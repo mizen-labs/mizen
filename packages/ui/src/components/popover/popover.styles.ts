@@ -93,15 +93,21 @@ export const popoverStyles = create({
 		transitionTimingFunction: easing.expoOut,
 		width: "var(--popup-width, auto)",
 	},
+	// A bare popup is as wide as its content, whatever room its positioner
+	// has. Base UI positions a popup that opens upward or to the left
+	// absolutely, and the bare positioner has no width of its own then: a
+	// width taken from it squeezed the content, to nothing in WebKit.
 	popupBare: {
 		backgroundColor: "transparent",
 		borderColor: "transparent",
 		borderStyle: "none",
 		borderWidth: 0,
 		boxShadow: "none",
+		display: "flex",
+		flexDirection: "column",
 		gap: space["0"],
-		gridTemplateColumns: "auto",
 		padding: space["0"],
+		width: "max-content",
 	},
 	popupTooltip: {
 		borderRadius: shape.controlRadius,

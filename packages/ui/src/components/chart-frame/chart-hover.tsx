@@ -5,12 +5,10 @@ import {
 	type PointerEvent,
 	type ReactNode,
 	useCallback,
-	useRef,
 	useState,
 } from "react";
 import { conditions } from "../../styles/conditions.stylex";
 import { duration } from "../../styles/motion.stylex";
-import { space } from "../../styles/spacing.stylex";
 import {
 	ChartTooltip,
 	type ChartTooltipItem,
@@ -24,8 +22,9 @@ export interface ChartHoverTip {
 	label?: ReactNode;
 }
 
+// The pointer position is in window coordinates: the tooltip is placed in the
+// window, not in the chart.
 interface HoverState {
-	flip: boolean;
 	id: string;
 	tip?: ChartHoverTip;
 	x: number;
@@ -43,42 +42,53 @@ const styles = create({
 		},
 		transitionProperty: "opacity",
 	},
-	tip: (x: number, y: number, flip: boolean) => ({
-		insetBlockStart: y,
-		insetInlineStart: x,
+	// A popover in the browser's top layer, fixed in the window: it adds no
+	// scrollable overflow to the chart, and no card clips it. The rest resets
+	// the browser's popover style.
+	tip: {
+		backgroundColor: "transparent",
+		borderStyle: "none",
+		color: "inherit",
+		inset: "auto",
+		margin: 0,
+		overflow: "visible",
+		padding: 0,
 		pointerEvents: "none",
-		position: "absolute",
-		transform: flip
-			? `translate(calc(-100% - ${space["3"]}), -50%)`
-			: `translate(${space["3"]}, -50%)`,
+		position: "fixed",
 		// Small hosts such as rings must not squeeze the tooltip.
 		width: "max-content",
-		zIndex: 1,
-	}),
+	},
 });
 
+const EDGE = 8;
+const GAP = 12;
+
+// Places the tooltip beside the pointer and keeps it inside the window: it
+// goes to the left of the pointer when the right has no room.
+function placeTip(tip: HTMLElement, x: number, y: number) {
+	if (tip.showPopover && !tip.matches(":popover-open")) {
+		tip.showPopover();
+	}
+	const { height, width } = tip.getBoundingClientRect();
+	const fits = x + GAP + width <= window.innerWidth - EDGE;
+	const left = Math.max(EDGE, fits ? x + GAP : x - GAP - width);
+	const top = Math.min(
+		Math.max(EDGE, y - height / 2),
+		Math.max(EDGE, window.innerHeight - EDGE - height)
+	);
+	tip.style.left = `${left}px`;
+	tip.style.top = `${top}px`;
+}
+
 export function useChartHover() {
-	const hostRef = useRef<HTMLDivElement>(null);
 	const [hover, setHover] = useState<HoverState | null>(null);
 	const [linked, setLinked] = useState<string | null>(null);
 	/** Pointer handlers for a mark: hovering shows its tooltip. */
 	const markProps = useCallback(
 		(id: string, tip?: ChartHoverTip) => ({
 			onPointerLeave: () => setHover(null),
-			onPointerMove: (event: PointerEvent) => {
-				const box = hostRef.current?.getBoundingClientRect();
-				if (!box) {
-					return;
-				}
-				const x = event.clientX - box.left;
-				setHover({
-					flip: x > box.width / 2,
-					id,
-					tip,
-					x,
-					y: event.clientY - box.top,
-				});
-			},
+			onPointerMove: (event: PointerEvent) =>
+				setHover({ id, tip, x: event.clientX, y: event.clientY }),
 		}),
 		[]
 	);
@@ -100,7 +110,6 @@ export function useChartHover() {
 	return {
 		active,
 		fade,
-		hostRef,
 		hostStyle: styles.host,
 		hover,
 		linkProps,
@@ -111,15 +120,30 @@ export function useChartHover() {
 export function ChartHoverTooltip({
 	hover,
 }: {
-	hover: { flip: boolean; tip?: ChartHoverTip; x: number; y: number } | null;
+	hover: { tip?: ChartHoverTip; x: number; y: number } | null;
 }) {
+	const x = hover?.x ?? 0;
+	const y = hover?.y ?? 0;
+	// A new callback for each position, so React places the tooltip again
+	// after every move, before the browser paints.
+	const place = useCallback(
+		(tip: HTMLDivElement | null) => {
+			if (tip) {
+				placeTip(tip, x, y);
+			}
+		},
+		[x, y]
+	);
 	if (!hover?.tip) {
 		return null;
 	}
 	return (
 		<div
 			aria-hidden="true"
-			{...props(styles.tip(hover.x, hover.y, hover.flip))}
+			data-slot="chart-hover-tooltip"
+			popover="manual"
+			ref={place}
+			{...props(styles.tip)}
 		>
 			<ChartTooltip items={hover.tip.items} label={hover.tip.label} />
 		</div>

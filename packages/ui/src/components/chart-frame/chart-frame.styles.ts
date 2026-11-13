@@ -45,4 +45,8 @@ export const chartFrameStyles = create({
 		outlineStyle: { ":focus-visible": "solid", default: "none" },
 		outlineWidth: borderWidth.focus,
 	},
+	// Hidden until the chart has placed the tooltip for the body's real size.
+	tooltipBody: {
+		visibility: { ":is([data-placed])": "visible", default: "hidden" },
+	},
 });

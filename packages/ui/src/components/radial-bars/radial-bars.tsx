@@ -138,7 +138,7 @@ export function RadialBars({
 	const max = ranked[0]?.value || 1;
 	const stroke = Math.min(16, (DIAMETER * 0.36) / ranked.length - GAP);
 	const hover = useChartHover();
-	const { fade, hostRef, hostStyle, linkProps, markProps } = hover;
+	const { fade, hostStyle, linkProps, markProps } = hover;
 	// Hovering a bar shows its value; hovering a tile lights its bar.
 	const ringHover = useMemo(() => {
 		const tips = new Map(
@@ -158,7 +158,7 @@ export function RadialBars({
 			ref={forwardedRef}
 			{...props(styles.root, typeRoles.ui)}
 		>
-			<div ref={hostRef} {...props(hostStyle)}>
+			<div {...props(hostStyle)}>
 				<RingGraphic
 					diameter={DIAMETER}
 					gap={GAP}

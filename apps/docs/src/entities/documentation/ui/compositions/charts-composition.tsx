@@ -35,6 +35,7 @@ import { scaleLinear } from "@tanstack/charts/scales/linear";
 import { scaleOrdinal } from "@tanstack/charts/scales/ordinal";
 import { scalePoint } from "@tanstack/charts/scales/point";
 import { tooltip } from "@tanstack/charts/tooltip";
+import { portal } from "@tanstack/charts/tooltip/portal";
 import { chartExampleStyles } from "./chart-composition.styles";
 
 const specimenStyles = create({
@@ -143,7 +144,7 @@ const teamChart = defineChart({
 			scale: scaleLinear,
 		},
 	},
-	tooltip,
+	tooltip: { portal, use: tooltip },
 });
 
 function renderTeamTooltip({
@@ -301,7 +302,7 @@ const yearChart = defineChart({
 		},
 		y: { grid: true, scale: scaleLinear },
 	},
-	tooltip,
+	tooltip: { portal, use: tooltip },
 });
 
 const activityChart = defineChart({
@@ -325,7 +326,7 @@ const activityChart = defineChart({
 		},
 		y: { grid: true, scale: scaleLinear },
 	},
-	tooltip,
+	tooltip: { portal, use: tooltip },
 });
 
 const growthChart = defineChart({
@@ -354,7 +355,7 @@ const growthChart = defineChart({
 		},
 		y: { grid: true, scale: scaleLinear },
 	},
-	tooltip,
+	tooltip: { portal, use: tooltip },
 });
 
 const chartExamples = [

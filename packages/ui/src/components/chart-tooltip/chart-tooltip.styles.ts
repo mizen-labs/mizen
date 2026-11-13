@@ -37,6 +37,9 @@ export const chartTooltipStyles = create({
 		minWidth: 0,
 		paddingBlock: space["2"],
 		paddingInline: space["3"],
+		// The chart positions the tooltip absolutely, so the room beside it
+		// must not set its width: near an edge it would wrap letter by letter.
+		width: "max-content",
 	},
 	row: {
 		alignItems: "baseline",

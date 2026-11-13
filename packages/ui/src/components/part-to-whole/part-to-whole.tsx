@@ -4,13 +4,13 @@ import { props } from "@stylexjs/stylex";
 import { defineChart } from "@tanstack/charts";
 import { focusGroupAngle, pie, polar, radialArc } from "@tanstack/charts/polar";
 import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/tooltip";
-import { tooltip as tooltipFeature } from "@tanstack/charts/tooltip";
 import type { ComponentPropsWithRef } from "react";
 import { useMemo } from "react";
 import type { Closed } from "../../closed";
 import { typeRoles } from "../../styles/typography.styles";
 import { type ChartSeriesTone, chartColors } from "../chart-frame/chart-colors";
 import { ChartFrame } from "../chart-frame/chart-frame";
+import { chartTooltipFeature } from "../chart-frame/chart-tooltip-feature";
 import {
 	ChartLegend,
 	type ChartLegendItem,
@@ -183,7 +183,7 @@ function PartToWholeChart({
 				],
 				scales: { x: null, y: null },
 			},
-			{ focus: focusGroupAngle, tooltip: tooltipFeature }
+			{ focus: focusGroupAngle, tooltip: chartTooltipFeature }
 		);
 	}, [parts]);
 	const renderTooltipBody = useMemo(

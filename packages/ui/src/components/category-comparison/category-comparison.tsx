@@ -6,7 +6,6 @@ import { decorative } from "@tanstack/charts/mark/decorative";
 import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/tooltip";
 import { scaleBand } from "@tanstack/charts/scales/band";
 import { scaleLinear } from "@tanstack/charts/scales/linear";
-import { tooltip as tooltipFeature } from "@tanstack/charts/tooltip";
 import type { ComponentPropsWithRef } from "react";
 import { useMemo } from "react";
 import type { Closed } from "../../closed";
@@ -15,6 +14,7 @@ import { typeRoles } from "../../styles/typography.styles";
 import { type ChartSeriesTone, chartColors } from "../chart-frame/chart-colors";
 import { bandCrosshair } from "../chart-frame/chart-crosshair";
 import { ChartFrame } from "../chart-frame/chart-frame";
+import { chartTooltipFeature } from "../chart-frame/chart-tooltip-feature";
 import { ChartLegend } from "../chart-legend/chart-legend";
 import { ChartTooltip } from "../chart-tooltip/chart-tooltip";
 import { categoryComparisonStyles } from "./category-comparison.styles";
@@ -397,7 +397,7 @@ function CategoryComparisonChart({
 				focus: vertical ? "group-x" : "group-y",
 				// The brand band marks the focused category, so no point ring.
 				focusRing: false,
-				tooltip: tooltipFeature,
+				tooltip: chartTooltipFeature,
 			}
 		);
 	}, [

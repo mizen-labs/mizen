@@ -22,6 +22,7 @@ import { scaleLinear } from "@tanstack/charts/scales/linear";
 import { scaleOrdinal } from "@tanstack/charts/scales/ordinal";
 import { scalePoint } from "@tanstack/charts/scales/point";
 import { tooltip } from "@tanstack/charts/tooltip";
+import { portal } from "@tanstack/charts/tooltip/portal";
 import { chartExampleStyles } from "../compositions/chart-composition.styles";
 
 interface TeamDatum {
@@ -68,7 +69,7 @@ const teamChart = defineChart({
 			scale: scaleLinear,
 		},
 	},
-	tooltip,
+	tooltip: { portal, use: tooltip },
 });
 function renderTeamTooltip({
 	points,

@@ -4,7 +4,6 @@ import { create, props } from "@stylexjs/stylex";
 import { cell, defineChart } from "@tanstack/charts";
 import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/tooltip";
 import { scaleBand } from "@tanstack/charts/scales/band";
-import { tooltip as tooltipFeature } from "@tanstack/charts/tooltip";
 import type { ComponentPropsWithRef } from "react";
 import { useMemo } from "react";
 import type { Closed } from "../../closed";
@@ -13,6 +12,7 @@ import { assertTone } from "../chart-frame/chart-assert";
 import type { ChartSeriesTone } from "../chart-frame/chart-colors";
 import { ChartDataTable } from "../chart-frame/chart-data-table";
 import { ChartFrame } from "../chart-frame/chart-frame";
+import { chartTooltipFeature } from "../chart-frame/chart-tooltip-feature";
 import { ChartTooltip } from "../chart-tooltip/chart-tooltip";
 import {
 	COLOR_DOMAIN,
@@ -315,7 +315,7 @@ function CalendarHeatmapPlot({
 					},
 				},
 			},
-			{ tooltip: tooltipFeature }
+			{ tooltip: chartTooltipFeature }
 		);
 	}, [cells, locale, tone, weekdays, weeks]);
 	const dateFormat = useMemo(

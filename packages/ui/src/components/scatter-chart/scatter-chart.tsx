@@ -4,7 +4,6 @@ import { props } from "@stylexjs/stylex";
 import { defineChart, dot } from "@tanstack/charts";
 import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/tooltip";
 import { scaleLinear } from "@tanstack/charts/scales/linear";
-import { tooltip as tooltipFeature } from "@tanstack/charts/tooltip";
 import type { ComponentPropsWithRef } from "react";
 import { useMemo } from "react";
 import type { Closed } from "../../closed";
@@ -12,6 +11,7 @@ import { typeRoles } from "../../styles/typography.styles";
 import { type ChartSeriesTone, chartColors } from "../chart-frame/chart-colors";
 import { ChartDataTable } from "../chart-frame/chart-data-table";
 import { ChartFrame } from "../chart-frame/chart-frame";
+import { chartTooltipFeature } from "../chart-frame/chart-tooltip-feature";
 import { ChartLegend } from "../chart-legend/chart-legend";
 import { ChartTooltip } from "../chart-tooltip/chart-tooltip";
 import {
@@ -391,7 +391,7 @@ function ScatterChartPlot({
 						},
 					},
 				},
-				{ tooltip: tooltipFeature }
+				{ tooltip: chartTooltipFeature }
 			),
 		[formatX, formatY, points, xAxisLabel, xDomain, yAxisLabel, yDomain]
 	);

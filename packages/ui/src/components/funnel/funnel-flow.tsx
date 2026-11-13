@@ -100,15 +100,14 @@ export function FunnelFlow({
 	share: Intl.NumberFormat;
 	stages: readonly PlacedFunnelStage[];
 }) {
-	const { fade, hostRef, hostStyle, hover, linkProps, markProps } =
-		useChartHover();
+	const { fade, hostStyle, hover, linkProps, markProps } = useChartHover();
 	const heights = stages.map(({ share: stageShare }) =>
 		Math.max(4, stageShare * HEIGHT * 0.78)
 	);
 	const halo = heights.map((height) => Math.min(HEIGHT, height * 1.12 + 10));
 	return (
 		<div data-slot="funnel-flow" {...props(styles.root)}>
-			<div ref={hostRef} {...props(styles.figure, hostStyle)}>
+			<div {...props(styles.figure, hostStyle)}>
 				<svg
 					aria-hidden="true"
 					preserveAspectRatio="none"

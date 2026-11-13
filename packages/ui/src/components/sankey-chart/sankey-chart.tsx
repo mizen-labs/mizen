@@ -228,7 +228,7 @@ export function SankeyChart({
 	);
 	const toneKeys = new Map(sources.map(({ id }, index) => [id, TONES[index]]));
 	const hover = useChartHover();
-	const { active, hostRef, hostStyle, linkProps, markProps } = hover;
+	const { active, hostStyle, linkProps, markProps } = hover;
 	const ribbonEmphasis = ({ source, target }: SankeyLink) => {
 		if (active === null) {
 			return null;
@@ -245,7 +245,7 @@ export function SankeyChart({
 			ref={forwardedRef}
 			{...props(styles.root, typeRoles.ui)}
 		>
-			<div ref={hostRef} {...props(styles.plot, hostStyle)}>
+			<div {...props(styles.plot, hostStyle)}>
 				<NodeLabels
 					align="end"
 					nodes={layout.left.map((node) => ({

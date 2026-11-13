@@ -168,7 +168,7 @@ export function ScoreGauge({
 		tone: part.tone ?? TONES[index],
 	}));
 	const hover = useChartHover();
-	const { fade, hostRef, hostStyle, linkProps, markProps } = hover;
+	const { fade, hostStyle, linkProps, markProps } = hover;
 	// Hovering a segment shows its points; hovering a row lights its segment.
 	const tips = new Map(
 		parts.map(({ id, label, max: partMax, tone, value }) => [
@@ -195,7 +195,7 @@ export function ScoreGauge({
 			ref={forwardedRef}
 			{...props(styles.root, typeRoles.ui)}
 		>
-			<div ref={hostRef} {...props(styles.figure, hostStyle)}>
+			<div {...props(styles.figure, hostStyle)}>
 				<Segments hover={segmentHover} parts={parts} />
 				<span data-slot="score-gauge-score" {...props(styles.score)}>
 					<span {...props(typeRoles.title)}>{format(score)}</span>

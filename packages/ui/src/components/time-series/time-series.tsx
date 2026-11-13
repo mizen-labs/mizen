@@ -5,7 +5,6 @@ import { areaY, defineChart, dot, lineY } from "@tanstack/charts";
 import { decorative } from "@tanstack/charts/mark/decorative";
 import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/tooltip";
 import { scaleLinear } from "@tanstack/charts/scales/linear";
-import { tooltip as tooltipFeature } from "@tanstack/charts/tooltip";
 import { scaleUtc } from "d3-scale";
 import type { ComponentPropsWithRef } from "react";
 import { useId, useMemo } from "react";
@@ -20,6 +19,7 @@ import {
 	chartRevealStyles,
 	useLoadingReveal,
 } from "../chart-frame/chart-loading";
+import { chartTooltipFeature } from "../chart-frame/chart-tooltip-feature";
 import { ChartLegend } from "../chart-legend/chart-legend";
 import { ChartTooltip } from "../chart-tooltip/chart-tooltip";
 import {
@@ -400,7 +400,7 @@ function TimeSeriesPlot({
 					},
 				},
 			},
-			{ tooltip: tooltipFeature }
+			{ tooltip: chartTooltipFeature }
 		);
 	}, [
 		axisFormatter,

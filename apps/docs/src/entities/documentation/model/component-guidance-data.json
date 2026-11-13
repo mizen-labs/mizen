@@ -194,7 +194,8 @@
       "The chart definition owns the plot. Aggregation, filtering, and a readable data alternative belong to the application."
     ],
     "recommendations": [
-      "Name the chart's question and provide readable units. Keep detailed values available beyond pointer hover."
+      "Name the chart's question and provide readable units. Keep detailed values available beyond pointer hover.",
+      "In your own definition, pass tooltip: { use: tooltip, portal } with portal from @tanstack/charts/tooltip/portal. The tooltip then opens in the top layer: no card clips it, and it adds no scrolling to the chart. Mizen's own charts do this already."
     ]
   },
   "chart-legend": {
@@ -212,7 +213,8 @@
       "ChartTooltip renders content; ChartFrame owns chart pointer and keyboard behavior."
     ],
     "recommendations": [
-      "Show the selected observation's label, units, and exact values. Keep series names consistent with the legend."
+      "Show the selected observation's label, units, and exact values. Keep series names consistent with the legend.",
+      "The tooltip is as wide as its content and does not wrap. Keep labels and values short."
     ]
   },
   "checkbox": {

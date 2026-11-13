@@ -153,6 +153,21 @@ function withMizenTheme<
 	return withMizenSpec(definition);
 }
 
+// The chart places the tooltip before React renders its body, and places it
+// again one frame after the body has a size. The body stays hidden for those
+// two frames, so it never shows in the first, wrong place.
+function revealWhenPlaced(body: HTMLElement | null) {
+	if (!body) {
+		return;
+	}
+	let frame = requestAnimationFrame(() => {
+		frame = requestAnimationFrame(() => {
+			body.dataset.placed = "";
+		});
+	});
+	return () => cancelAnimationFrame(frame);
+}
+
 function styleChartPlot({ svg }: { svg: SVGSVGElement }) {
 	const { className } = props(chartFrameStyles.plot);
 	if (className) {
@@ -195,6 +210,20 @@ export function ChartFrame<
 		() => withMizenTheme(definition),
 		[definition]
 	);
+	const renderBody = useMemo<typeof renderTooltipBody>(
+		() =>
+			renderTooltipBody &&
+			((context) => (
+				<div
+					data-slot="chart-tooltip-body"
+					ref={revealWhenPlaced}
+					{...props(chartFrameStyles.tooltipBody)}
+				>
+					{renderTooltipBody(context)}
+				</div>
+			)),
+		[renderTooltipBody]
+	);
 
 	return (
 		<div
@@ -216,7 +245,7 @@ export function ChartFrame<
 				onFocusGroupChange={onFocusGroupChange}
 				onRender={styleChartPlot}
 				onSelect={onSelect}
-				renderTooltipBody={renderTooltipBody}
+				renderTooltipBody={renderBody}
 				tabIndex={tabIndex}
 			/>
 		</div>

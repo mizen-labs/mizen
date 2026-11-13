@@ -13,7 +13,6 @@ import {
 import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/tooltip";
 import { scaleLinear } from "@tanstack/charts/scales/linear";
 import { scalePoint } from "@tanstack/charts/scales/point";
-import { tooltip as tooltipFeature } from "@tanstack/charts/tooltip";
 import { curveLinearClosed } from "d3-shape";
 import type { ComponentPropsWithRef } from "react";
 import { useMemo } from "react";
@@ -23,6 +22,7 @@ import { space } from "../../styles/spacing.stylex";
 import { assertIdentity, assertNonNegative } from "../chart-frame/chart-assert";
 import { chartColors } from "../chart-frame/chart-colors";
 import { ChartFrame } from "../chart-frame/chart-frame";
+import { chartTooltipFeature } from "../chart-frame/chart-tooltip-feature";
 import { ChartLegend } from "../chart-legend/chart-legend";
 import { ChartTooltip } from "../chart-tooltip/chart-tooltip";
 
@@ -240,7 +240,7 @@ export function RadarChart({
 				],
 				scales: { x: null, y: null },
 			},
-			{ focus: focusGroupAngle, tooltip: tooltipFeature }
+			{ focus: focusGroupAngle, tooltip: chartTooltipFeature }
 		);
 	}, [axes, outer, rows, series]);
 	const renderTooltipBody = useMemo(

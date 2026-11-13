@@ -87,7 +87,7 @@ export function ProgressRings({
 	}));
 	const compact = size === "sm";
 	const hover = useChartHover();
-	const { fade, hostRef, hostStyle, linkProps, markProps } = hover;
+	const { fade, hostStyle, linkProps, markProps } = hover;
 	// Hovering a ring shows its value and progress; hovering a tile lights its ring.
 	const tips = new Map(
 		rings.map(({ display, goal, id, label, tone, value }) => [
@@ -146,7 +146,7 @@ export function ProgressRings({
 					</li>
 				))}
 			</ul>
-			<div ref={hostRef} {...props(hostStyle)}>
+			<div {...props(hostStyle)}>
 				<RingGraphic
 					{...GEOMETRY[size]}
 					hover={ringHover}

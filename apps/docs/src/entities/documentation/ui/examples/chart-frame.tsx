@@ -6,6 +6,7 @@ import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/toolt
 import { scaleBand } from "@tanstack/charts/scales/band";
 import { scaleLinear } from "@tanstack/charts/scales/linear";
 import { tooltip } from "@tanstack/charts/tooltip";
+import { portal } from "@tanstack/charts/tooltip/portal";
 
 interface SignupDatum {
 	count: number;
@@ -23,7 +24,7 @@ const chart = defineChart({
 		x: { scale: () => scaleBand<string>().padding(0.25) },
 		y: { grid: true, scale: scaleLinear },
 	},
-	tooltip,
+	tooltip: { portal, use: tooltip },
 });
 function renderSignupTooltip({
 	points,

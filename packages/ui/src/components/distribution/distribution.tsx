@@ -4,7 +4,6 @@ import { props } from "@stylexjs/stylex";
 import { crosshair, defineChart, rect } from "@tanstack/charts";
 import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/tooltip";
 import { scaleLinear } from "@tanstack/charts/scales/linear";
-import { tooltip as tooltipFeature } from "@tanstack/charts/tooltip";
 import { binX } from "@tanstack/charts/transform/bin";
 import type { ComponentPropsWithRef } from "react";
 import { useMemo } from "react";
@@ -12,6 +11,7 @@ import type { Closed } from "../../closed";
 import { typeRoles } from "../../styles/typography.styles";
 import { type ChartSeriesTone, chartColors } from "../chart-frame/chart-colors";
 import { ChartFrame } from "../chart-frame/chart-frame";
+import { chartTooltipFeature } from "../chart-frame/chart-tooltip-feature";
 import { ChartLegend } from "../chart-legend/chart-legend";
 import { ChartTooltip } from "../chart-tooltip/chart-tooltip";
 import { distributionStyles } from "./distribution.styles";
@@ -301,7 +301,7 @@ function DistributionChart({
 				// The default layer rings every bin of an interval mark at once, so
 				// the crosshair marker above rings only the focused one.
 				focusRing: false,
-				tooltip: tooltipFeature,
+				tooltip: chartTooltipFeature,
 			}
 		);
 	}, [

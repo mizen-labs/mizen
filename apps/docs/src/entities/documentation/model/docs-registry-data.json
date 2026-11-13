@@ -3641,7 +3641,7 @@
       },
       {
         "defaultValue": "\"default\"",
-        "description": "Sets the badge dimensions.",
+        "description": "Sets the badge dimensions. Inside a Button, a tab, or a segment the control sets them, and size is ignored.",
         "name": "size",
         "type": "\"default\" | \"sm\" | \"lg\""
       },

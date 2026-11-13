@@ -1944,6 +1944,13 @@
         "description": "A link that looks like a button. Render the anchor or the router link, set nativeButton to false, and set role to link so assistive technology announces a link.",
         "path": "entities/documentation/ui/examples/button-variants.tsx",
         "code": "\"use client\";\n\nimport { Button, Inline } from \"@mizen-labs/ui\";\n\nexport function ButtonNavigationLinkExample7() {\n\treturn (\n\t\t<Inline>\n\t\t\t<Button\n\t\t\t\tnativeButton={false}\n\t\t\t\trender={<a href=\"/docs/installation\" />}\n\t\t\t\trole=\"link\"\n\t\t\t\tvariant=\"brand\"\n\t\t\t>\n\t\t\t\tInstall Mizen\n\t\t\t</Button>\n\t\t\t<Button\n\t\t\t\tnativeButton={false}\n\t\t\t\trender={<a href=\"/docs/components/link\" />}\n\t\t\t\trole=\"link\"\n\t\t\t\tvariant=\"outline\"\n\t\t\t>\n\t\t\t\tRead about Link\n\t\t\t</Button>\n\t\t</Inline>\n\t);\n}\n"
+      },
+      {
+        "name": "ButtonWithCountExample8",
+        "title": "With a count",
+        "description": "Put a Badge after the label. It takes its size and its neutral color from the button, so it needs no size and no variant.",
+        "path": "entities/documentation/ui/examples/button-variants.tsx",
+        "code": "\"use client\";\n\nimport { Badge, Button, Inline, Stack, VisuallyHidden } from \"@mizen-labs/ui\";\n\nconst BUTTON_SIZES = [\"xs\", \"sm\", \"default\", \"lg\", \"xl\"] as const;\n\nexport function ButtonWithCountExample8() {\n\treturn (\n\t\t<Stack gap=\"4\">\n\t\t\t<Inline>\n\t\t\t\t{BUTTON_SIZES.map((size) => (\n\t\t\t\t\t<Button key={size} size={size} variant=\"outline\">\n\t\t\t\t\t\tFilters\n\t\t\t\t\t\t<Badge>\n\t\t\t\t\t\t\t3<VisuallyHidden> active</VisuallyHidden>\n\t\t\t\t\t\t</Badge>\n\t\t\t\t\t</Button>\n\t\t\t\t))}\n\t\t\t</Inline>\n\t\t\t<Inline>\n\t\t\t\t<Button>\n\t\t\t\t\tInbox\n\t\t\t\t\t<Badge>\n\t\t\t\t\t\t128<VisuallyHidden> unread</VisuallyHidden>\n\t\t\t\t\t</Badge>\n\t\t\t\t</Button>\n\t\t\t\t<Button variant=\"secondary\">\n\t\t\t\t\tDrafts\n\t\t\t\t\t<Badge>\n\t\t\t\t\t\t12<VisuallyHidden> drafts</VisuallyHidden>\n\t\t\t\t\t</Badge>\n\t\t\t\t</Button>\n\t\t\t\t<Button variant=\"ghost\">\n\t\t\t\t\tReview\n\t\t\t\t\t<Badge>\n\t\t\t\t\t\t99+<VisuallyHidden> to review</VisuallyHidden>\n\t\t\t\t\t</Badge>\n\t\t\t\t</Button>\n\t\t\t\t<Button variant=\"outline\">\n\t\t\t\t\tFailed\n\t\t\t\t\t<Badge appearance=\"soft\" variant=\"destructive\">\n\t\t\t\t\t\t3<VisuallyHidden> failed</VisuallyHidden>\n\t\t\t\t\t</Badge>\n\t\t\t\t</Button>\n\t\t\t</Inline>\n\t\t</Stack>\n\t);\n}\n"
       }
     ],
     "field": [
@@ -3124,6 +3131,13 @@
         "code": "import {\n\tField,\n\tFieldLabel,\n\tHeading,\n\tInput,\n\tStack,\n\tSwitch,\n\tTabs,\n\tTabsIndicator,\n\tTabsList,\n\tTabsPanel,\n\tTabsTab,\n\tText,\n} from \"@mizen-labs/ui\";\n\nexport function TabsProfileSettingsExample3() {\n\treturn (\n\t\t<Tabs defaultValue=\"profile\" orientation=\"vertical\">\n\t\t\t<TabsList aria-label=\"Account sections\" size=\"lg\">\n\t\t\t\t<TabsTab value=\"profile\">Profile</TabsTab>\n\t\t\t\t<TabsTab value=\"security\">Security</TabsTab>\n\t\t\t\t<TabsIndicator />\n\t\t\t</TabsList>\n\t\t\t<TabsPanel value=\"profile\">\n\t\t\t\t<Stack gap=\"4\">\n\t\t\t\t\t<Heading level={4}>Profile settings</Heading>\n\t\t\t\t\t<Field>\n\t\t\t\t\t\t<FieldLabel>Display name</FieldLabel>\n\t\t\t\t\t\t<Input defaultValue=\"Maya Chen\" />\n\t\t\t\t\t</Field>\n\t\t\t\t\t<Field>\n\t\t\t\t\t\t<FieldLabel>Contact email</FieldLabel>\n\t\t\t\t\t\t<Input defaultValue=\"maya@example.com\" type=\"email\" />\n\t\t\t\t\t</Field>\n\t\t\t\t</Stack>\n\t\t\t</TabsPanel>\n\t\t\t<TabsPanel value=\"security\">\n\t\t\t\t<Stack gap=\"4\">\n\t\t\t\t\t<Heading level={4}>Security settings</Heading>\n\t\t\t\t\t<Field>\n\t\t\t\t\t\t<FieldLabel>\n\t\t\t\t\t\t\t<Switch defaultChecked />\n\t\t\t\t\t\t\tRequire a sign-in code\n\t\t\t\t\t\t</FieldLabel>\n\t\t\t\t\t</Field>\n\t\t\t\t\t<Text size=\"ui\" tone=\"muted\">\n\t\t\t\t\t\tProtect your workspace with a second verification step.\n\t\t\t\t\t</Text>\n\t\t\t\t</Stack>\n\t\t\t</TabsPanel>\n\t\t</Tabs>\n\t);\n}\n"
       },
       {
+        "name": "TabsWithCountsExample4",
+        "title": "With counts",
+        "description": "Put a Badge after the label of a tab. It takes its size from the tab and shows on a selected and an unselected tab.",
+        "path": "entities/documentation/ui/examples/tabs-variants.tsx",
+        "code": "import { Badge, Stack, Tabs, TabsList, TabsTab } from \"@mizen-labs/ui\";\n\nconst TAB_SIZES = [\"sm\", \"default\", \"lg\"] as const;\n\nexport function TabsWithCountsExample4() {\n\treturn (\n\t\t<Stack gap=\"4\">\n\t\t\t{TAB_SIZES.map((size) => (\n\t\t\t\t<Tabs defaultValue=\"open\" key={size}>\n\t\t\t\t\t<TabsList aria-label={`Orders, ${size} tabs`} size={size}>\n\t\t\t\t\t\t<TabsTab value=\"open\">\n\t\t\t\t\t\t\tOpen <Badge>12</Badge>\n\t\t\t\t\t\t</TabsTab>\n\t\t\t\t\t\t<TabsTab value=\"shipped\">\n\t\t\t\t\t\t\tShipped <Badge>128</Badge>\n\t\t\t\t\t\t</TabsTab>\n\t\t\t\t\t\t<TabsTab value=\"failed\">\n\t\t\t\t\t\t\tFailed\n\t\t\t\t\t\t\t<Badge appearance=\"soft\" variant=\"destructive\">\n\t\t\t\t\t\t\t\t3\n\t\t\t\t\t\t\t</Badge>\n\t\t\t\t\t\t</TabsTab>\n\t\t\t\t\t</TabsList>\n\t\t\t\t</Tabs>\n\t\t\t))}\n\t\t\t<Tabs defaultValue=\"open\">\n\t\t\t\t<TabsList aria-label=\"Orders, underline tabs\" variant=\"underline\">\n\t\t\t\t\t<TabsTab value=\"open\">\n\t\t\t\t\t\tOpen <Badge>12</Badge>\n\t\t\t\t\t</TabsTab>\n\t\t\t\t\t<TabsTab value=\"shipped\">\n\t\t\t\t\t\tShipped <Badge>128</Badge>\n\t\t\t\t\t</TabsTab>\n\t\t\t\t</TabsList>\n\t\t\t</Tabs>\n\t\t</Stack>\n\t);\n}\n"
+      },
+      {
         "name": "TabsStates",
         "title": "Sizes, icons, and manual activation",
         "description": "Tabs share compact sizing with segmented controls. Arrow keys move focus; manual activation waits for Enter or Space.",
@@ -3240,6 +3254,13 @@
         "description": "",
         "path": "entities/documentation/ui/examples/segmented-control-variants.tsx",
         "code": "\"use client\";\n\nimport {\n\tHeading,\n\tSegmentedControl,\n\tSegmentedControlItem,\n\tStack,\n\tText,\n} from \"@mizen-labs/ui\";\n\nexport function SegmentedControlReportSettingsExample2() {\n\treturn (\n\t\t<Stack>\n\t\t\t<Heading level={3}>Report settings</Heading>\n\t\t\t<Text size=\"ui\" tone=\"muted\">\n\t\t\t\tChoose a period. The workspace controls the managed view.\n\t\t\t</Text>\n\t\t\t<SegmentedControl\n\t\t\t\taria-label=\"Report period\"\n\t\t\t\tdefaultValue={[\"week\"]}\n\t\t\t\tsize=\"sm\"\n\t\t\t>\n\t\t\t\t<SegmentedControlItem value=\"day\">Day</SegmentedControlItem>\n\t\t\t\t<SegmentedControlItem value=\"week\">Week</SegmentedControlItem>\n\t\t\t\t<SegmentedControlItem value=\"month\">Month</SegmentedControlItem>\n\t\t\t</SegmentedControl>\n\t\t\t<SegmentedControl\n\t\t\t\taria-label=\"Managed view\"\n\t\t\t\tdefaultValue={[\"table\"]}\n\t\t\t\tdisabled\n\t\t\t\tsize=\"lg\"\n\t\t\t>\n\t\t\t\t<SegmentedControlItem value=\"table\">Table</SegmentedControlItem>\n\t\t\t\t<SegmentedControlItem value=\"chart\">Chart</SegmentedControlItem>\n\t\t\t</SegmentedControl>\n\t\t</Stack>\n\t);\n}\n"
+      },
+      {
+        "name": "SegmentedControlWithCountsExample3",
+        "title": "With counts",
+        "description": "Put a Badge after the label of a segment. It takes its size from the segment.",
+        "path": "entities/documentation/ui/examples/segmented-control-variants.tsx",
+        "code": "\"use client\";\n\nimport {\n\tBadge,\n\tSegmentedControl,\n\tSegmentedControlItem,\n\tStack,\n} from \"@mizen-labs/ui\";\n\nconst SEGMENT_SIZES = [\"sm\", \"default\", \"lg\"] as const;\n\nexport function SegmentedControlWithCountsExample3() {\n\treturn (\n\t\t<Stack gap=\"4\">\n\t\t\t{SEGMENT_SIZES.map((size) => (\n\t\t\t\t<SegmentedControl\n\t\t\t\t\taria-label={`Status, ${size}`}\n\t\t\t\t\tdefaultValue={[\"open\"]}\n\t\t\t\t\tkey={size}\n\t\t\t\t\tsize={size}\n\t\t\t\t>\n\t\t\t\t\t<SegmentedControlItem value=\"open\">\n\t\t\t\t\t\tOpen <Badge>12</Badge>\n\t\t\t\t\t</SegmentedControlItem>\n\t\t\t\t\t<SegmentedControlItem value=\"done\">\n\t\t\t\t\t\tDone <Badge>128</Badge>\n\t\t\t\t\t</SegmentedControlItem>\n\t\t\t\t</SegmentedControl>\n\t\t\t))}\n\t\t</Stack>\n\t);\n}\n"
       },
       {
         "name": "SegmentedControlStates",

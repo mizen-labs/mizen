@@ -95,6 +95,7 @@ import {
 	ButtonIconActionsExample6,
 	ButtonNavigationLinkExample7,
 	ButtonReleaseReviewExample1,
+	ButtonWithCountExample8,
 } from "./button-variants";
 import { AppointmentCalendar, CalendarDropdownNavigation } from "./calendar";
 import { ContributionsThisYear } from "./calendar-heatmap";
@@ -533,6 +534,7 @@ import {
 	SegmentedControlProjectViewsExample1,
 	SegmentedControlReportSettingsExample2,
 	SegmentedControlStates,
+	SegmentedControlWithCountsExample3,
 } from "./segmented-control-variants";
 import {
 	MultipleSelect,
@@ -604,6 +606,7 @@ import {
 	TabsProjectOverviewExample1,
 	TabsRecordDetailsExample2,
 	TabsStates,
+	TabsWithCountsExample4,
 } from "./tabs-variants";
 import { AgentPlan, FailedPlan } from "./task-list";
 import { AgentCommands, FailedCommand } from "./terminal";
@@ -766,6 +769,7 @@ export const usageComponents: Record<string, ComponentType> = {
 	ButtonIconActionsExample6,
 	ButtonNavigationLinkExample7,
 	ButtonReleaseReviewExample1,
+	ButtonWithCountExample8,
 	CalendarDateRangeExample2,
 	CalendarDropdownNavigation,
 	CalendarHeatmapHalfYearExample,
@@ -1106,6 +1110,7 @@ export const usageComponents: Record<string, ComponentType> = {
 	SegmentedControlProjectViewsExample1,
 	SegmentedControlReportSettingsExample2,
 	SegmentedControlStates,
+	SegmentedControlWithCountsExample3,
 	SelectLargeSelect,
 	SelectManagedSelect,
 	SelectReadonlySelect,
@@ -1155,6 +1160,7 @@ export const usageComponents: Record<string, ComponentType> = {
 	TabsProjectOverviewExample1,
 	TabsRecordDetailsExample2,
 	TabsStates,
+	TabsWithCountsExample4,
 	TeamChat,
 	TextAlignmentGroup,
 	TextareaDisabledNote,

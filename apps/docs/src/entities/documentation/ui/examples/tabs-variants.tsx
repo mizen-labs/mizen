@@ -140,6 +140,45 @@ export function TabsProfileSettingsExample3() {
 	);
 }
 
+const TAB_SIZES = ["sm", "default", "lg"] as const;
+
+// A Badge inside a tab takes its size from the tab and stays visible on a
+// selected and an unselected tab.
+export function TabsWithCountsExample4() {
+	return (
+		<Stack gap="4">
+			{TAB_SIZES.map((size) => (
+				<Tabs defaultValue="open" key={size}>
+					<TabsList aria-label={`Orders, ${size} tabs`} size={size}>
+						<TabsTab value="open">
+							Open <Badge>12</Badge>
+						</TabsTab>
+						<TabsTab value="shipped">
+							Shipped <Badge>128</Badge>
+						</TabsTab>
+						<TabsTab value="failed">
+							Failed
+							<Badge appearance="soft" variant="destructive">
+								3
+							</Badge>
+						</TabsTab>
+					</TabsList>
+				</Tabs>
+			))}
+			<Tabs defaultValue="open">
+				<TabsList aria-label="Orders, underline tabs" variant="underline">
+					<TabsTab value="open">
+						Open <Badge>12</Badge>
+					</TabsTab>
+					<TabsTab value="shipped">
+						Shipped <Badge>128</Badge>
+					</TabsTab>
+				</TabsList>
+			</Tabs>
+		</Stack>
+	);
+}
+
 export function TabsStates() {
 	return (
 		<Stack gap="4">

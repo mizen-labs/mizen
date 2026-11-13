@@ -6,6 +6,7 @@ import type { ComponentPropsWithRef, ReactNode } from "react";
 import { controlLabel } from "../../control-label";
 import { LoadingIndicator } from "../../loading-indicator";
 import "./button.css";
+import { badgeFit } from "../../styles/badge-fit.styles";
 import { buttonStyles } from "./button.styles";
 
 type BaseButtonProps = ComponentPropsWithRef<typeof BaseButton>;
@@ -58,17 +59,19 @@ export type ButtonProps = SharedButtonProps &
 		  } & AccessibleIconName)
 	);
 
+// A text size also sizes a Badge inside the button. An icon button holds no
+// badge.
 const sizeStyles = {
-	default: buttonStyles.defaultSize,
+	default: [buttonStyles.defaultSize, badgeFit.h32],
 	icon: buttonStyles.icon,
 	"icon-lg": buttonStyles["icon-lg"],
 	"icon-sm": buttonStyles["icon-sm"],
 	"icon-xl": buttonStyles["icon-xl"],
 	"icon-xs": buttonStyles["icon-xs"],
-	lg: buttonStyles.lg,
-	sm: buttonStyles.sm,
-	xl: buttonStyles.xl,
-	xs: buttonStyles.xs,
+	lg: [buttonStyles.lg, badgeFit.h40],
+	sm: [buttonStyles.sm, badgeFit.h28],
+	xl: [buttonStyles.xl, badgeFit.h44],
+	xs: [buttonStyles.xs, badgeFit.h24],
 };
 
 const loadingIndicatorStyles = {

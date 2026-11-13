@@ -43,6 +43,10 @@ const soft = (fill: string, text: string) =>
 		color: text,
 	}) as const;
 
+const LG_PADDING = "0.625rem";
+// The size a badge that stands alone reports to its block margins: none.
+const ALONE = "0px";
+
 export const badgeStyles = create({
 	base: {
 		alignItems: "center",
@@ -58,11 +62,16 @@ export const badgeStyles = create({
 		display: "inline-flex",
 		flexShrink: 1,
 		fontFamily: "inherit",
+		// Inside a control, digits keep one width and one digit makes a circle.
+		fontVariantNumeric: "var(--mizen-badge-numeric, normal)",
 		fontWeight: fontWeight.medium,
 		gap: space["1"],
 		justifyContent: "center",
+		// Inside a control the badge can be taller than the label's line. The
+		// margins take it out of the control's height, and it stays centered.
+		marginBlock: `calc(var(--mizen-badge-size, ${ALONE}) / -2)`,
 		maxWidth: "100%",
-		minWidth: 0,
+		minWidth: "var(--mizen-badge-size, 0)",
 		outlineColor: {
 			":focus-visible": colors.focusRing,
 			default: "transparent",
@@ -89,30 +98,32 @@ export const badgeStyles = create({
 		color: colors.brandForeground,
 	},
 	// The tile tone: visible on the page surface and on card fills alike.
+	// Inside a control, the control sets the fill and the ink.
 	default: {
-		backgroundColor: colors.controlSurface,
+		backgroundColor: `var(--mizen-badge-fill, ${colors.controlSurface})`,
 		borderColor: "transparent",
-		color: colors.secondaryContent,
+		color: `var(--mizen-badge-ink, ${colors.secondaryContent})`,
 	},
 	// Each radius is half the one-line height: a pill that stays a rounded
-	// rectangle when the label wraps.
+	// rectangle when the label wraps. Inside a control, the control sets the
+	// size, so the three sizes are for a badge that stands alone.
 	defaultSize: {
-		borderRadius: "0.6875rem",
-		fontSize: fontSize["12"],
+		borderRadius: "calc(var(--mizen-badge-size, 1.375rem) / 2)",
+		fontSize: `var(--mizen-badge-font-size, ${fontSize["12"]})`,
 		letterSpacing: letterSpacing.caption,
-		lineHeight: lineHeight["16"],
-		minHeight: "1.375rem",
-		paddingInline: space["2"],
+		lineHeight: `var(--mizen-badge-line-height, ${lineHeight["16"]})`,
+		minHeight: "var(--mizen-badge-size, 1.375rem)",
+		paddingInline: `var(--mizen-badge-padding, ${space["2"]})`,
 	},
 	destructive: status(colors.destructive),
 	info: status(colors.infoSolid),
 	lg: {
-		borderRadius: "0.75rem",
-		fontSize: fontSize["13"],
+		borderRadius: `calc(var(--mizen-badge-size, ${controlSize.xs}) / 2)`,
+		fontSize: `var(--mizen-badge-font-size, ${fontSize["13"]})`,
 		letterSpacing: letterSpacing.ui,
-		lineHeight: lineHeight["20"],
-		minHeight: controlSize.xs,
-		paddingInline: "0.625rem",
+		lineHeight: `var(--mizen-badge-line-height, ${lineHeight["20"]})`,
+		minHeight: `var(--mizen-badge-size, ${controlSize.xs})`,
+		paddingInline: `var(--mizen-badge-padding, ${LG_PADDING})`,
 	},
 	outline: {
 		backgroundColor: "transparent",
@@ -120,17 +131,17 @@ export const badgeStyles = create({
 		color: colors.content,
 	},
 	secondary: {
-		backgroundColor: colors.secondary,
+		backgroundColor: `var(--mizen-badge-fill, ${colors.secondary})`,
 		borderColor: "transparent",
-		color: colors.secondaryContent,
+		color: `var(--mizen-badge-ink, ${colors.secondaryContent})`,
 	},
 	sm: {
-		borderRadius: "0.625rem",
-		fontSize: fontSize["12"],
+		borderRadius: "calc(var(--mizen-badge-size, 1.25rem) / 2)",
+		fontSize: `var(--mizen-badge-font-size, ${fontSize["12"]})`,
 		letterSpacing: letterSpacing.caption,
-		lineHeight: lineHeight["16"],
-		minHeight: "1.25rem",
-		paddingInline: "0.375rem",
+		lineHeight: `var(--mizen-badge-line-height, ${lineHeight["16"]})`,
+		minHeight: "var(--mizen-badge-size, 1.25rem)",
+		paddingInline: `var(--mizen-badge-padding, ${space["1.5"]})`,
 	},
 	softDestructive: soft(colors.destructiveSubtle, colors.destructiveText),
 	softInfo: soft(colors.info, colors.infoContent),

@@ -61,6 +61,12 @@
       "title": "Navigation link",
       "description": "A link that looks like a button. Render the anchor or the router link, set nativeButton to false, and set role to link so assistive technology announces a link.",
       "path": "entities/documentation/ui/examples/button-variants.tsx"
+    },
+    {
+      "name": "ButtonWithCountExample8",
+      "title": "With a count",
+      "description": "Put a Badge after the label. It takes its size and its neutral color from the button, so it needs no size and no variant.",
+      "path": "entities/documentation/ui/examples/button-variants.tsx"
     }
   ],
   "field": [
@@ -1004,6 +1010,12 @@
       "path": "entities/documentation/ui/examples/tabs-variants.tsx"
     },
     {
+      "name": "TabsWithCountsExample4",
+      "title": "With counts",
+      "description": "Put a Badge after the label of a tab. It takes its size from the tab and shows on a selected and an unselected tab.",
+      "path": "entities/documentation/ui/examples/tabs-variants.tsx"
+    },
+    {
       "name": "TabsStates",
       "title": "Sizes, icons, and manual activation",
       "description": "Tabs share compact sizing with segmented controls. Arrow keys move focus; manual activation waits for Enter or Space.",
@@ -1100,6 +1112,12 @@
       "name": "SegmentedControlReportSettingsExample2",
       "title": "Report settings",
       "description": "",
+      "path": "entities/documentation/ui/examples/segmented-control-variants.tsx"
+    },
+    {
+      "name": "SegmentedControlWithCountsExample3",
+      "title": "With counts",
+      "description": "Put a Badge after the label of a segment. It takes its size from the segment.",
       "path": "entities/documentation/ui/examples/segmented-control-variants.tsx"
     },
     {

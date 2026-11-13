@@ -4,6 +4,7 @@ import { Tabs as BaseTabs } from "@base-ui/react/tabs";
 import { props } from "@stylexjs/stylex";
 import { type ComponentPropsWithRef, createContext, useContext } from "react";
 import { controlLabel } from "../../control-label";
+import { badgeFit } from "../../styles/badge-fit.styles";
 import { tabsStyles } from "./tabs.styles";
 
 type BaseTabsProps = ComponentPropsWithRef<typeof BaseTabs.Root>;
@@ -63,10 +64,11 @@ const defaultTabsListContext: TabsListContextValue = {
 };
 const TabsListContext = createContext(defaultTabsListContext);
 
+// The size of a tab also sizes a Badge inside it.
 const sizeStyles = {
-	default: tabsStyles.sizeDefault,
-	lg: tabsStyles.sizeLg,
-	sm: tabsStyles.sizeSm,
+	default: [tabsStyles.sizeDefault, badgeFit.h28],
+	lg: [tabsStyles.sizeLg, badgeFit.h36],
+	sm: [tabsStyles.sizeSm, badgeFit.h24],
 };
 
 export function Tabs({

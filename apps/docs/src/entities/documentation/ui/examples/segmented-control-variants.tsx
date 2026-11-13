@@ -84,6 +84,31 @@ export function SegmentedControlReportSettingsExample2() {
 	);
 }
 
+const SEGMENT_SIZES = ["sm", "default", "lg"] as const;
+
+// A Badge inside a segment takes its size from the segment.
+export function SegmentedControlWithCountsExample3() {
+	return (
+		<Stack gap="4">
+			{SEGMENT_SIZES.map((size) => (
+				<SegmentedControl
+					aria-label={`Status, ${size}`}
+					defaultValue={["open"]}
+					key={size}
+					size={size}
+				>
+					<SegmentedControlItem value="open">
+						Open <Badge>12</Badge>
+					</SegmentedControlItem>
+					<SegmentedControlItem value="done">
+						Done <Badge>128</Badge>
+					</SegmentedControlItem>
+				</SegmentedControl>
+			))}
+		</Stack>
+	);
+}
+
 export function SegmentedControlStates() {
 	return (
 		<Stack gap="4">

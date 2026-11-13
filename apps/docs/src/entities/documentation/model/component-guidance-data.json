@@ -97,6 +97,7 @@
     ],
     "recommendations": [
       "Use short labels for status or category. Pair semantic color with text that carries the meaning.",
+      "Inside a Button, a tab, or a segment, a badge takes its size from the control and ignores size. A default or secondary badge there also takes the control's text color and a tint of it. Status, brand, and outline badges keep their own colors.",
       "Keep the dot for status in sparse rows and running text. Set `appearance=\"soft\"` where statuses must stand out in a dense table or list. Use one appearance per view."
     ]
   },
@@ -134,6 +135,7 @@
     "recommendations": [
       "Use default or brand for the main action. Keep supporting actions quieter.",
       "Give icon buttons an aria-label. Hide decorative icons from assistive technology.",
+      "A count goes in a Badge after the label. The badge takes its size and its neutral color from the control, so pass no size and no variant. Format a large count yourself, such as 99+, leave the badge out at zero, and add hidden text that names the count, such as \"unread\".",
       "Keep the label when loading. Loading blocks activation and preserves keyboard focus.",
       "Tab moves focus. Enter or Space activates an enabled button.",
       "Button supports Server Components. Add event handlers in a Client Component."
@@ -801,7 +803,8 @@
       "Use Tabs for switching panels and Radio Group for a longer form question."
     ],
     "recommendations": [
-      "Use short labels for a small set of peer choices. Keep the selected value visible."
+      "Use short labels for a small set of peer choices. Keep the selected value visible.",
+      "A count goes in a Badge after the label. The badge takes its size and its neutral color from the control, so pass no size and no variant. Format a large count yourself, such as 99+, leave the badge out at zero, and add hidden text that names the count, such as \"unread\"."
     ]
   },
   "select": {
@@ -930,7 +933,8 @@
       "Use navigation links for routes. Tabs change views within the current context."
     ],
     "recommendations": [
-      "Use concise labels for related panels. Keep panel headings and reading order consistent."
+      "Use concise labels for related panels. Keep panel headings and reading order consistent.",
+      "A count goes in a Badge after the label. The badge takes its size and its neutral color from the control, so pass no size and no variant. Format a large count yourself, such as 99+, leave the badge out at zero, and add hidden text that names the count, such as \"unread\"."
     ]
   },
   "task-list": {

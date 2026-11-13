@@ -5,6 +5,7 @@ import { ToggleGroup as BaseToggleGroup } from "@base-ui/react/toggle-group";
 import { props } from "@stylexjs/stylex";
 import { createContext, useContext } from "react";
 import { controlLabel } from "../../control-label";
+import { badgeFit } from "../../styles/badge-fit.styles";
 import type {
 	ToggleGroupProps,
 	ToggleProps,
@@ -14,13 +15,14 @@ import { segmentedStyles } from "./segmented-control.styles";
 
 type SegmentedControlSize = Extract<ToggleSize, "default" | "sm" | "lg">;
 const SizeContext = createContext<ToggleSize>("default");
+// The size of a segment also sizes a Badge inside it.
 const sizeStyles = {
-	default: segmentedStyles.defaultSize,
+	default: [segmentedStyles.defaultSize, badgeFit.h28],
 	icon: segmentedStyles.defaultSize,
 	"icon-lg": segmentedStyles.lg,
 	"icon-sm": segmentedStyles.sm,
-	lg: segmentedStyles.lg,
-	sm: segmentedStyles.sm,
+	lg: [segmentedStyles.lg, badgeFit.h36],
+	sm: [segmentedStyles.sm, badgeFit.h24],
 };
 
 export type SegmentedControlProps<Value extends string = string> = Omit<

@@ -1,5 +1,13 @@
 "use client";
-import { Badge, Button, Heading, Inline, Stack, Text } from "@mizen-labs/ui";
+import {
+	Badge,
+	Button,
+	Heading,
+	Inline,
+	Stack,
+	Text,
+	VisuallyHidden,
+} from "@mizen-labs/ui";
 import { IconPlus } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
 
@@ -88,6 +96,53 @@ export function ButtonControlSizesExample5() {
 		</Stack>
 	);
 }
+const BUTTON_SIZES = ["xs", "sm", "default", "lg", "xl"] as const;
+
+// A Badge inside a button takes its size and its neutral color from the
+// button, so it needs no size and no variant. The hidden text names the count.
+export function ButtonWithCountExample8() {
+	return (
+		<Stack gap="4">
+			<Inline>
+				{BUTTON_SIZES.map((size) => (
+					<Button key={size} size={size} variant="outline">
+						Filters
+						<Badge>
+							3<VisuallyHidden> active</VisuallyHidden>
+						</Badge>
+					</Button>
+				))}
+			</Inline>
+			<Inline>
+				<Button>
+					Inbox
+					<Badge>
+						128<VisuallyHidden> unread</VisuallyHidden>
+					</Badge>
+				</Button>
+				<Button variant="secondary">
+					Drafts
+					<Badge>
+						12<VisuallyHidden> drafts</VisuallyHidden>
+					</Badge>
+				</Button>
+				<Button variant="ghost">
+					Review
+					<Badge>
+						99+<VisuallyHidden> to review</VisuallyHidden>
+					</Badge>
+				</Button>
+				<Button variant="outline">
+					Failed
+					<Badge appearance="soft" variant="destructive">
+						3<VisuallyHidden> failed</VisuallyHidden>
+					</Badge>
+				</Button>
+			</Inline>
+		</Stack>
+	);
+}
+
 export function ButtonIconActionsExample6() {
 	return (
 		<Stack gap="4">

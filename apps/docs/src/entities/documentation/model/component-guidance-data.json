@@ -1031,7 +1031,8 @@
       "Use Token for metadata, filters, and reversible selections. Combobox owns multi-select input behavior."
     ],
     "recommendations": [
-      "Use a short label, two or three meaningful category colors, and icons only when they help recognition. Keep hidden labels accessible."
+      "Use a short label, two or three meaningful category colors, and icons only when they help recognition. Keep hidden labels accessible.",
+      "In an interface that is not in English, set removeLabel on every removable token. The default name is English."
     ]
   },
   "tool-call": {

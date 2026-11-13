@@ -58,6 +58,23 @@ describe("Token contract", () => {
 		act(() => root.unmount());
 		container.remove();
 	});
+	it("names the remove button in English by default and takes another name", () => {
+		const named = (properties: object) =>
+			renderToStaticMarkup(
+				h(Token, { label: "Стример", onRemove: vi.fn(), ...properties })
+			);
+		expect(named({})).toContain('aria-label="Remove Стример"');
+		const russian = named({ removeLabel: "Убрать фильтр «Стример»" });
+		expect(russian).toContain('aria-label="Убрать фильтр «Стример»"');
+		expect(russian).not.toContain("Remove");
+		// Without a remove action the name is not used.
+		expect(
+			renderToStaticMarkup(
+				h(Token, { label: "Стример", removeLabel: "Убрать" })
+			)
+		).not.toContain("Убрать");
+	});
+
 	it("keeps links native, disabled links inert, and actions named", () => {
 		const enabled = renderToStaticMarkup(
 			h(Token, { href: "/review", label: "Review", onRemove: vi.fn() })

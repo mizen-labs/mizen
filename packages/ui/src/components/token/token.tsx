@@ -39,6 +39,11 @@ export type TokenProps = Omit<
 	disabled?: boolean;
 	onClick?: MouseEventHandler<HTMLElement>;
 	onRemove?: MouseEventHandler<HTMLElement>;
+	/**
+	 * The accessible name of the remove button. The default is English:
+	 * "Remove " and the label. Pass the whole name in the interface language.
+	 */
+	removeLabel?: string;
 };
 const tones = {
 	blue: palette.blue700,
@@ -106,9 +111,10 @@ function TokenContents({
 	disabled,
 	label,
 	onRemove,
+	removeLabel = `Remove ${label}`,
 }: Pick<
 	TokenProps,
-	"icon" | "endContent" | "disabled" | "label" | "onRemove"
+	"icon" | "endContent" | "disabled" | "label" | "onRemove" | "removeLabel"
 > & { actionable: boolean }) {
 	return (
 		<>
@@ -129,7 +135,7 @@ function TokenContents({
 			) : null}
 			{onRemove ? (
 				<button
-					aria-label={`Remove ${label}`}
+					aria-label={removeLabel}
 					disabled={disabled}
 					onClick={onRemove}
 					type="button"
@@ -163,6 +169,7 @@ export function Token({
 	onClick,
 	onRemove,
 	ref,
+	removeLabel,
 	"aria-pressed": pressed,
 	...rest
 }: TokenProps) {
@@ -202,6 +209,7 @@ export function Token({
 				icon={icon}
 				label={label}
 				onRemove={onRemove}
+				removeLabel={removeLabel}
 			/>
 		</span>
 	);

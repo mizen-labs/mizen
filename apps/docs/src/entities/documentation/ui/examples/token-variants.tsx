@@ -101,6 +101,12 @@ export function TokenRemovalExample() {
 					label="Locked filter"
 					onRemove={remove}
 				/>
+				<Token
+					color="green"
+					label="Стример"
+					onRemove={remove}
+					removeLabel="Убрать фильтр «Стример»"
+				/>
 			</Inline>
 			<Text aria-live="polite" size="ui" tone="muted">
 				{visible ? "Maya is selected" : "Maya was removed"}

@@ -6416,6 +6416,12 @@
         "type": "MouseEventHandler<HTMLElement>",
         "defaultValue": "—",
         "description": "Adds a separate native remove button."
+      },
+      {
+        "name": "removeLabel",
+        "type": "string",
+        "defaultValue": "\"Remove \" + label",
+        "description": "Names the remove button. Pass the whole name in the interface language."
       }
     ]
   },

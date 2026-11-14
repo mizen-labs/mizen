@@ -137,7 +137,9 @@ describe("Remaining component state repairs", () => {
 			waitUntil: "networkidle",
 		});
 		await page.getByRole("button", { name: "Edit workspace settings" }).click();
-		const close = page.locator('[data-slot="sheet-default-close"]');
+		const close = page.locator(
+			'[data-slot="sheet-popup"]:not([hidden]) [data-slot="sheet-default-close"]'
+		);
 		// Isolate native disabled CSS; public closeProps behavior is outside this CSS probe.
 		await close.evaluate((node) => {
 			(node as HTMLButtonElement).disabled = true;

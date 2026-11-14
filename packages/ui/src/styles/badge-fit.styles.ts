@@ -35,7 +35,7 @@ const FONT = fontSize["12"];
 
 // Named by the height of the control: a button, a tab, or a segment.
 export const badgeFit = create({
-	h24: fit("1.5rem", "1rem", "0.25rem", "0.875rem", FONT),
+	h24: fit("1.5rem", "1.125rem", "0.25rem", LINE, FONT),
 	h28: fit("1.75rem", "1.125rem", "0.3125rem", LINE, FONT),
 	h32: fit("2rem", "1.25rem", "0.375rem", LINE, FONT),
 	h36: fit("2.25rem", "1.25rem", "0.375rem", LINE, FONT),

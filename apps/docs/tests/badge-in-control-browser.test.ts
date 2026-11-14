@@ -60,7 +60,7 @@ describe("Badge inside a control", { timeout: 30_000 }, () => {
 		const badges = await measure("With a count");
 		const sizes = badges.slice(0, 5);
 		expect(sizes.map((badge) => [badge.control, badge.height])).toEqual([
-			[24, 16],
+			[24, 18],
 			[28, 18],
 			[32, 20],
 			[40, 22],
@@ -92,7 +92,7 @@ describe("Badge inside a control", { timeout: 30_000 }, () => {
 		async (slug, heights) => {
 			await open(slug);
 			const badges = await measure("With counts");
-			const fits = { 24: 16, 28: 18, 36: 20 } as const;
+			const fits = { 24: 18, 28: 18, 36: 20 } as const;
 			for (const height of heights) {
 				const row = badges.filter((badge) => badge.control === height);
 				expect(row.length).toBeGreaterThanOrEqual(2);

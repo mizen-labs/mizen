@@ -163,7 +163,8 @@ export const dialogStyles = create({
 		boxShadow: shadows.floating,
 		boxSizing: "border-box",
 		color: colors.content,
-		display: "flex",
+		// A closed popup kept mounted carries hidden; flex must not override it.
+		display: { "[hidden]": "none", default: "flex" },
 		flexDirection: "column",
 		maxHeight: "calc(100dvh - 2rem)",
 		opacity: {
@@ -209,7 +210,8 @@ export const dialogStyles = create({
 	viewport: {
 		alignItems: "center",
 		boxSizing: "border-box",
-		display: "flex",
+		// A closed popup kept mounted carries hidden; flex must not override it.
+		display: { "[hidden]": "none", default: "flex" },
 		height: "100%",
 		insetBlockStart: 0,
 		insetInlineStart: 0,

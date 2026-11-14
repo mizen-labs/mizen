@@ -57,8 +57,10 @@ describe("Shared overlay motion", () => {
 					.locator(`#${example}`)
 					.getByRole("button", { exact: true, name });
 				await trigger.click();
-				const popup = page.locator(`[data-slot="${slot}-popup"]`);
-				const backdrop = page.locator(`[data-slot="${slot}-backdrop"]`);
+				const popup = page.locator(`[data-slot="${slot}-popup"]:not([hidden])`);
+				const backdrop = page.locator(
+					`[data-slot="${slot}-backdrop"]:not([hidden])`
+				);
 				await expectLocator(popup).toBeVisible();
 				expect(
 					await backdrop.evaluate(

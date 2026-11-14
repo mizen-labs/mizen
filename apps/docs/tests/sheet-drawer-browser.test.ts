@@ -72,7 +72,7 @@ describe("Sheet and Drawer package behavior in docs", () => {
 		await trigger.waitFor({ state: "visible" });
 		await trigger.click();
 
-		const popup = page.locator('[data-slot="sheet-popup"]');
+		const popup = page.locator('[data-slot="sheet-popup"]:not([hidden])');
 		await popup.waitFor({ state: "visible" });
 
 		const state = await popup.evaluate((el) => ({

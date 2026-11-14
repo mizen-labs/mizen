@@ -10,9 +10,62 @@ import {
 	DrawerPopup,
 	DrawerTitle,
 	DrawerTrigger,
+	Select,
+	SelectItem,
+	SelectLabel,
+	SelectPopup,
+	SelectTrigger,
+	SelectValue,
 	Stack,
 	Text,
 } from "@mizen-labs/ui";
+
+const STATUS = { active: "Active", all: "All players", banned: "Banned" };
+const TIER = { all: "All tiers", streamer: "Streamer", vip: "VIP" };
+
+// Popups inside a drawer, such as a Select list, open above it.
+export function DrawerFiltersExample2() {
+	return (
+		<Drawer position="right">
+			<DrawerTrigger render={<Button variant="outline">Filters</Button>} />
+			<DrawerPopup showCloseButton variant="inset">
+				<DrawerHeader>
+					<DrawerTitle>Filters</DrawerTitle>
+					<DrawerDescription>Narrow the player list.</DrawerDescription>
+				</DrawerHeader>
+				<DrawerPanel>
+					<Stack>
+						<Select defaultValue="all" items={STATUS} name="status">
+							<SelectLabel>Status</SelectLabel>
+							<SelectTrigger>
+								<SelectValue />
+							</SelectTrigger>
+							<SelectPopup>
+								<SelectItem value="all">All players</SelectItem>
+								<SelectItem value="active">Active</SelectItem>
+								<SelectItem value="banned">Banned</SelectItem>
+							</SelectPopup>
+						</Select>
+						<Select defaultValue="all" items={TIER} name="tier">
+							<SelectLabel>Tier</SelectLabel>
+							<SelectTrigger>
+								<SelectValue />
+							</SelectTrigger>
+							<SelectPopup>
+								<SelectItem value="all">All tiers</SelectItem>
+								<SelectItem value="vip">VIP</SelectItem>
+								<SelectItem value="streamer">Streamer</SelectItem>
+							</SelectPopup>
+						</Select>
+					</Stack>
+				</DrawerPanel>
+				<DrawerFooter>
+					<DrawerClose render={<Button>Apply filters</Button>} />
+				</DrawerFooter>
+			</DrawerPopup>
+		</Drawer>
+	);
+}
 
 export function DrawerProductionWorkspaceExample1() {
 	return (

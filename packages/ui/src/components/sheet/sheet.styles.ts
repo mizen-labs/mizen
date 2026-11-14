@@ -156,7 +156,8 @@ export const sheetStyles = create({
 		boxShadow: shadows.floating,
 		boxSizing: "border-box",
 		color: colors.content,
-		display: "flex",
+		// A closed popup kept mounted carries hidden; flex must not override it.
+		display: { "[hidden]": "none", default: "flex" },
 		flexDirection: "column",
 		opacity: {
 			"[data-ending-style]": 0,
@@ -197,7 +198,8 @@ export const sheetStyles = create({
 	},
 	viewport: {
 		boxSizing: "border-box",
-		display: "flex",
+		// A closed popup kept mounted carries hidden; flex must not override it.
+		display: { "[hidden]": "none", default: "flex" },
 		height: "100%",
 		insetBlockStart: 0,
 		insetInlineStart: 0,

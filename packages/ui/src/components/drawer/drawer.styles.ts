@@ -180,7 +180,8 @@ export const drawerStyles = create({
 		boxShadow: shadows.floating,
 		boxSizing: "border-box",
 		color: colors.content,
-		display: "flex",
+		// A closed popup kept mounted carries hidden; flex must not override it.
+		display: { "[hidden]": "none", default: "flex" },
 		flexDirection: "column",
 		minHeight: 0,
 		minWidth: 0,
@@ -221,7 +222,8 @@ export const drawerStyles = create({
 	viewport: {
 		"--drawer-viewport-inset": "0px",
 		boxSizing: "border-box",
-		display: "flex",
+		// A closed popup kept mounted carries hidden; flex must not override it.
+		display: { "[hidden]": "none", default: "flex" },
 		height: "100%",
 		insetBlockStart: 0,
 		insetInlineStart: 0,

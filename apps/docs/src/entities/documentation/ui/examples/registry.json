@@ -2925,6 +2925,12 @@
       "path": "entities/documentation/ui/examples/drawer-variants.tsx"
     },
     {
+      "name": "DrawerFiltersExample2",
+      "title": "Filters",
+      "description": "A drawer of form fields. A Select, Combobox, Menu, Popover, or DatePicker inside it opens above the drawer.",
+      "path": "entities/documentation/ui/examples/drawer-variants.tsx"
+    },
+    {
       "name": "DrawerInsetPositions",
       "title": "Inset variant",
       "description": "Panels from all four edges.",
@@ -2971,6 +2977,12 @@
       "name": "SheetWorkspacePreferencesExample1",
       "title": "Workspace preferences",
       "description": "Open settings while keeping the workspace in view.",
+      "path": "entities/documentation/ui/examples/sheet-variants.tsx"
+    },
+    {
+      "name": "SheetKeptMountedExample2",
+      "title": "Kept mounted",
+      "description": "With keepMounted, the fields and their drafts stay while the sheet is closed. A closed sheet is hidden and takes no clicks.",
       "path": "entities/documentation/ui/examples/sheet-variants.tsx"
     }
   ],

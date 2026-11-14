@@ -16,6 +16,37 @@ import {
 	Stack,
 } from "@mizen-labs/ui";
 
+// keepMounted keeps the fields and their drafts while the sheet is closed.
+// A closed sheet is hidden and takes no clicks.
+export function SheetKeptMountedExample2() {
+	return (
+		<Sheet>
+			<SheetTrigger render={<Button variant="outline">Draft note</Button>} />
+			<SheetPopup
+				portalProps={{ keepMounted: true }}
+				side="right"
+				variant="inset"
+			>
+				<SheetHeader>
+					<SheetTitle>Draft note</SheetTitle>
+					<SheetDescription>
+						Close the sheet and open it again: the draft stays.
+					</SheetDescription>
+				</SheetHeader>
+				<SheetPanel>
+					<Field>
+						<FieldLabel>Note</FieldLabel>
+						<Input name="note" />
+					</Field>
+				</SheetPanel>
+				<SheetFooter>
+					<SheetClose render={<Button>Done</Button>} />
+				</SheetFooter>
+			</SheetPopup>
+		</Sheet>
+	);
+}
+
 export function SheetWorkspacePreferencesExample1() {
 	return (
 		<Stack gap="4">

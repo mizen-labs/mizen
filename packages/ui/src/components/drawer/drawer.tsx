@@ -191,6 +191,7 @@ export function DrawerViewport({
 			data-slot="drawer-viewport"
 			{...props(
 				drawerStyles.viewport,
+				overlayLayerStyles.modalViewport,
 				drawerViewportPositionStyles[position],
 				variant === "inset" ? drawerPositionsStyles.viewport_inset : null
 			)}

@@ -262,7 +262,10 @@ import {
 	DrawerSnapPoints,
 	DrawerStraightPositions,
 } from "./drawer-states";
-import { DrawerProductionWorkspaceExample1 } from "./drawer-variants";
+import {
+	DrawerFiltersExample2,
+	DrawerProductionWorkspaceExample1,
+} from "./drawer-variants";
 import { NoRepositories } from "./empty";
 import {
 	EmptyCanonicalIconStateExample1,
@@ -548,7 +551,10 @@ import {
 import { AccountDetailsDivider } from "./separator";
 import { SeparatorAccountDetailsExample1 } from "./separator-variants";
 import { ProjectSheet } from "./sheet";
-import { SheetWorkspacePreferencesExample1 } from "./sheet-variants";
+import {
+	SheetKeptMountedExample2,
+	SheetWorkspacePreferencesExample1,
+} from "./sheet-variants";
 import { LoadingProjectCard } from "./skeleton";
 import {
 	SkeletonCircleWithMetadataExample3,
@@ -884,6 +890,7 @@ export const usageComponents: Record<string, ComponentType> = {
 	DocumentSources,
 	DocumentToolbar,
 	DrawerDisabledTrigger,
+	DrawerFiltersExample2,
 	DrawerInsetPositions,
 	DrawerNestedMenus,
 	DrawerProductionWorkspaceExample1,
@@ -1119,6 +1126,7 @@ export const usageComponents: Record<string, ComponentType> = {
 	SendEmailApproval,
 	SeparatorAccountDetailsExample1,
 	ServiceStatus,
+	SheetKeptMountedExample2,
 	SheetWorkspacePreferencesExample1,
 	SignupFlowCard,
 	SignupPipeline,

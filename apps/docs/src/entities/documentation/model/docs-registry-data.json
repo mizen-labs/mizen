@@ -234,6 +234,12 @@
       },
       {
         "defaultValue": "<div>",
+        "description": "Holds content between the header and the footer, such as the values the action will change. It scrolls when it is too long.",
+        "name": "AlertDialogPanel",
+        "type": "AlertDialogPanelProps"
+      },
+      {
+        "defaultValue": "<div>",
         "description": "Groups the available actions.",
         "name": "AlertDialogFooter",
         "type": "AlertDialogFooterProps"

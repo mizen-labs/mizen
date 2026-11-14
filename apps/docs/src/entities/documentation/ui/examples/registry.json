@@ -2589,6 +2589,11 @@
   ],
   "alert-dialog": [
     {
+      "name": "ConfirmBalanceChange",
+      "title": "Confirm with details",
+      "description": "Show the values the action will commit in AlertDialogPanel, between the header and the footer."
+    },
+    {
       "name": "ConfirmDiscard",
       "title": "Local confirmation",
       "description": "This example discards local demo state. Production actions must handle their own persistence and errors."

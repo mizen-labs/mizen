@@ -18,7 +18,7 @@ import {
 } from "./activity-feed-variants";
 import { ThinkingThenAnswer } from "./agent-thinking";
 import { MaintenanceNotice } from "./alert";
-import { ConfirmDiscard } from "./alert-dialog";
+import { ConfirmBalanceChange, ConfirmDiscard } from "./alert-dialog";
 import { AlertDialogProjectArchiveExample1 } from "./alert-dialog-variants";
 import {
 	AlertDescriptiononlyAlertExample4,
@@ -827,6 +827,7 @@ export const usageComponents: Record<string, ComponentType> = {
 	ComposerAttachmentsExample,
 	ComposerMentionsExample,
 	ComposerWorkingExample,
+	ConfirmBalanceChange,
 	ConfirmDiscard,
 	ContactDetailsFieldset,
 	ContactForm,

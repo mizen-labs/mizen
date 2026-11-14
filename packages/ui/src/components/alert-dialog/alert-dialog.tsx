@@ -54,6 +54,7 @@ export type AlertDialogCloseProps = Omit<
 	"className" | "style"
 >;
 export type AlertDialogHeaderProps = DivProps;
+export type AlertDialogPanelProps = DivProps;
 export type AlertDialogFooterProps = DivProps;
 
 export const AlertDialogCreateHandle = BaseAlertDialog.createHandle;
@@ -160,6 +161,28 @@ export function AlertDialogDescription({
 		>
 			{children}
 		</BaseAlertDialog.Description>
+	);
+}
+
+/**
+ * The content between the header and the footer, such as the values the
+ * action will change. It scrolls when it is too long; the header and the
+ * footer stay in view.
+ */
+export function AlertDialogPanel({
+	children,
+	ref: forwardedRef,
+	...rest
+}: AlertDialogPanelProps) {
+	return (
+		<div
+			{...rest}
+			data-slot="alert-dialog-panel"
+			ref={forwardedRef}
+			{...props(alertDialogStyles.panel)}
+		>
+			{children}
+		</div>
 	);
 }
 

@@ -28,7 +28,7 @@
       ]
     },
     "alert-dialog": {
-      "anatomy": "<AlertDialog>\n\t<AlertDialogTrigger />\n\t<AlertDialogPopup>\n\t\t<AlertDialogHeader>\n\t\t\t<AlertDialogTitle />\n\t\t\t<AlertDialogDescription />\n\t\t</AlertDialogHeader>\n\t\t<AlertDialogFooter>\n\t\t\t<AlertDialogClose />\n\t\t</AlertDialogFooter>\n\t</AlertDialogPopup>\n</AlertDialog>",
+      "anatomy": "<AlertDialog>\n\t<AlertDialogTrigger />\n\t<AlertDialogPopup>\n\t\t<AlertDialogHeader>\n\t\t\t<AlertDialogTitle />\n\t\t\t<AlertDialogDescription />\n\t\t</AlertDialogHeader>\n\t\t<AlertDialogPanel />\n\t\t<AlertDialogFooter>\n\t\t\t<AlertDialogClose />\n\t\t</AlertDialogFooter>\n\t</AlertDialogPopup>\n</AlertDialog>",
       "imports": [
         "AlertDialog",
         "AlertDialogTrigger",
@@ -36,6 +36,7 @@
         "AlertDialogHeader",
         "AlertDialogTitle",
         "AlertDialogDescription",
+        "AlertDialogPanel",
         "AlertDialogFooter",
         "AlertDialogClose"
       ]
@@ -5047,6 +5048,13 @@
       }
     ],
     "alert-dialog": [
+      {
+        "name": "ConfirmBalanceChange",
+        "title": "Confirm with details",
+        "description": "Show the values the action will commit in AlertDialogPanel, between the header and the footer.",
+        "code": "import {\n\tAlertDialog,\n\tAlertDialogClose,\n\tAlertDialogDescription,\n\tAlertDialogFooter,\n\tAlertDialogHeader,\n\tAlertDialogPanel,\n\tAlertDialogPopup,\n\tAlertDialogTitle,\n\tAlertDialogTrigger,\n\tButton,\n\tPropertyList,\n\tPropertyListItem,\n\tPropertyListLabel,\n\tPropertyListValue,\n} from \"@mizen-labs/ui\";\n\nconst CHANGE = [\n\t[\"Account\", \"Alpha Player · 76561198000000001\"],\n\t[\"Operation\", \"Manual balance correction\"],\n\t[\"Current balance\", \"1,250.00 USD\"],\n\t[\"New balance\", \"1,000.00 USD\"],\n] as const;\n\nexport function ConfirmBalanceChange() {\n\treturn (\n\t\t<AlertDialog>\n\t\t\t<AlertDialogTrigger\n\t\t\t\trender={<Button variant=\"outline\">Change balance</Button>}\n\t\t\t/>\n\t\t\t<AlertDialogPopup>\n\t\t\t\t<AlertDialogHeader>\n\t\t\t\t\t<AlertDialogTitle>Change the balance?</AlertDialogTitle>\n\t\t\t\t\t<AlertDialogDescription>\n\t\t\t\t\t\tCheck the values. The change is logged under your name.\n\t\t\t\t\t</AlertDialogDescription>\n\t\t\t\t</AlertDialogHeader>\n\t\t\t\t<AlertDialogPanel>\n\t\t\t\t\t<PropertyList>\n\t\t\t\t\t\t{CHANGE.map(([label, value]) => (\n\t\t\t\t\t\t\t<PropertyListItem key={label}>\n\t\t\t\t\t\t\t\t<PropertyListLabel>{label}</PropertyListLabel>\n\t\t\t\t\t\t\t\t<PropertyListValue>{value}</PropertyListValue>\n\t\t\t\t\t\t\t</PropertyListItem>\n\t\t\t\t\t\t))}\n\t\t\t\t\t</PropertyList>\n\t\t\t\t</AlertDialogPanel>\n\t\t\t\t<AlertDialogFooter>\n\t\t\t\t\t<AlertDialogClose render={<Button variant=\"ghost\">Cancel</Button>} />\n\t\t\t\t\t<AlertDialogClose render={<Button>Change balance</Button>} />\n\t\t\t\t</AlertDialogFooter>\n\t\t\t</AlertDialogPopup>\n\t\t</AlertDialog>\n\t);\n}\n",
+        "path": "entities/documentation/ui/examples/alert-dialog.tsx"
+      },
       {
         "name": "ConfirmDiscard",
         "title": "Local confirmation",

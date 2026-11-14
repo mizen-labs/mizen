@@ -133,6 +133,7 @@ export const usageComponents: Record<string, ReturnType<typeof preloadableExampl
 "ComposerAttachmentsExample": preloadableExample(() => import("./examples/composer").then((module) => ({ default: module.ComposerAttachmentsExample }))),
 "ComposerMentionsExample": preloadableExample(() => import("./examples/composer-variants").then((module) => ({ default: module.ComposerMentionsExample }))),
 "ComposerWorkingExample": preloadableExample(() => import("./examples/composer").then((module) => ({ default: module.ComposerWorkingExample }))),
+"ConfirmBalanceChange": preloadableExample(() => import("./examples/alert-dialog").then((module) => ({ default: module.ConfirmBalanceChange }))),
 "ConfirmDiscard": preloadableExample(() => import("./examples/alert-dialog").then((module) => ({ default: module.ConfirmDiscard }))),
 "ContactDetailsFieldset": preloadableExample(() => import("./examples/fieldset").then((module) => ({ default: module.ContactDetailsFieldset }))),
 "ContactForm": preloadableExample(() => import("./examples/form").then((module) => ({ default: module.ContactForm }))),

@@ -1,5 +1,6 @@
 import { props } from "@stylexjs/stylex";
 import { Link } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import type { getComponentPageData } from "../../../entities/documentation/api/component-data.server";
 import type {
 	getComponentUsage,
@@ -142,6 +143,9 @@ const fillPreviews = new Set([
 
 // A screen fills the stage edge to edge, as it fills an app's content area.
 const screenPreviews = new Set(["page"]);
+// A frame is a whole application, with its own main landmark and skip link,
+// so its examples run in a frame of their own.
+const framePreviews = new Set(["app-shell"]);
 
 function getDemoProps(slug: string) {
 	return props(
@@ -152,9 +156,41 @@ function getDemoProps(slug: string) {
 	);
 }
 
+function ExampleStage({
+	anchor = false,
+	children,
+	name,
+	slug,
+	title,
+}: {
+	/** The presentation stage is the anchor of its example. */
+	anchor?: boolean;
+	children: ReactNode;
+	name: string | undefined;
+	slug: string;
+	title: string;
+}) {
+	if (name && framePreviews.has(slug)) {
+		return (
+			<div {...props(docsStyles.exampleFrameClip)}>
+				<iframe
+					src={`/docs/examples/${name}`}
+					title={`${title} example`}
+					{...props(docsStyles.exampleFrame)}
+				/>
+			</div>
+		);
+	}
+	return (
+		<div id={anchor ? name : undefined} {...getDemoProps(slug)}>
+			{children}
+		</div>
+	);
+}
+
 // A layout changes with the width of the window, and the stage is narrower
 // than a screen. These examples also open on their own.
-const fullScreenPreviews = new Set(["grid", "page"]);
+const fullScreenPreviews = new Set(["app-shell", "grid", "page"]);
 
 function getFullScreenHref(slug: string, name: string | undefined) {
 	return name && fullScreenPreviews.has(slug)
@@ -166,7 +202,8 @@ function getStageProps(slug: string) {
 	return props(
 		docsStyles.previewFrame,
 		docsStyles.usageStage,
-		screenPreviews.has(slug) && docsStyles.screenStage
+		(screenPreviews.has(slug) || framePreviews.has(slug)) &&
+			docsStyles.screenStage
 	);
 }
 
@@ -352,10 +389,15 @@ export default function ComponentPage({
 								tabIndex={0}
 								{...getStageProps(slug)}
 							>
-								<div id={presentation?.name} {...getDemoProps(slug)}>
+								<ExampleStage
+									anchor
+									name={presentation?.name}
+									slug={slug}
+									title={component.name}
+								>
 									{/* eslint-disable-next-line react-hooks/static-components -- A registry lookup: each slug maps to a module-level component, so its identity never changes. */}
 									<Specimen />
-								</div>
+								</ExampleStage>
 							</section>
 						</ExamplePreview>
 					</section>
@@ -427,9 +469,9 @@ export default function ComponentPage({
 											tabIndex={0}
 											{...getStageProps(slug)}
 										>
-											<div {...getDemoProps(slug)}>
+											<ExampleStage name={name} slug={slug} title={title}>
 												<Example />
-											</div>
+											</ExampleStage>
 										</section>
 									</ExamplePreview>
 								</section>

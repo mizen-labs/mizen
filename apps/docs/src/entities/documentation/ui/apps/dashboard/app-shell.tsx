@@ -1,33 +1,46 @@
 "use client";
 
 import {
+	AppShell,
+	AppShellGroup,
+	AppShellHeader,
+	AppShellInset,
+	AppShellItem,
+	AppShellMain,
+	AppShellNav,
+	AppShellSidebar,
+	AppShellSidebarFooter,
+	AppShellSidebarHeader,
+	AppShellSidebarTrigger,
+	AppShellTitle,
 	Avatar,
 	AvatarFallback,
+	Badge,
 	Button,
-	Drawer,
-	DrawerHeader,
-	DrawerPanel,
-	DrawerPopup,
-	DrawerTitle,
-	DrawerTrigger,
-	Input,
+	Inline,
+	Kbd,
+	Menu,
+	MenuItem,
+	MenuPopup,
+	MenuSeparator,
+	MenuTrigger,
 	Text,
+	VisuallyHidden,
 } from "@mizen-labs/ui";
-import { props } from "@stylexjs/stylex";
 import {
 	type Icon,
 	IconChartBar,
 	IconHome,
-	IconMenu2,
 	IconPackage,
+	IconSearch,
+	IconSelector,
 	IconSettings,
 	IconShoppingCart,
 	IconSpeakerphone,
 	IconUsers,
 	IconUsersGroup,
 } from "@tabler/icons-react";
-import { type MouseEvent, type ReactNode, useCallback, useState } from "react";
-import { shellStyles } from "./app-shell.styles";
+import type { ReactNode } from "react";
 
 interface NavItem {
 	count?: number;
@@ -37,12 +50,15 @@ interface NavItem {
 	label: string;
 }
 
-// Each href is a place in this demo. In your app, render your router's link.
+// Each href is a place in this demo. In your app, pass your router's link to
+// render, and the item reads aria-current from it.
 const primary: NavItem[] = [
-	{ count: 12, current: true, href: "#home", icon: IconHome, label: "Home" },
-	{ href: "#orders", icon: IconShoppingCart, label: "Orders" },
+	{ current: true, href: "#home", icon: IconHome, label: "Home" },
+	{ count: 12, href: "#orders", icon: IconShoppingCart, label: "Orders" },
 	{ href: "#customers", icon: IconUsers, label: "Customers" },
 	{ href: "#products", icon: IconPackage, label: "Products" },
+];
+const insights: NavItem[] = [
 	{ href: "#analytics", icon: IconChartBar, label: "Analytics" },
 	{ href: "#marketing", icon: IconSpeakerphone, label: "Marketing" },
 ];
@@ -51,124 +67,82 @@ const workspace: NavItem[] = [
 	{ href: "#settings", icon: IconSettings, label: "Settings" },
 ];
 
-function NavList({ items, label }: { items: NavItem[]; label?: string }) {
-	return (
-		<ul aria-label={label} {...props(shellStyles.group)}>
-			{label ? (
-				<li aria-hidden="true" {...props(shellStyles.groupLabel)}>
-					{label}
-				</li>
+// An array, not a component: each item becomes its own entry in the group.
+function items(list: NavItem[]) {
+	return list.map(({ count, current, href, icon: Glyph, label }) => (
+		<AppShellItem current={current} href={href} key={href}>
+			<Glyph aria-hidden="true" />
+			{label}
+			{count ? (
+				<Badge>
+					{count}
+					<VisuallyHidden> new</VisuallyHidden>
+				</Badge>
 			) : null}
-			{items.map(({ count, current, href, icon: Glyph, label: name }) => (
-				<li key={href}>
-					<a
-						aria-current={current ? "page" : undefined}
-						href={href}
-						{...props(shellStyles.link, current && shellStyles.linkCurrent)}
-					>
-						<Glyph aria-hidden="true" size={16} stroke={1.75} />
-						<span {...props(shellStyles.linkLabel)}>{name}</span>
-						{count ? <span {...props(shellStyles.count)}>{count}</span> : null}
-					</a>
-				</li>
-			))}
-		</ul>
-	);
+		</AppShellItem>
+	));
 }
 
-function Brand() {
+function Account() {
 	return (
-		<div {...props(shellStyles.brand)}>
-			<Avatar size="sm">
-				<AvatarFallback>N</AvatarFallback>
-			</Avatar>
-			Northstar
-		</div>
-	);
-}
-
-// The sidebar and the drawer on a narrow screen show the same content.
-function Navigation() {
-	return (
-		<>
-			<Input
-				aria-label="Search"
-				name="search"
-				placeholder="Search…"
-				size="sm"
-				type="search"
-			/>
-			<nav aria-label="Main" {...props(shellStyles.nav)}>
-				<NavList items={primary} />
-				<NavList items={workspace} label="Workspace" />
-			</nav>
-			<div {...props(shellStyles.account)}>
+		<Menu>
+			<MenuTrigger render={<Button variant="ghost" />}>
 				<Avatar size="sm">
 					<AvatarFallback>MC</AvatarFallback>
 				</Avatar>
-				<div>
-					<Text size="ui">Maya Chen</Text>
-					<Text size="caption" tone="muted">
-						maya@northstar.io
-					</Text>
-				</div>
-			</div>
-		</>
-	);
-}
-
-function NavigationDrawer() {
-	const [open, setOpen] = useState(false);
-	const closeOnNavigate = useCallback((event: MouseEvent<HTMLDivElement>) => {
-		if (event.target instanceof Element && event.target.closest("a[href]")) {
-			setOpen(false);
-		}
-	}, []);
-	return (
-		<Drawer onOpenChange={setOpen} open={open} position="left">
-			<DrawerTrigger
-				render={
-					<Button aria-label="Open navigation" size="icon" variant="ghost">
-						<IconMenu2 aria-hidden="true" />
-					</Button>
-				}
-			/>
-			<DrawerPopup
-				closeProps={{ "aria-label": "Close navigation" }}
-				onClick={closeOnNavigate}
-				showCloseButton
-			>
-				<DrawerHeader>
-					<DrawerTitle>Northstar</DrawerTitle>
-				</DrawerHeader>
-				<DrawerPanel>
-					<div
-						{...props(shellStyles.text, shellStyles.column, shellStyles.drawer)}
-					>
-						<Navigation />
-					</div>
-				</DrawerPanel>
-			</DrawerPopup>
-		</Drawer>
+				Maya Chen
+				<IconSelector aria-hidden="true" />
+			</MenuTrigger>
+			<MenuPopup>
+				<MenuItem>Profile</MenuItem>
+				<MenuItem>Billing</MenuItem>
+				<MenuSeparator />
+				<MenuItem>Sign out</MenuItem>
+			</MenuPopup>
+		</Menu>
 	);
 }
 
 // The frame around every screen. On a wide screen the navigation is a
-// sidebar; on a narrow one it moves into a drawer behind the menu button.
-export function AppShell({ children }: { children: ReactNode }) {
+// sidebar; collapsed, it returns when the pointer rests on the left edge. On
+// a narrow screen it opens in a drawer from the button in the header.
+export function AppShellFrame({ children }: { children: ReactNode }) {
 	return (
-		<div {...props(shellStyles.shell)}>
-			<header {...props(shellStyles.text, shellStyles.bar)}>
-				<Brand />
-				<NavigationDrawer />
-			</header>
-			<aside
-				{...props(shellStyles.text, shellStyles.column, shellStyles.sidebar)}
-			>
-				<Brand />
-				<Navigation />
-			</aside>
-			<main {...props(shellStyles.pane)}>{children}</main>
-		</div>
+		<AppShell>
+			<AppShellSidebar aria-label="Northstar">
+				<AppShellSidebarHeader>
+					<Inline gap="2">
+						<Avatar size="sm">
+							<AvatarFallback>N</AvatarFallback>
+						</Avatar>
+						<Text size="ui">Northstar</Text>
+					</Inline>
+					<Button variant="outline">
+						<IconSearch aria-hidden="true" />
+						Search
+						<Kbd>⌘K</Kbd>
+					</Button>
+				</AppShellSidebarHeader>
+				<AppShellNav aria-label="Main">
+					<AppShellGroup>{items(primary)}</AppShellGroup>
+					<AppShellGroup collapsible label="Insights">
+						{items(insights)}
+					</AppShellGroup>
+					<AppShellGroup collapsible label="Workspace">
+						{items(workspace)}
+					</AppShellGroup>
+				</AppShellNav>
+				<AppShellSidebarFooter>
+					<Account />
+				</AppShellSidebarFooter>
+			</AppShellSidebar>
+			<AppShellInset>
+				<AppShellHeader>
+					<AppShellSidebarTrigger aria-label="Toggle navigation" />
+					<AppShellTitle>Home</AppShellTitle>
+				</AppShellHeader>
+				<AppShellMain>{children}</AppShellMain>
+			</AppShellInset>
+		</AppShell>
 	);
 }

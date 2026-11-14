@@ -1,10 +1,10 @@
-import { AppShell } from "./app-shell";
+import { AppShellFrame } from "./app-shell";
 import { Home } from "./home";
 
 export function App() {
 	return (
-		<AppShell>
+		<AppShellFrame>
 			<Home />
-		</AppShell>
+		</AppShellFrame>
 	);
 }

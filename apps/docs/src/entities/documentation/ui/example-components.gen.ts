@@ -35,6 +35,8 @@ export const usageComponents: Record<string, ReturnType<typeof preloadableExampl
 "AppointmentCalendar": preloadableExample(() => import("./examples/calendar").then((module) => ({ default: module.AppointmentCalendar }))),
 "AppointmentTime": preloadableExample(() => import("./examples/time-input").then((module) => ({ default: module.AppointmentTime }))),
 "ApprovalWorkflow": preloadableExample(() => import("./examples/diagram").then((module) => ({ default: module.ApprovalWorkflow }))),
+"AppShellAdminExample": preloadableExample(() => import("./examples/app-shell").then((module) => ({ default: module.AppShellAdminExample }))),
+"AppShellControlledExample": preloadableExample(() => import("./examples/app-shell").then((module) => ({ default: module.AppShellControlledExample }))),
 "ArchitectureQuote": preloadableExample(() => import("./examples/blockquote").then((module) => ({ default: module.ArchitectureQuote }))),
 "AreaChartLoadingExample": preloadableExample(() => import("./examples/area-chart-variants").then((module) => ({ default: module.AreaChartLoadingExample }))),
 "AreaChartOverlapExample": preloadableExample(() => import("./examples/area-chart-variants").then((module) => ({ default: module.AreaChartOverlapExample }))),

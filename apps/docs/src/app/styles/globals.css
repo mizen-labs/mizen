@@ -65,8 +65,8 @@ a {
 		scrollbar-gutter: stable;
 	}
 
-	/* An app preview fills the window and scrolls inside its own pane. */
-	html:has([data-slot="app-preview"]) {
+	/* An app preview or shell fills the window and scrolls inside its own pane. */
+	html:has([data-slot="app-preview"], [data-slot="app-shell"]) {
 		scrollbar-gutter: auto;
 	}
 }

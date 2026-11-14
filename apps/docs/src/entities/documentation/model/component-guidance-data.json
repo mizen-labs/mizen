@@ -1112,6 +1112,20 @@
       "Use Conversation for an agent thread; reach for Message Scroller for other transcripts, such as a team chat or a log. Anchor turns the person sends, and load earlier messages above without scrolling yourself."
     ]
   },
+  "app-shell": {
+    "boundaries": [
+      "AppShell is the frame of the whole application. Render it once, around the router outlet. A screen inside it is a Page.",
+      "The app owns routes, permissions, and saved preferences. Filter the items by permission before rendering them; render no empty group.",
+      "Use Sheet or Drawer for a panel that a task opens. The navigation drawer on a narrow screen is built in."
+    ],
+    "recommendations": [
+      "Give AppShellSidebar and AppShellNav an aria-label. The sidebar's label names the drawer on a narrow screen.",
+      "Render the router's link through render on AppShellItem. Pass current, or let a router link set aria-current.",
+      "Put an icon, then the label, then an optional Badge in an item. Keep labels short; a long label ends in an ellipsis and keeps its full text as a title.",
+      "Save sidebarOpen in onSidebarOpenChange, and read it on the next visit. Save the open state of a collapsible group the same way with open and onOpenChange.",
+      "Set AppShellMain busy while the router loads the next screen. Translate skipLinkLabel, busyLabel, closeLabel, and the trigger's aria-label in a non-English app."
+    ]
+  },
   "page": {
     "boundaries": [
       "Page is the content area. Use the application shell for navigation, the sidebar, and the top bar; the shell adds no padding around a Page.",

@@ -2268,6 +2268,305 @@
     "api": [
       {
         "defaultValue": "—",
+        "description": "An AppShellSidebar, then an AppShellInset.",
+        "name": "children",
+        "type": "ReactNode"
+      },
+      {
+        "defaultValue": "true",
+        "description": "Whether the sidebar starts open on a wide screen, when the shell owns the state.",
+        "name": "defaultSidebarOpen",
+        "type": "boolean"
+      },
+      {
+        "defaultValue": "—",
+        "description": "Whether the sidebar is open on a wide screen. Pass it with onSidebarOpenChange when the app saves the state.",
+        "name": "sidebarOpen",
+        "type": "boolean"
+      },
+      {
+        "defaultValue": "—",
+        "description": "Called when the sidebar opens or collapses. Save the value here.",
+        "name": "onSidebarOpenChange",
+        "type": "(open: boolean) => void"
+      },
+      {
+        "defaultValue": "\"Skip to content\"",
+        "description": "The link that keyboard users meet first. It moves focus to the content.",
+        "name": "skipLinkLabel",
+        "type": "string"
+      }
+    ],
+    "apiSections": [
+      {
+        "name": "AppShell",
+        "description": "The frame of the application: a sidebar beside one inset surface. From 48rem the sidebar sits beside the content; below it, it opens in a drawer.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "An AppShellSidebar, then an AppShellInset.",
+            "name": "children",
+            "type": "ReactNode"
+          },
+          {
+            "defaultValue": "true",
+            "description": "Whether the sidebar starts open on a wide screen, when the shell owns the state.",
+            "name": "defaultSidebarOpen",
+            "type": "boolean"
+          },
+          {
+            "defaultValue": "—",
+            "description": "Whether the sidebar is open on a wide screen. Pass it with onSidebarOpenChange when the app saves the state.",
+            "name": "sidebarOpen",
+            "type": "boolean"
+          },
+          {
+            "defaultValue": "—",
+            "description": "Called when the sidebar opens or collapses. Save the value here.",
+            "name": "onSidebarOpenChange",
+            "type": "(open: boolean) => void"
+          },
+          {
+            "defaultValue": "\"Skip to content\"",
+            "description": "The link that keyboard users meet first. It moves focus to the content.",
+            "name": "skipLinkLabel",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "AppShellSidebar",
+        "description": "The navigation column. Collapsed, it hides and slides back in while the pointer rests on the start edge of the window. On a narrow screen it opens in a drawer that closes after a link is chosen.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "AppShellSidebarHeader, AppShellNav, then AppShellSidebarFooter.",
+            "name": "children",
+            "type": "ReactNode"
+          },
+          {
+            "defaultValue": "—",
+            "description": "Names the navigation drawer on a narrow screen.",
+            "name": "aria-label",
+            "type": "string"
+          },
+          {
+            "defaultValue": "\"Close navigation\"",
+            "description": "The name of the drawer's close button.",
+            "name": "closeLabel",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "AppShellSidebarHeader",
+        "description": "The top of the sidebar: the product, then search. Each child spans the sidebar.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "The product name, then a search button.",
+            "name": "children",
+            "type": "ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "AppShellNav",
+        "description": "The navigation. It scrolls while the sidebar header and footer stay in view.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "AppShellGroup elements.",
+            "name": "children",
+            "type": "ReactNode"
+          },
+          {
+            "defaultValue": "—",
+            "description": "Names the navigation landmark.",
+            "name": "aria-label",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "AppShellGroup",
+        "description": "A list of items, with an optional label. A collapsible group folds under its label.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "AppShellItem elements.",
+            "name": "children",
+            "type": "ReactNode"
+          },
+          {
+            "defaultValue": "—",
+            "description": "The name of the group. Leave it out for the first group.",
+            "name": "label",
+            "type": "ReactNode"
+          },
+          {
+            "defaultValue": "false",
+            "description": "Lets the reader fold the group.",
+            "name": "collapsible",
+            "type": "boolean"
+          },
+          {
+            "defaultValue": "—",
+            "description": "Whether a collapsible group is open, when the app saves it.",
+            "name": "open",
+            "type": "boolean"
+          },
+          {
+            "defaultValue": "true",
+            "description": "Whether a collapsible group starts open.",
+            "name": "defaultOpen",
+            "type": "boolean"
+          },
+          {
+            "defaultValue": "—",
+            "description": "Called when a collapsible group opens or closes.",
+            "name": "onOpenChange",
+            "type": "(open: boolean) => void"
+          }
+        ]
+      },
+      {
+        "name": "AppShellItem",
+        "description": "A link in the navigation, with an icon, a label that ends in an ellipsis, and an optional count.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "An icon, the label, then an optional Badge.",
+            "name": "children",
+            "type": "ReactNode"
+          },
+          {
+            "defaultValue": "—",
+            "description": "The destination, when it renders an anchor.",
+            "name": "href",
+            "type": "string"
+          },
+          {
+            "defaultValue": "—",
+            "description": "The router's link, such as <Link to=\"/players\" />.",
+            "name": "render",
+            "type": "ReactElement"
+          },
+          {
+            "defaultValue": "—",
+            "description": "Marks the current page with aria-current. A router link that sets aria-current needs no prop.",
+            "name": "current",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "name": "AppShellSidebarFooter",
+        "description": "The bottom of the sidebar. It stays in view. Each child spans the sidebar.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "The account menu.",
+            "name": "children",
+            "type": "ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "AppShellInset",
+        "description": "The surface beside the sidebar.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "An AppShellHeader, then AppShellMain.",
+            "name": "children",
+            "type": "ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "AppShellHeader",
+        "description": "The bar above the content.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "AppShellSidebarTrigger, AppShellTitle, then actions.",
+            "name": "children",
+            "type": "ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "AppShellSidebarTrigger",
+        "description": "Collapses and opens the sidebar on a wide screen, and opens the navigation drawer on a narrow one.",
+        "properties": [
+          {
+            "defaultValue": "\"Toggle navigation\"",
+            "description": "The accessible name of the icon button.",
+            "name": "aria-label",
+            "type": "string"
+          },
+          {
+            "defaultValue": "Sidebar icon",
+            "description": "Replaces the icon.",
+            "name": "children",
+            "type": "ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "AppShellTitle",
+        "description": "The name of the current screen, on one line. It is not a heading, since the Page inside has the h1.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "The name of the screen.",
+            "name": "children",
+            "type": "ReactNode"
+          },
+          {
+            "defaultValue": "—",
+            "description": "An h1, when the screen has no PageTitle.",
+            "name": "render",
+            "type": "ReactElement"
+          }
+        ]
+      },
+      {
+        "name": "AppShellMain",
+        "description": "The scrolling content and the main landmark. The skip link moves focus here.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "A Page.",
+            "name": "children",
+            "type": "ReactNode"
+          },
+          {
+            "defaultValue": "false",
+            "description": "Shows a line at the top while the next screen loads, and sets aria-busy.",
+            "name": "busy",
+            "type": "boolean"
+          },
+          {
+            "defaultValue": "\"Loading\"",
+            "description": "Read to screen readers while busy.",
+            "name": "busyLabel",
+            "type": "string"
+          }
+        ]
+      }
+    ],
+    "category": "Layout",
+    "description": "Frames an application: a sidebar with grouped navigation beside the content, a header, and a navigation drawer on a narrow screen.",
+    "name": "App Shell",
+    "slug": "app-shell",
+    "status": "preview"
+  },
+  {
+    "api": [
+      {
+        "defaultValue": "—",
         "description": "A PageHeader, then sections.",
         "name": "children",
         "type": "ReactNode"

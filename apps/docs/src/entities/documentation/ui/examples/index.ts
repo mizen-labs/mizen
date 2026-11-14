@@ -26,6 +26,7 @@ import {
 	AlertInteractiveActionExample2,
 	AlertSemanticVariantsExample1,
 } from "./alert-variants";
+import { AppShellAdminExample, AppShellControlledExample } from "./app-shell";
 import { AnsweredApprovals, SendEmailApproval } from "./approval-card";
 import { VisitorsBySource } from "./area-chart";
 import { VisitorsAreaCard } from "./area-chart-card";
@@ -728,6 +729,8 @@ export const usageComponents: Record<string, ComponentType> = {
 	AppointmentCalendar,
 	AppointmentTime,
 	ApprovalWorkflow,
+	AppShellAdminExample,
+	AppShellControlledExample,
 	ArchitectureQuote,
 	AreaChartLoadingExample,
 	AreaChartOverlapExample,

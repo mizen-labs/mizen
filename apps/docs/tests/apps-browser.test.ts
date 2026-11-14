@@ -84,8 +84,7 @@ describe("Apps", { timeout: 30_000 }, () => {
 		for (const source of [
 			"### src/app.tsx",
 			"export function Home()",
-			"export function AppShell(",
-			"export const shellStyles = create({",
+			"export function AppShellFrame(",
 			"export const orders",
 		]) {
 			expect(markdown).toContain(source);
@@ -119,7 +118,6 @@ describe("Apps", { timeout: 30_000 }, () => {
 			"src/app.tsx",
 			"src/home.tsx",
 			"src/app-shell.tsx",
-			"src/app-shell.styles.ts",
 			"src/data.ts",
 		]);
 		expect(
@@ -139,13 +137,13 @@ describe("Apps", { timeout: 30_000 }, () => {
 			expect(await token("--mizen-color-primary")).toBe(
 				await token("--mizen-color-accent")
 			);
-			const sidebar = page.getByRole("complementary");
+			const nav = page.getByRole("navigation", { name: "Main" });
 			await expectLocator(
-				sidebar.getByRole("link", { name: "Home" })
+				nav.getByRole("link", { name: "Home" })
 			).toHaveAttribute("aria-current", "page");
 			await expectLocator(
-				page.getByRole("button", { name: "Open navigation" })
-			).toBeHidden();
+				page.getByRole("button", { name: "Toggle navigation" })
+			).toHaveAttribute("aria-expanded", "true");
 			// The window does not scroll; the pane does.
 			expect(
 				await page.evaluate(() => [
@@ -174,15 +172,16 @@ describe("Apps", { timeout: 30_000 }, () => {
 
 	it("moves the navigation into a drawer on a narrow screen", async () => {
 		await openPreview(375);
-		await expectLocator(page.getByRole("complementary")).toBeHidden();
+		await expectLocator(
+			page.getByRole("navigation", { name: "Main" })
+		).toHaveCount(0);
 		expect(
 			await page.evaluate(() => document.documentElement.scrollWidth)
 		).toBe(375);
-		await page.getByRole("button", { name: "Open navigation" }).click();
+		await page.getByRole("button", { name: "Toggle navigation" }).click();
 		const drawer = page.getByRole("dialog", { name: "Northstar" });
 		const orders = drawer.getByRole("link", { name: "Orders" });
 		await expectLocator(orders).toBeVisible();
-		// The drawer sets the same text size as the sidebar.
 		await expectLocator(orders).toHaveCSS("font-size", "14px");
 		await orders.click();
 		await expectLocator(drawer).toBeHidden();

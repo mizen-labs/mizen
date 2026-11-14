@@ -68,9 +68,7 @@ describes the latest release. When it disagrees with the installed version,
 the installed package and its matching CLI win.
 
 For a whole screen, start from an app: `/apps/dashboard/markdown` has the
-sources of a dashboard in an application shell with a sidebar. Its shell
-styles are StyleX. In an app without a StyleX build, write those rules in
-plain CSS with the token variables.
+sources of a dashboard in an `AppShell` with a sidebar, and no CSS.
 
 ## Lay out the screen
 
@@ -120,8 +118,13 @@ Rules:
   `InputGroup`, `DatePicker` and `DateRangePicker` fill the width in a `Stack`,
   a `Field` or a `Grid` cell, and are as wide as their content in an `Inline`
   or a header action. Do not set a width on a control or wrap it to size it.
-- One `Page` per screen, with one `PageTitle`. The app shell around it adds no
-  padding; `Page` owns the inset and the space between sections.
+- Frame the application once with `AppShell`, around the router outlet: an
+  `AppShellSidebar` with `AppShellNav` groups of `AppShellItem` links, then an
+  `AppShellInset` with an `AppShellHeader` and `AppShellMain`. It owns the
+  sidebar, its collapse, the drawer on a narrow screen, and the skip link. Do
+  not build a sidebar of your own. Read `/docs/components/app-shell/markdown`.
+- One `Page` per screen, with one `PageTitle`, inside `AppShellMain`. The shell
+  adds no padding; `Page` owns the inset and the space between sections.
 - Set space only with `gap` props. Steps are 4px each: `"1"` is 4px, `"4"` is
   16px. Use `"2"` inside a group, `"4"` between fields or cards. `Page` already
   puts 32px between sections.

@@ -135,6 +135,21 @@ export const docsStyles = create({
 		minInlineSize: 0,
 		scrollMarginBlockStart: "6rem",
 	},
+	// The stage is narrower than a desktop window. The frame lays the app out
+	// at 125% of the stage and shows it at 80%, so a wide layout fits.
+	exampleFrame: {
+		blockSize: "50rem",
+		borderStyle: "none",
+		display: "block",
+		inlineSize: "125%",
+		transform: "scale(0.8)",
+		transformOrigin: "0 0",
+	},
+	exampleFrameClip: {
+		blockSize: "40rem",
+		inlineSize: "100%",
+		overflow: "hidden",
+	},
 	exampleHeader: {
 		display: "grid",
 		gap: space["1"],

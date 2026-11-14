@@ -3282,6 +3282,20 @@
       "path": "entities/documentation/ui/examples/message-scroller.tsx"
     }
   ],
+  "app-shell": [
+    {
+      "name": "AppShellAdminExample",
+      "title": "Admin",
+      "description": "A sidebar with a header, a pinned group, collapsible groups, counts and an account menu, then a header and the content.",
+      "path": "entities/documentation/ui/examples/app-shell.tsx"
+    },
+    {
+      "name": "AppShellControlledExample",
+      "title": "Saved state and loading",
+      "description": "The app owns whether the sidebar is open, so it can save it. busy shows a line at the top of the content while the next screen loads.",
+      "path": "entities/documentation/ui/examples/app-shell.tsx"
+    }
+  ],
   "page": [
     {
       "name": "ProjectsPage",

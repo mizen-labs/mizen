@@ -529,6 +529,11 @@
       "types": "./dist/components/approval-card/approval-card.d.ts",
       "default": "./dist/components/approval-card/approval-card.js"
     },
+    "./app-shell": {
+      "source": "./src/components/app-shell/app-shell.tsx",
+      "types": "./dist/components/app-shell/app-shell.d.ts",
+      "default": "./dist/components/app-shell/app-shell.js"
+    },
     "./aspect-ratio": {
       "source": "./src/components/aspect-ratio/aspect-ratio.tsx",
       "types": "./dist/components/aspect-ratio/aspect-ratio.d.ts",

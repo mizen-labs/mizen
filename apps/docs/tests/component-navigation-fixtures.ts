@@ -3,6 +3,7 @@ export const EXPECTED_GROUPS = [
 		heading: "Layout",
 		items: [
 			"Accordion",
+			"App Shell",
 			"Aspect Ratio",
 			"Card",
 			"Collapsible",

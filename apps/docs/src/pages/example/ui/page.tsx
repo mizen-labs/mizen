@@ -4,23 +4,29 @@ import { create, props } from "@stylexjs/stylex";
 import { usageComponents } from "../../../entities/documentation/ui/example-components.gen";
 
 const styles = create({
-	// A Page brings its own inset; anything else gets the same one.
+	// A Page or an AppShell brings its own inset; anything else gets the same
+	// one.
 	screen: {
 		backgroundColor: colors.surface,
 		minBlockSize: "100dvh",
-		padding: { ":has(> [data-slot='page'])": 0, default: space["6"] },
+		padding: {
+			":has(> [data-slot='app-shell'], > [data-slot='page'])": 0,
+			default: space["6"],
+		},
 	},
 });
 
 export default function ExamplePage({ name }: { name: string }) {
 	const Example = usageComponents[name];
+	// An app shell brings its own main landmark.
+	const Root = name.startsWith("AppShell") ? "div" : "main";
 	return (
-		<main
+		<Root
 			data-slot="example-screen"
 			id="docs-content"
 			{...props(styles.screen)}
 		>
 			{Example ? <Example /> : null}
-		</main>
+		</Root>
 	);
 }

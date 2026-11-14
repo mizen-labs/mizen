@@ -1164,6 +1164,33 @@ export {
 	ActivityFeedTime,
 } from "./components/activity-feed/activity-feed";
 export type {
+	AppShellGroupProps,
+	AppShellHeaderProps,
+	AppShellInsetProps,
+	AppShellItemProps,
+	AppShellMainProps,
+	AppShellNavProps,
+	AppShellProps,
+	AppShellSidebarProps,
+	AppShellSidebarRegionProps,
+	AppShellSidebarTriggerProps,
+	AppShellTitleProps,
+} from "./components/app-shell/app-shell";
+export {
+	AppShell,
+	AppShellGroup,
+	AppShellHeader,
+	AppShellInset,
+	AppShellItem,
+	AppShellMain,
+	AppShellNav,
+	AppShellSidebar,
+	AppShellSidebarFooter,
+	AppShellSidebarHeader,
+	AppShellSidebarTrigger,
+	AppShellTitle,
+} from "./components/app-shell/app-shell";
+export type {
 	ApprovalCardDetail,
 	ApprovalCardProps,
 	ApprovalCardStatus,

@@ -656,6 +656,15 @@ export function ContactEmail() {
 				title: "Render slots, wrappers, and primitives",
 			},
 			{
+				id: "missing-interactions",
+				paragraphs: [
+					"Popups, menus, selection, typeahead, arrow-key focus, trees, tables, and chat scrolling exist in Mizen. Do not rebuild them.",
+					"For an interaction Mizen does not have, such as sorting a list by drag, moving cards between columns, resizing panels, swipe actions, or panning a canvas, use UI SDK behaviors from @ui-sdk/core and @ui-sdk/react. They handle the pointer, the keyboard, and screen-reader announcements, which hand-written handlers usually miss. UI SDK is in beta, so pin an exact version.",
+					"Style the result with the Mizen token variables, put Mizen components inside it, and keep its state in the application. Report the gap, so the library can decide whether the interaction needs a component.",
+				],
+				title: "Interactions Mizen does not have",
+			},
+			{
 				code: {
 					value: `"use client";
 

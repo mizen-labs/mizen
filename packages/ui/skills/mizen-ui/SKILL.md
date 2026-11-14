@@ -178,6 +178,24 @@ app for this.
   Approval Card reports a caller-owned decision; the application authorizes and
   executes the operation.
 
+## Build an interaction Mizen lacks
+
+First use a Mizen component, a `render` slot, or an exported primitive. Popups,
+menus, selection, typeahead, arrow-key focus, trees, tables, and chat scrolling
+already exist; never rebuild them.
+
+When the screen needs an interaction Mizen has none of, such as sorting a list
+by drag, moving cards between columns, resizing panels, swipe actions, or
+panning a canvas, build it from UI SDK behaviors (`@ui-sdk/core` with
+`@ui-sdk/react`), not from hand-written pointer and key handlers. Its behaviors
+also cover keyboard use and screen-reader announcements.
+
+- Read `node_modules/@ui-sdk/react/docs/llms.txt` of the installed version.
+- UI SDK is in beta. Pin an exact version.
+- Style the result with Mizen token variables, and put Mizen components inside
+  it for its content. Keep its state in the application.
+- Report the gap, so the library can decide whether it needs a component.
+
 ## Verify the result
 
 Run the host's TypeScript and lint checks. Then check the screen itself:

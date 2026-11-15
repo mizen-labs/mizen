@@ -34,7 +34,6 @@ import {
 } from "./composer-editor";
 import { composerPartStyles } from "./composer-parts.styles";
 import { ComposerScrollArea } from "./composer-scroll-area";
-import "./composer.css";
 
 const StopAction = createContext<(() => void) | undefined>(undefined);
 type ComposerPopupProps = Closed<

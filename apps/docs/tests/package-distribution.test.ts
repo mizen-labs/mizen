@@ -11,6 +11,8 @@ const execute = promisify(execFile);
 const CLIENT_BOUNDARY = /^"use client";/u;
 const CSS_COMMENT = /\/\*[\s\S]*?\*\//gu;
 const COMPILED = /\.(?:css|js)$/u;
+const RELATIVE_IMPORT =
+	/(?:\bfrom\s*|\bimport\s*\(?\s*)["'](?<path>\.\.?\/[^"']*)["']/gu;
 
 // The prelude of each rule outside any block, such as "@layer mizen-reset".
 function topLevelRules(css: string): string[] {
@@ -124,6 +126,29 @@ it("packs every public export and preserves client boundaries", async () => {
 		expect(
 			built.filter((_, index) => sources[index]?.includes("reset.css"))
 		).toEqual([]);
+		// Plain Node loads every module: each relative import names its file,
+		// and no module imports CSS. Component CSS ships in the one stylesheet.
+		const modules = built.filter((path) => path.endsWith(".js"));
+		const unresolved = modules.flatMap((path) => {
+			const source = sources[built.indexOf(path)] ?? "";
+			return Array.from(
+				source.matchAll(RELATIVE_IMPORT),
+				(match) => match.groups?.path
+			)
+				.filter((specifier) => !specifier?.endsWith(".js"))
+				.map((specifier) => `${path}: ${specifier}`);
+		});
+		expect(unresolved).toEqual([]);
+		expect(css).toContain("var(--mizen-button-glyph, 1em)");
+		await execute(
+			process.execPath,
+			[
+				"--input-type=module",
+				"-e",
+				`await import(${JSON.stringify(join(uiRoot, "dist/index.js"))}); await import(${JSON.stringify(join(uiRoot, "dist/components/app-shell/app-shell.js"))});`,
+			],
+			{ killSignal: "SIGKILL", timeout: 30_000 }
+		);
 		await Promise.all(
 			Object.entries(manifest.exports).map(async ([name, entry]) => {
 				const targets =

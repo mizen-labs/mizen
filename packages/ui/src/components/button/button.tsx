@@ -5,7 +5,6 @@ import { props } from "@stylexjs/stylex";
 import type { ComponentPropsWithRef, ReactNode } from "react";
 import { controlLabel } from "../../control-label";
 import { LoadingIndicator } from "../../loading-indicator";
-import "./button.css";
 import { badgeFit } from "../../styles/badge-fit.styles";
 import { buttonStyles } from "./button.styles";
 

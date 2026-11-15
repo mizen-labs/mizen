@@ -9,7 +9,6 @@ import { typeRoles } from "../../styles/typography.styles";
 import { Spinner } from "../spinner/spinner";
 import { diagramStyles } from "./diagram.styles";
 import { mountDiagram } from "./diagram-renderer";
-import "./diagram.css";
 
 export type DiagramState = "loading" | "ready" | "error";
 export type DiagramProps = Omit<

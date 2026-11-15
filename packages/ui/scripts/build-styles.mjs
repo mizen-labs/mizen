@@ -1,5 +1,6 @@
-import { writeFile } from "node:fs/promises";
+import { readdir, readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import stylex from "@stylexjs/postcss-plugin";
 import postcss from "postcss";
@@ -25,4 +26,22 @@ const result = await postcss([
 	from: fileURLToPath(new URL("../src/styles.css", import.meta.url)),
 });
 
-await writeFile(new URL("../dist/styles.css", import.meta.url), result.css);
+// Rules StyleX cannot express, such as styles for an icon a button holds, live
+// in plain CSS beside their component. They join the one stylesheet, so no
+// JavaScript module imports CSS and plain Node can load every component.
+const sources = fileURLToPath(new URL("../src/components/", import.meta.url));
+const componentCss = (
+	await Promise.all(
+		(
+			await readdir(sources, { recursive: true })
+		)
+			.filter((path) => path.endsWith(".css"))
+			.sort()
+			.map((path) => readFile(join(sources, path), "utf8"))
+	)
+).join("\n");
+
+await writeFile(
+	new URL("../dist/styles.css", import.meta.url),
+	`${result.css}\n${componentCss}`
+);

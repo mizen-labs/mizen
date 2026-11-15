@@ -1,7 +1,5 @@
-/// <reference path="../button/button.css.d.ts" />
 import { props } from "@stylexjs/stylex";
 import type { ComponentPropsWithRef, ReactElement } from "react";
-import "./button-group.css";
 import type { Closed } from "../../closed";
 import { buttonGroupStyles } from "./button-group.styles";
 

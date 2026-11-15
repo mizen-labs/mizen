@@ -31,7 +31,7 @@ Add `AppShell`, the frame of an application (#5), from `@mizen-labs/ui` or `@miz
 ```
 
 - From 48rem the sidebar sits beside one inset surface. The navigation scrolls; the sidebar header and footer stay in view.
-- `AppShellSidebarTrigger` collapses the sidebar. Collapsed, it hides and slides back over the content while the pointer rests on the left edge, and while focus or an open menu is inside it.
+- `AppShellSidebarTrigger` collapses the sidebar, and its icon shows whether it will collapse or expand. Collapsed, the sidebar hides at once and slides back over the content while the pointer rests on the left edge, and while focus or an open menu is inside it. It stays above anything raised in the content, such as a sticky table header.
 - Below 48rem the same sidebar opens in a left drawer, which closes after a link is chosen.
 - `AppShellItem` renders a router link, marks the current page from `current` or the link's own `aria-current`, truncates a long label and keeps its full text, and fits a `Badge` count.
 - `AppShellGroup` lists its items under a label and can fold, controlled or not.

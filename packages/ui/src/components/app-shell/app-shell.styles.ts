@@ -97,6 +97,7 @@ export const appShellStyles = create({
 		transitionTimingFunction: easing.easeIn,
 		visibility: "hidden",
 	},
+	floatingInstant: { transitionDuration: "0s" },
 	// The account menu sits at the start, like the items above it.
 	footer: { justifyItems: "start" },
 
@@ -169,6 +170,13 @@ export const appShellStyles = create({
 		paddingBlock: space["2"],
 		paddingInline: space["3"],
 	},
+	// Text in the header, such as the product name and its avatar, starts
+	// where the item icons start. Controls keep their own edges.
+	headerText: {
+		paddingInline: {
+			":is(*) > :not(button, a, input, [role])": space["2"],
+		},
+	},
 	// Inside the drawer on a narrow screen.
 	inDrawer: {
 		display: "flex",
@@ -189,6 +197,9 @@ export const appShellStyles = create({
 		flexDirection: "column",
 		gridColumn: { default: "1", [WIDE]: "2" },
 		gridRow: "1",
+		// Its own stacking context: a sticky table header or any raised layer
+		// inside stays under the floating sidebar.
+		isolation: "isolate",
 		minBlockSize: 0,
 		minInlineSize: 0,
 		overflow: "hidden",

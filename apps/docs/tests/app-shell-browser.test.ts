@@ -17,6 +17,7 @@ import {
 } from "./test-helper";
 
 const NOTIFICATIONS = /Notifications/u;
+const GLYPH = /layout-sidebar-left-(?<state>collapse|expand)/u;
 const ACCOUNT = /Maya Chen/u;
 const docsRoot = new URL("..", import.meta.url).pathname.replace(/\/$/u, "");
 let handle: TestServerHandle;
@@ -68,6 +69,15 @@ function settled(page: Page) {
 	return expect
 		.poll(async () => (await box(page, "app-shell-sidebar")).left)
 		.toBe(8);
+}
+
+// The trigger shows collapse while the sidebar is open, expand otherwise.
+async function glyph(page: Page) {
+	const name = await page
+		.locator('[data-slot="app-shell-header"] button svg')
+		.first()
+		.getAttribute("class");
+	return name?.match(GLYPH)?.groups?.state;
 }
 
 const trigger = (page: Page) =>
@@ -153,12 +163,15 @@ describe.each([
 	it("collapses, and shows the sidebar while the pointer rests on the edge", async () => {
 		const page = await open(browser, 1280);
 		const sidebar = page.locator('[data-slot="app-shell-sidebar"]');
+		expect(await glyph(page)).toBe("collapse");
 		await trigger(page).click();
 		expect(await trigger(page).getAttribute("aria-expanded")).toBe("false");
-		await expect
-			.poll(() => sidebar.getAttribute("data-state"))
-			.toBe("floating");
-		await expect.poll(() => sidebar.isVisible()).toBe(false);
+		expect(await glyph(page)).toBe("expand");
+		// It goes at once: no floating card slides over the content.
+		expect(
+			await sidebar.evaluate((element) => getComputedStyle(element).visibility)
+		).toBe("hidden");
+		expect(await sidebar.getAttribute("data-state")).toBe("floating");
 		await expect
 			.poll(async () => (await box(page, "app-shell-inset")).left)
 			.toBe(8);
@@ -175,8 +188,52 @@ describe.each([
 
 		await page.mouse.move(900, 400);
 		await expect.poll(() => sidebar.isVisible()).toBe(false);
+
+		// A pointer that leaves the edge for the content hides it too.
+		await page.mouse.move(4, 400);
+		await settled(page);
+		await page.mouse.move(900, 400);
+		await expect.poll(() => sidebar.isVisible()).toBe(false);
 		await trigger(page).click();
 		await expect.poll(() => sidebar.getAttribute("data-state")).toBe("docked");
+		await page.context().close();
+	});
+
+	it("floats above raised layers in the content", async () => {
+		const page = await open(browser, 1280);
+		await page.evaluate(() => {
+			const raised = document.createElement("div");
+			raised.style.cssText =
+				"position:sticky;top:0;z-index:999;height:200px;background:red";
+			document.querySelector('[data-slot="app-shell-main"]')?.prepend(raised);
+		});
+		await trigger(page).click();
+		await page.mouse.move(4, 160);
+		await settled(page);
+		expect(
+			await page.evaluate(
+				() =>
+					document
+						.elementFromPoint(200, 160)
+						?.closest('[data-slot="app-shell-sidebar"]') !== null
+			)
+		).toBe(true);
+		await page.context().close();
+	});
+
+	it("starts the product name where the item icons start", async () => {
+		const page = await open(browser, 1280);
+		const [avatar, icon] = await page.evaluate(() =>
+			[
+				'[data-slot="app-shell-sidebar-header"] [data-slot="avatar"]',
+				'[data-slot="app-shell-item"] svg',
+			].map((selector) =>
+				Math.round(
+					document.querySelector(selector)?.getBoundingClientRect().left ?? -1
+				)
+			)
+		);
+		expect(avatar).toBe(icon);
 		await page.context().close();
 	});
 

@@ -9,6 +9,7 @@ import {
 	createContext,
 	type MouseEvent,
 	type ReactNode,
+	type PointerEvent as ReactPointerEvent,
 	useCallback,
 	useContext,
 	useId,
@@ -17,7 +18,11 @@ import {
 	useSyncExternalStore,
 } from "react";
 import type { Closed } from "../../closed";
-import { IconChevronDown } from "../../icons";
+import {
+	IconChevronDown,
+	IconLayoutSidebarLeftCollapse,
+	IconLayoutSidebarLeftExpand,
+} from "../../icons";
 import { assignRef } from "../../ref-utils";
 import { protectRenderSlot } from "../../render-utils";
 import { badgeFit } from "../../styles/badge-fit.styles";
@@ -46,16 +51,23 @@ const isWide = () => window.matchMedia(WIDE_QUERY).matches;
 // client knows the width.
 const wideOnServer = () => true;
 
+// A collapsed sidebar is hidden, shown while the pointer rests on the edge,
+// or leaving. Only a sidebar that was shown slides out; one that the trigger
+// collapses goes at once, so no card flashes over the content.
+type Peek = "hidden" | "leaving" | "shown";
+
 interface ShellState {
 	drawerOpen: boolean;
 	mainId: string;
 	open: boolean;
-	peek: boolean;
+	peek: Peek;
 	setDrawerOpen: (open: boolean) => void;
 	setOpen: (open: boolean) => void;
-	setPeek: (peek: boolean) => void;
+	setPeek: (peek: Peek) => void;
 	wide: boolean;
 }
+
+const SIDEBAR = '[data-slot="app-shell-sidebar"]';
 
 const ShellContext = createContext<ShellState | null>(null);
 
@@ -100,13 +112,13 @@ export function AppShell({
 	const wide = useSyncExternalStore(subscribe, isWide, wideOnServer);
 	const [ownOpen, setOwnOpen] = useState(defaultSidebarOpen);
 	const [drawerOpen, setDrawerOpen] = useState(false);
-	const [peek, setPeek] = useState(false);
+	const [peek, setPeek] = useState<Peek>("hidden");
 	const open = sidebarOpen ?? ownOpen;
 	const mainId = `${useId()}main`;
 	const setOpen = useCallback(
 		(next: boolean) => {
 			setOwnOpen(next);
-			setPeek(false);
+			setPeek("hidden");
 			onSidebarOpenChange?.(next);
 		},
 		[onSidebarOpenChange]
@@ -124,7 +136,14 @@ export function AppShell({
 		}),
 		[drawerOpen, mainId, open, peek, setOpen, wide]
 	);
-	const showPeek = useCallback(() => setPeek(true), []);
+	const showPeek = useCallback(() => setPeek("shown"), []);
+	// A pointer that leaves the edge for anywhere but the sidebar hides it.
+	const leaveEdge = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
+		const next = event.relatedTarget;
+		if (!(next instanceof Element && next.closest(SIDEBAR))) {
+			setPeek((current) => (current === "shown" ? "leaving" : current));
+		}
+	}, []);
 	return (
 		<ShellContext value={shell}>
 			<div
@@ -142,6 +161,7 @@ export function AppShell({
 						aria-hidden="true"
 						data-slot="app-shell-edge"
 						onPointerEnter={showPeek}
+						onPointerLeave={leaveEdge}
 						{...props(styles.edge)}
 					/>
 				)}
@@ -177,7 +197,7 @@ function hasOpenPopup(element: HTMLElement) {
 // hides when both leave or Escape is pressed. An open menu inside keeps it.
 function useFloating(
 	floating: boolean,
-	setPeek: (peek: boolean) => void,
+	setPeek: (peek: Peek) => void,
 	forwardedRef: AppShellSidebarProps["ref"]
 ) {
 	return useCallback(
@@ -188,7 +208,7 @@ function useFloating(
 			}
 			const hide = () => {
 				if (!hasOpenPopup(element)) {
-					setPeek(false);
+					setPeek("leaving");
 				}
 			};
 			// The sidebar rests a little in from the window edge, so a pointer
@@ -206,7 +226,7 @@ function useFloating(
 			};
 			const closeOnEscape = (event: KeyboardEvent) => {
 				if (event.key === "Escape") {
-					setPeek(false);
+					setPeek("leaving");
 				}
 			};
 			element.addEventListener("pointerleave", leave);
@@ -257,6 +277,21 @@ function NavigationDrawer({
 	);
 }
 
+function sidebarLook(floating: boolean, hidden: boolean, peek: Peek) {
+	if (!floating) {
+		return styles.sidebar;
+	}
+	if (!hidden) {
+		return [styles.sidebar, styles.floating];
+	}
+	return [
+		styles.sidebar,
+		styles.floating,
+		styles.floatingHidden,
+		peek === "hidden" && styles.floatingInstant,
+	];
+}
+
 /** The navigation column. Its content moves into a drawer on a narrow screen. */
 export function AppShellSidebar({
 	children,
@@ -266,7 +301,7 @@ export function AppShellSidebar({
 }: AppShellSidebarProps) {
 	const { open, peek, setPeek, wide } = useShell("AppShellSidebar");
 	const floating = wide && !open;
-	const hidden = floating && !peek;
+	const hidden = floating && peek !== "shown";
 	const ref = useFloating(floating, setPeek, forwardedRef);
 	if (!wide) {
 		return (
@@ -282,11 +317,7 @@ export function AppShellSidebar({
 			data-state={floating ? "floating" : "docked"}
 			inert={hidden || undefined}
 			ref={ref}
-			{...props(
-				styles.sidebar,
-				floating && styles.floating,
-				hidden && styles.floatingHidden
-			)}
+			{...props(sidebarLook(floating, hidden, peek))}
 		>
 			{children}
 		</div>
@@ -305,7 +336,7 @@ export function AppShellSidebarHeader({
 			{...rest}
 			data-slot="app-shell-sidebar-header"
 			ref={forwardedRef}
-			{...props(styles.region)}
+			{...props(styles.region, styles.headerText)}
 		/>
 	);
 }
@@ -665,27 +696,15 @@ export function AppShellSidebarTrigger({
 			size="icon-sm"
 			variant="ghost"
 		>
-			{children ?? <SidebarGlyph />}
+			{children ?? <SidebarGlyph collapse={wide && open} />}
 		</Button>
 	);
 }
 
-// Tabler's layout-sidebar, drawn here so the icon pack stays replaceable.
-function SidebarGlyph() {
-	return (
-		<svg
-			aria-hidden="true"
-			fill="none"
-			height="16"
-			stroke="currentColor"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			strokeWidth="2"
-			viewBox="0 0 24 24"
-			width="16"
-		>
-			<path d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
-			<path d="M9 4v16" />
-		</svg>
-	);
+// Collapse while the sidebar is open beside the content; expand otherwise.
+function SidebarGlyph({ collapse }: { collapse: boolean }) {
+	const Glyph = collapse
+		? IconLayoutSidebarLeftCollapse
+		: IconLayoutSidebarLeftExpand;
+	return <Glyph aria-hidden="true" size={16} />;
 }

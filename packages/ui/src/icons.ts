@@ -23,6 +23,8 @@ export {
 	IconDots,
 	IconFile,
 	IconInfoCircle,
+	IconLayoutSidebarLeftCollapse,
+	IconLayoutSidebarLeftExpand,
 	IconListCheck,
 	IconMessageQuestion,
 	IconMicrophone,

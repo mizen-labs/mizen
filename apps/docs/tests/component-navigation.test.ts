@@ -164,6 +164,15 @@ describe("Component navigation", () => {
 		expect(containment.navScrollWidth).toBeLessThanOrEqual(
 			containment.navClientWidth
 		);
+		// Measure once the popup has finished sliding in: under load the two
+		// boxes would otherwise come from different frames.
+		await mobilePopup.evaluate((popup) =>
+			Promise.all(
+				popup
+					.getAnimations({ subtree: true })
+					.map((animation) => animation.finished)
+			)
+		);
 		const popupBox = await mobilePopup.boundingBox();
 		const activeBox = await activeLink.boundingBox();
 		expect(popupBox).not.toBeNull();

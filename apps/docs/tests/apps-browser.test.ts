@@ -83,7 +83,7 @@ describe("Apps", { timeout: 30_000 }, () => {
 		expect(markdown).toContain("init --preset vivid");
 		for (const source of [
 			"### src/app.tsx",
-			"export function Home()",
+			"export function Home(",
 			"export function AppShellFrame(",
 			"export const orders",
 		]) {

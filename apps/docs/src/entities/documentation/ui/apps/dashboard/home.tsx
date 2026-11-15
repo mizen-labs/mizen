@@ -8,6 +8,11 @@ import {
 	Button,
 	CalendarHeatmap,
 	Checkbox,
+	Empty,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
 	Grid,
 	Inline,
 	MetricDelta,
@@ -30,8 +35,9 @@ import {
 	TableHeader,
 	TableRow,
 } from "@mizen-labs/ui";
-import { useCallback, useState } from "react";
-import { metrics, type Order, orders, ordersPerDay, revenue } from "./data";
+import { IconShoppingCart } from "@tabler/icons-react";
+import { useCallback, useMemo, useState } from "react";
+import type { Dashboard, Order } from "./data";
 
 function OrderRow({
 	onToggle,
@@ -62,36 +68,65 @@ function OrderRow({
 					{order.customer}
 				</Inline>
 			</TableHead>
-			<TableCell>
+			<TableCell nowrap>
 				<Badge appearance="soft" variant={order.variant}>
 					{order.status}
 				</Badge>
 			</TableCell>
-			<TableCell>{order.updated}</TableCell>
+			<TableCell nowrap>{order.updated}</TableCell>
 			<TableCell numeric>{order.total}</TableCell>
 		</TableRow>
 	);
 }
 
-function RecentOrders() {
-	const [selected, setSelected] = useState<readonly string[]>([
+// The home screen shows the latest orders; View all opens the full list.
+const RECENT = 7;
+
+// Rows the reader picked. The two picked at first show the selected style.
+function useSelection(ids: readonly string[]) {
+	const [picked, setPicked] = useState<readonly string[]>([
 		"ORD-1043",
 		"ORD-1044",
 	]);
+	// Only rows on screen count, so a list without them shows none picked.
+	const selected = picked.filter((id) => ids.includes(id));
+	const all = ids.length > 0 && selected.length === ids.length;
 	const toggle = useCallback(
 		(id: string) =>
-			setSelected((current) =>
+			setPicked((current) =>
 				current.includes(id)
 					? current.filter((entry) => entry !== id)
 					: [...current, id]
 			),
 		[]
 	);
-	const all = selected.length === orders.length;
 	const toggleAll = useCallback(
-		() => setSelected(all ? [] : orders.map((order) => order.id)),
-		[all]
+		() => setPicked(all ? [] : [...ids]),
+		[all, ids]
 	);
+	return { all, selected, toggle, toggleAll };
+}
+
+function NoOrders() {
+	return (
+		<Empty>
+			<EmptyHeader>
+				<EmptyMedia variant="icon">
+					<IconShoppingCart aria-hidden="true" size="18" />
+				</EmptyMedia>
+				<EmptyTitle>No orders yet</EmptyTitle>
+				<EmptyDescription>
+					New orders show here as customers place them.
+				</EmptyDescription>
+			</EmptyHeader>
+		</Empty>
+	);
+}
+
+function RecentOrders({ orders }: { orders: Dashboard["orders"] }) {
+	const recent = useMemo(() => orders.slice(0, RECENT), [orders]);
+	const ids = useMemo(() => recent.map((order) => order.id), [recent]);
+	const { all, selected, toggle, toggleAll } = useSelection(ids);
 	return (
 		<Section aria-labelledby="orders-title">
 			<SectionHeader>
@@ -102,45 +137,49 @@ function RecentOrders() {
 					</Button>
 				</SectionAction>
 			</SectionHeader>
-			<TableContainer aria-labelledby="orders-title" scroll="horizontal">
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead scope="col">
-								<Checkbox
-									aria-label="Select all orders"
-									checked={all}
-									indeterminate={selected.length > 0 && !all}
-									onCheckedChange={toggleAll}
+			{recent.length === 0 ? (
+				<NoOrders />
+			) : (
+				<TableContainer aria-labelledby="orders-title" scroll="horizontal">
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHead scope="col">
+									<Checkbox
+										aria-label="Select all orders"
+										checked={all}
+										indeterminate={selected.length > 0 && !all}
+										onCheckedChange={toggleAll}
+									/>
+								</TableHead>
+								<TableHead scope="col">Customer</TableHead>
+								<TableHead scope="col">Status</TableHead>
+								<TableHead scope="col">Updated</TableHead>
+								<TableHead numeric scope="col">
+									Total
+								</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							{recent.map((order) => (
+								<OrderRow
+									key={order.id}
+									onToggle={toggle}
+									order={order}
+									selected={selected.includes(order.id)}
 								/>
-							</TableHead>
-							<TableHead scope="col">Customer</TableHead>
-							<TableHead scope="col">Status</TableHead>
-							<TableHead scope="col">Updated</TableHead>
-							<TableHead numeric scope="col">
-								Total
-							</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{orders.map((order) => (
-							<OrderRow
-								key={order.id}
-								onToggle={toggle}
-								order={order}
-								selected={selected.includes(order.id)}
-							/>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+							))}
+						</TableBody>
+					</Table>
+				</TableContainer>
+			)}
 		</Section>
 	);
 }
 
 // One screen: a Page with its header, then sections. The layout comes from
 // Page, Section, Grid and Stack; the screen has no CSS of its own.
-export function Home() {
+export function Home({ data }: { data: Dashboard }) {
 	return (
 		<Page>
 			<PageHeader>
@@ -152,7 +191,7 @@ export function Home() {
 				</PageAction>
 			</PageHeader>
 			<Grid columns="4" gap="4">
-				{metrics.map((metric) => (
+				{data.metrics.map((metric) => (
 					<MetricTrend
 						delta={
 							<MetricDelta
@@ -170,7 +209,7 @@ export function Home() {
 				))}
 			</Grid>
 			<Grid columns="2:1" gap="8">
-				<RecentOrders />
+				<RecentOrders orders={data.orders} />
 				<Stack gap="8">
 					<Section aria-labelledby="revenue-title">
 						<SectionHeader>
@@ -179,7 +218,7 @@ export function Home() {
 						<AreaChart
 							aria-label="Revenue by channel"
 							layout="overlap"
-							series={revenue}
+							series={data.revenue}
 							timeZone="UTC"
 						/>
 					</Section>
@@ -189,7 +228,7 @@ export function Home() {
 						</SectionHeader>
 						<CalendarHeatmap
 							aria-label="Orders per day"
-							days={ordersPerDay}
+							days={data.ordersPerDay}
 							tone="series1"
 							valueLabel="Orders"
 							weekStartsOn={0}

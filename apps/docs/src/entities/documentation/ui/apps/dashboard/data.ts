@@ -1,13 +1,69 @@
-export const metrics = [
+import {
+	type Icon,
+	IconChartBar,
+	IconHome,
+	IconPackage,
+	IconSettings,
+	IconShoppingCart,
+	IconSpeakerphone,
+	IconUsers,
+	IconUsersGroup,
+} from "@tabler/icons-react";
+
+export interface NavItem {
+	count?: number;
+	current?: boolean;
+	href: string;
+	icon: Icon;
+	label: string;
+}
+
+export interface NavGroup {
+	items: NavItem[];
+	/** A named group can fold; the first group has no name. */
+	label?: string;
+}
+
+// Each href is a place in this demo. In your app, pass your router's link to
+// render, and the item reads aria-current from it.
+export const navigation: NavGroup[] = [
+	{
+		items: [
+			{ current: true, href: "#home", icon: IconHome, label: "Home" },
+			{ count: 12, href: "#orders", icon: IconShoppingCart, label: "Orders" },
+			{ href: "#customers", icon: IconUsers, label: "Customers" },
+			{ href: "#products", icon: IconPackage, label: "Products" },
+		],
+	},
+	{
+		items: [
+			{ href: "#analytics", icon: IconChartBar, label: "Analytics" },
+			{ href: "#marketing", icon: IconSpeakerphone, label: "Marketing" },
+		],
+		label: "Insights",
+	},
+	{
+		items: [
+			{ href: "#team", icon: IconUsersGroup, label: "Team" },
+			{ href: "#settings", icon: IconSettings, label: "Settings" },
+		],
+		label: "Workspace",
+	},
+];
+
+export const workspace = { initials: "N", name: "Northstar" };
+export const account = { initials: "MC", name: "Maya Chen" };
+
+export const metrics: readonly Metric[] = [
 	{ change: 0.124, good: "up", label: "Revenue", value: "$48,290" },
 	{ change: 0.031, good: "up", label: "New customers", value: "312" },
 	{ change: -0.018, good: "up", label: "Conversion", value: "3.4%" },
 	{ change: 0.08, good: "down", label: "Refunds", value: "$640" },
-] as const;
+];
 
 // Each customer keeps one avatar color, so the same person looks the same on
 // every screen.
-export const orders = [
+export const orders: readonly Order[] = [
 	{
 		color: "blue",
 		customer: "John Clarkson",
@@ -78,14 +134,34 @@ export const orders = [
 		updated: "Nov 11",
 		variant: "warning",
 	},
-] as const;
+];
 
-export type Order = (typeof orders)[number];
+export interface Order {
+	color: "blue" | "green" | "neutral" | "orange" | "purple";
+	customer: string;
+	id: string;
+	initials: string;
+	status: string;
+	total: string;
+	updated: string;
+	variant: "destructive" | "info" | "success" | "warning";
+}
+
+export interface Metric {
+	change: number;
+	good: "down" | "up";
+	label: string;
+	value: string;
+}
 
 const monthly = (values: readonly number[]) =>
 	values.map((value, month) => ({ time: Date.UTC(2026, month, 1), value }));
 
-export const revenue = [
+export const revenue: {
+	id: string;
+	label: string;
+	points: { time: number; value: number }[];
+}[] = [
 	{
 		id: "online",
 		label: "Online",
@@ -112,3 +188,17 @@ export const ordersPerDay = Array.from({ length: 126 }, (_, index) => ({
 		Math.abs(Math.sin(index * 0.45) * 40 + Math.cos(index * 0.1) * 20)
 	),
 }));
+
+// Everything the screens show, in one place: the app passes it down, so a
+// test can pass other data through the same door.
+export const dashboard = {
+	account,
+	metrics,
+	navigation,
+	orders,
+	ordersPerDay,
+	revenue,
+	workspace,
+};
+
+export type Dashboard = typeof dashboard;

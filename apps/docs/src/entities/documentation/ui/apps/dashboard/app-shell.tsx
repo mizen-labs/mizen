@@ -27,55 +27,24 @@ import {
 	Text,
 	VisuallyHidden,
 } from "@mizen-labs/ui";
-import {
-	type Icon,
-	IconChartBar,
-	IconHome,
-	IconPackage,
-	IconSearch,
-	IconSelector,
-	IconSettings,
-	IconShoppingCart,
-	IconSpeakerphone,
-	IconUsers,
-	IconUsersGroup,
-} from "@tabler/icons-react";
+import { IconSearch, IconSelector } from "@tabler/icons-react";
 import type { ReactNode } from "react";
+import type { Dashboard, NavItem } from "./data";
 
-interface NavItem {
-	count?: number;
-	current?: boolean;
-	href: string;
-	icon: Icon;
-	label: string;
+// A count past 99 shows as 99+; the full number is in the page itself.
+function formatCount(count: number) {
+	return count > 99 ? "99+" : count.toLocaleString();
 }
 
-// Each href is a place in this demo. In your app, pass your router's link to
-// render, and the item reads aria-current from it.
-const primary: NavItem[] = [
-	{ current: true, href: "#home", icon: IconHome, label: "Home" },
-	{ count: 12, href: "#orders", icon: IconShoppingCart, label: "Orders" },
-	{ href: "#customers", icon: IconUsers, label: "Customers" },
-	{ href: "#products", icon: IconPackage, label: "Products" },
-];
-const insights: NavItem[] = [
-	{ href: "#analytics", icon: IconChartBar, label: "Analytics" },
-	{ href: "#marketing", icon: IconSpeakerphone, label: "Marketing" },
-];
-const workspace: NavItem[] = [
-	{ href: "#team", icon: IconUsersGroup, label: "Team" },
-	{ href: "#settings", icon: IconSettings, label: "Settings" },
-];
-
 // An array, not a component: each item becomes its own entry in the group.
-function items(list: NavItem[]) {
+function items(list: readonly NavItem[]) {
 	return list.map(({ count, current, href, icon: Glyph, label }) => (
 		<AppShellItem current={current} href={href} key={href}>
 			<Glyph aria-hidden="true" />
 			{label}
 			{count ? (
 				<Badge>
-					{count}
+					{formatCount(count)}
 					<VisuallyHidden> new</VisuallyHidden>
 				</Badge>
 			) : null}
@@ -83,14 +52,14 @@ function items(list: NavItem[]) {
 	));
 }
 
-function Account() {
+function Account({ person }: { person: Dashboard["account"] }) {
 	return (
 		<Menu>
 			<MenuTrigger render={<Button variant="ghost" />}>
 				<Avatar size="sm">
-					<AvatarFallback>MC</AvatarFallback>
+					<AvatarFallback>{person.initials}</AvatarFallback>
 				</Avatar>
-				Maya Chen
+				{person.name}
 				<IconSelector aria-hidden="true" />
 			</MenuTrigger>
 			<MenuPopup>
@@ -106,16 +75,24 @@ function Account() {
 // The frame around every screen. On a wide screen the navigation is a
 // sidebar; collapsed, it returns when the pointer rests on the left edge. On
 // a narrow screen it opens in a drawer from the button in the header.
-export function AppShellFrame({ children }: { children: ReactNode }) {
+export function AppShellFrame({
+	children,
+	data,
+}: {
+	children: ReactNode;
+	data: Dashboard;
+}) {
 	return (
 		<AppShell>
-			<AppShellSidebar aria-label="Northstar">
+			<AppShellSidebar aria-label={data.workspace.name}>
 				<AppShellSidebarHeader>
-					<Inline gap="2">
+					<Inline gap="2" wrap={false}>
 						<Avatar size="sm">
-							<AvatarFallback>N</AvatarFallback>
+							<AvatarFallback>{data.workspace.initials}</AvatarFallback>
 						</Avatar>
-						<Text size="ui">Northstar</Text>
+						<Text size="ui" truncate>
+							{data.workspace.name}
+						</Text>
 					</Inline>
 					<Button variant="outline">
 						<IconSearch aria-hidden="true" />
@@ -124,16 +101,18 @@ export function AppShellFrame({ children }: { children: ReactNode }) {
 					</Button>
 				</AppShellSidebarHeader>
 				<AppShellNav aria-label="Main">
-					<AppShellGroup>{items(primary)}</AppShellGroup>
-					<AppShellGroup collapsible label="Insights">
-						{items(insights)}
-					</AppShellGroup>
-					<AppShellGroup collapsible label="Workspace">
-						{items(workspace)}
-					</AppShellGroup>
+					{data.navigation.map((group) => (
+						<AppShellGroup
+							collapsible={group.label !== undefined}
+							key={group.label ?? "main"}
+							label={group.label}
+						>
+							{items(group.items)}
+						</AppShellGroup>
+					))}
 				</AppShellNav>
 				<AppShellSidebarFooter>
-					<Account />
+					<Account person={data.account} />
 				</AppShellSidebarFooter>
 			</AppShellSidebar>
 			<AppShellInset>

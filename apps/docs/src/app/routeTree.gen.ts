@@ -17,6 +17,7 @@ import { Route as AppsAppRouteImport } from './routes/apps.$app'
 import { Route as ComponentsSlugRouteImport } from './routes/components_.$slug'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
 import { Route as DocsGuideRouteImport } from './routes/docs.$guide'
+import { Route as InternalAppFixturesRouteImport } from './routes/internal.app-fixtures'
 import { Route as InternalComposerFixturesRouteImport } from './routes/internal.composer-fixtures'
 import { Route as InternalPressRouteImport } from './routes/internal.press'
 import { Route as InternalSpecimensRouteImport } from './routes/internal.specimens'
@@ -70,6 +71,11 @@ const DocsGuideRoute = DocsGuideRouteImport.update({
   id: '/$guide',
   path: '/$guide',
   getParentRoute: () => DocsRoute,
+} as any)
+const InternalAppFixturesRoute = InternalAppFixturesRouteImport.update({
+  id: '/internal/app-fixtures',
+  path: '/internal/app-fixtures',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const InternalComposerFixturesRoute =
   InternalComposerFixturesRouteImport.update({
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/apps/$app': typeof AppsAppRoute
   '/components/$slug': typeof ComponentsSlugRoute
   '/docs/$guide': typeof DocsGuideRoute
+  '/internal/app-fixtures': typeof InternalAppFixturesRoute
   '/internal/composer-fixtures': typeof InternalComposerFixturesRoute
   '/internal/press': typeof InternalPressRoute
   '/internal/specimens': typeof InternalSpecimensRoute
@@ -169,6 +176,7 @@ export interface FileRoutesByTo {
   '/apps/$app': typeof AppsAppRoute
   '/components/$slug': typeof ComponentsSlugRoute
   '/docs/$guide': typeof DocsGuideRoute
+  '/internal/app-fixtures': typeof InternalAppFixturesRoute
   '/internal/composer-fixtures': typeof InternalComposerFixturesRoute
   '/internal/press': typeof InternalPressRoute
   '/internal/specimens': typeof InternalSpecimensRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/apps/$app': typeof AppsAppRoute
   '/components_/$slug': typeof ComponentsSlugRoute
   '/docs/$guide': typeof DocsGuideRoute
+  '/internal/app-fixtures': typeof InternalAppFixturesRoute
   '/internal/composer-fixtures': typeof InternalComposerFixturesRoute
   '/internal/press': typeof InternalPressRoute
   '/internal/specimens': typeof InternalSpecimensRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
     | '/apps/$app'
     | '/components/$slug'
     | '/docs/$guide'
+    | '/internal/app-fixtures'
     | '/internal/composer-fixtures'
     | '/internal/press'
     | '/internal/specimens'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/apps/$app'
     | '/components/$slug'
     | '/docs/$guide'
+    | '/internal/app-fixtures'
     | '/internal/composer-fixtures'
     | '/internal/press'
     | '/internal/specimens'
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/apps/$app'
     | '/components_/$slug'
     | '/docs/$guide'
+    | '/internal/app-fixtures'
     | '/internal/composer-fixtures'
     | '/internal/press'
     | '/internal/specimens'
@@ -286,6 +298,7 @@ export interface RootRouteChildren {
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   AppsAppRoute: typeof AppsAppRoute
   ComponentsSlugRoute: typeof ComponentsSlugRoute
+  InternalAppFixturesRoute: typeof InternalAppFixturesRoute
   InternalComposerFixturesRoute: typeof InternalComposerFixturesRoute
   InternalPressRoute: typeof InternalPressRoute
   InternalSpecimensRoute: typeof InternalSpecimensRoute
@@ -358,6 +371,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/docs/$guide'
       preLoaderRoute: typeof DocsGuideRouteImport
       parentRoute: typeof DocsRoute
+    }
+    '/internal/app-fixtures': {
+      id: '/internal/app-fixtures'
+      path: '/internal/app-fixtures'
+      fullPath: '/internal/app-fixtures'
+      preLoaderRoute: typeof InternalAppFixturesRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/internal/composer-fixtures': {
       id: '/internal/composer-fixtures'
@@ -473,6 +493,7 @@ const rootRouteChildren: RootRouteChildren = {
   LlmsDottxtRoute: LlmsDottxtRoute,
   AppsAppRoute: AppsAppRoute,
   ComponentsSlugRoute: ComponentsSlugRoute,
+  InternalAppFixturesRoute: InternalAppFixturesRoute,
   InternalComposerFixturesRoute: InternalComposerFixturesRoute,
   InternalPressRoute: InternalPressRoute,
   InternalSpecimensRoute: InternalSpecimensRoute,

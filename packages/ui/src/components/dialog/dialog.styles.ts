@@ -123,6 +123,13 @@ export const dialogStyles = create({
 		paddingBlock: space["4"],
 		paddingInline: space["4"],
 	},
+	// A form around the panel and the footer lays them out as the popup
+	// does, so the panel still scrolls between a fixed header and footer.
+	formHost: {
+		display: { ":is(*) > form": "flex" },
+		flexDirection: { ":is(*) > form": "column" },
+		minHeight: { ":is(*) > form": 0 },
+	},
 	header: {
 		display: "flex",
 		flexDirection: "column",
@@ -132,7 +139,6 @@ export const dialogStyles = create({
 		paddingBlockEnd: space["6"],
 		paddingBlockStart: space["6"],
 		paddingInline: space["6"],
-		paddingInlineEnd: "3.5rem",
 	},
 	panel: {
 		display: "flex",
@@ -142,8 +148,11 @@ export const dialogStyles = create({
 		overflowY: "auto",
 		overscrollBehavior: "contain",
 		paddingBlock: space["4"],
+		// Under the header, the header's own inset is the gap, also when a
+		// form holds the panel and the footer.
 		paddingBlockStart: {
 			":is([data-slot='dialog-header'] + *)": space["0"],
+			":is([data-slot='dialog-header'] + form > :first-child)": space["0"],
 			default: space["4"],
 		},
 		paddingInline: space["6"],
@@ -205,6 +214,13 @@ export const dialogStyles = create({
 		lineHeight: lineHeight["24"],
 		marginBlock: 0,
 		overflowWrap: "anywhere",
+		// Only the title line sits beside the close button; the description
+		// below it uses the full width. Without the button, nothing is kept.
+		paddingInlineEnd: {
+			":is([data-slot='dialog-popup']:has(> [data-slot='dialog-default-close']) *)":
+				"2rem",
+			default: null,
+		},
 		textWrap: "balance",
 	},
 	viewport: {

@@ -131,7 +131,6 @@ export const sheetStyles = create({
 		gap: space["1"],
 		paddingBlockStart: space["6"],
 		paddingInline: space["6"],
-		paddingInlineEnd: "3.5rem",
 	},
 	panel: {
 		boxSizing: "border-box",
@@ -194,6 +193,13 @@ export const sheetStyles = create({
 		letterSpacing: letterSpacing.subheading,
 		lineHeight: lineHeight["24"],
 		marginBlock: 0,
+		// Only the title line sits beside the close button; the description
+		// below it uses the full width. Without the button, nothing is kept.
+		paddingInlineEnd: {
+			":is([data-slot='sheet-popup']:has(> [data-slot='sheet-default-close']) *)":
+				"2rem",
+			default: null,
+		},
 		textWrap: "balance",
 	},
 	viewport: {

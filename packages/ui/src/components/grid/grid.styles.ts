@@ -50,6 +50,11 @@ export const gridStyles = create({
 	columnsAuto: {
 		gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 16rem), 1fr))",
 	},
+	// As many as fit, each at least 9rem: small tiles such as product,
+	// item, or file cards, two in a row on a phone.
+	columnsAutoSmall: {
+		gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 9rem), 1fr))",
+	},
 	columnsMainAside: {
 		gridTemplateColumns: {
 			[THREE_UP]: "minmax(0, 2fr) minmax(0, 1fr)",
@@ -67,4 +72,5 @@ export const gridColumnStyles = {
 	"3": gridStyles.columns3,
 	"4": gridStyles.columns4,
 	auto: gridStyles.columnsAuto,
+	"auto-sm": gridStyles.columnsAutoSmall,
 };

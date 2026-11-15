@@ -250,7 +250,7 @@ import {
 	DiagramTimelineExample,
 	DiagramUpdatingExample,
 } from "./diagram-variants";
-import { BasicDialog, ControlledDialog } from "./dialog";
+import { BasicDialog, ControlledDialog, DialogFormExample } from "./dialog";
 import { DialogNorthstarLaunchExample1 } from "./dialog-variants";
 import { ResponseTimeDistribution } from "./distribution";
 import { DistributionSupportResolutionTimeExample1 } from "./distribution-variants";
@@ -313,6 +313,7 @@ import { FunnelFlowExample } from "./funnel-variants";
 import { SummaryGrid } from "./grid";
 import {
 	GridMainAsideExample2,
+	GridTileGalleryExample3,
 	GridYourProjectsExample1,
 } from "./grid-variants";
 import { ProjectActions } from "./group";
@@ -887,6 +888,7 @@ export const usageComponents: Record<string, ComponentType> = {
 	DiagramStateExample,
 	DiagramTimelineExample,
 	DiagramUpdatingExample,
+	DialogFormExample,
 	DialogNorthstarLaunchExample1,
 	DisabledAction,
 	DisabledInput,
@@ -942,6 +944,7 @@ export const usageComponents: Record<string, ComponentType> = {
 	FrameworkCombobox,
 	FunnelFlowExample,
 	GridMainAsideExample2,
+	GridTileGalleryExample3,
 	GridYourProjectsExample1,
 	GroupChat,
 	GroupWorkspaceChangesExample1,

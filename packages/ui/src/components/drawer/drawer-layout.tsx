@@ -4,10 +4,8 @@ import { Drawer as BaseDrawer } from "@base-ui/react/drawer";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { props } from "@stylexjs/stylex";
-import { useContext } from "react";
 import { protectRenderSlot as protectSlot } from "../../render-utils";
 import { ScrollArea } from "../scroll-area/scroll-area";
-import { DrawerContext } from "./drawer.context";
 import { drawerStyles } from "./drawer.styles";
 import type {
 	DrawerFooterProps,
@@ -22,7 +20,6 @@ export function DrawerHeader({
 	render,
 	...rest
 }: DrawerHeaderProps) {
-	const { showCloseButton } = useContext(DrawerContext);
 	const protectedRender = protectSlot("drawer-header", render);
 
 	return useRender({
@@ -32,7 +29,6 @@ export function DrawerHeader({
 				children,
 				...props(
 					drawerStyles.header,
-					showCloseButton ? drawerStyles.headerWithClose : null,
 					allowSelection ? null : drawerStyles.noSelection
 				),
 				"data-slot": "drawer-header",

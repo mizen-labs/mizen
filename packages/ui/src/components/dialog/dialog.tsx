@@ -112,7 +112,11 @@ export function DialogPopup({
 					{...rest}
 					data-slot="dialog-popup"
 					ref={forwardedRef}
-					{...props(dialogStyles.popup, sizeStyles[size])}
+					{...props(
+						dialogStyles.popup,
+						dialogStyles.formHost,
+						sizeStyles[size]
+					)}
 				>
 					{showCloseButton ? (
 						<BaseDialog.Close
@@ -139,6 +143,7 @@ export function DialogTitle({
 	return (
 		<BaseDialog.Title
 			{...rest}
+			data-slot="dialog-title"
 			ref={forwardedRef}
 			{...props(dialogStyles.title)}
 		>
@@ -155,6 +160,7 @@ export function DialogDescription({
 	return (
 		<BaseDialog.Description
 			{...rest}
+			data-slot="dialog-description"
 			ref={forwardedRef}
 			{...props(dialogStyles.description)}
 		>

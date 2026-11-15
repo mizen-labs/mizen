@@ -148,9 +148,6 @@ export const drawerStyles = create({
 		paddingBlockStart: space["6"],
 		paddingInline: space["6"],
 	},
-	headerWithClose: {
-		paddingInlineEnd: "3.5rem",
-	},
 	noSelection: {
 		userSelect: "none",
 	},
@@ -217,6 +214,13 @@ export const drawerStyles = create({
 		lineHeight: lineHeight["24"],
 		marginBlock: 0,
 		overflowWrap: "anywhere",
+		// Only the title line sits beside the close button; the description
+		// below it uses the full width. Without the button, nothing is kept.
+		paddingInlineEnd: {
+			":is([data-slot='drawer-popup']:has(> [data-slot='drawer-default-close']) *)":
+				"2rem",
+			default: null,
+		},
 		textWrap: "balance",
 	},
 	viewport: {

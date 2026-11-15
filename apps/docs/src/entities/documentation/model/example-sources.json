@@ -2147,6 +2147,13 @@
         "path": "entities/documentation/ui/examples/dialog.tsx"
       },
       {
+        "name": "DialogFormExample",
+        "title": "Form",
+        "description": "Wrap DialogPanel and DialogFooter in a form, so Enter in a field submits and the submit button sits in the footer. The spacing stays as without the form. Close the dialog after the save succeeds.",
+        "code": "\"use client\";\n\nimport {\n\tButton,\n\tDialog,\n\tDialogClose,\n\tDialogDescription,\n\tDialogFooter,\n\tDialogHeader,\n\tDialogPanel,\n\tDialogPopup,\n\tDialogTitle,\n\tDialogTrigger,\n\tField,\n\tFieldLabel,\n\tInput,\n\tStack,\n\tText,\n} from \"@mizen-labs/ui\";\n\nimport { type FormEvent, useCallback, useState } from \"react\";\n\nexport function DialogFormExample() {\n\tconst [open, setOpen] = useState(false);\n\tconst [category, setCategory] = useState(\"Regular\");\n\tconst save = useCallback((event: FormEvent<HTMLFormElement>) => {\n\t\tevent.preventDefault();\n\t\tconst data = new FormData(event.currentTarget);\n\t\tsetCategory(String(data.get(\"category\") ?? \"\"));\n\t\tsetOpen(false);\n\t}, []);\n\treturn (\n\t\t<Stack gap=\"2\">\n\t\t\t<Dialog onOpenChange={setOpen} open={open}>\n\t\t\t\t<DialogTrigger\n\t\t\t\t\trender={<Button variant=\"outline\">Change category</Button>}\n\t\t\t\t/>\n\t\t\t\t<DialogPopup showCloseButton={false} size=\"sm\">\n\t\t\t\t\t<DialogHeader>\n\t\t\t\t\t\t<DialogTitle>Change user category</DialogTitle>\n\t\t\t\t\t\t<DialogDescription>\n\t\t\t\t\t\t\tChoose a new category for the user.\n\t\t\t\t\t\t</DialogDescription>\n\t\t\t\t\t</DialogHeader>\n\t\t\t\t\t<form onSubmit={save}>\n\t\t\t\t\t\t<DialogPanel>\n\t\t\t\t\t\t\t<Field>\n\t\t\t\t\t\t\t\t<FieldLabel>Category</FieldLabel>\n\t\t\t\t\t\t\t\t<Input defaultValue={category} name=\"category\" required />\n\t\t\t\t\t\t\t</Field>\n\t\t\t\t\t\t</DialogPanel>\n\t\t\t\t\t\t<DialogFooter>\n\t\t\t\t\t\t\t<DialogClose render={<Button variant=\"ghost\">Cancel</Button>} />\n\t\t\t\t\t\t\t<Button type=\"submit\">Save</Button>\n\t\t\t\t\t\t</DialogFooter>\n\t\t\t\t\t</form>\n\t\t\t\t</DialogPopup>\n\t\t\t</Dialog>\n\t\t\t<Text size=\"ui\" tone=\"muted\">\n\t\t\t\tCategory: {category}\n\t\t\t</Text>\n\t\t</Stack>\n\t);\n}\n",
+        "path": "entities/documentation/ui/examples/dialog.tsx"
+      },
+      {
         "name": "DialogNorthstarLaunchExample1",
         "title": "Northstar launch",
         "description": "Review and edit the details of this project.",
@@ -3554,6 +3561,13 @@
         "description": "columns 2:1 puts the main content beside a narrower column. The two stack when the grid is narrow.",
         "path": "entities/documentation/ui/examples/grid-variants.tsx",
         "code": "import {\n\tCard,\n\tCardDescription,\n\tCardHeader,\n\tCardPanel,\n\tCardTitle,\n\tGrid,\n\tPropertyList,\n\tPropertyListItem,\n\tPropertyListLabel,\n\tPropertyListValue,\n\tText,\n} from \"@mizen-labs/ui\";\n\nexport function GridMainAsideExample2() {\n\treturn (\n\t\t<Grid columns=\"2:1\" gap=\"4\">\n\t\t\t<Card>\n\t\t\t\t<CardHeader>\n\t\t\t\t\t<CardTitle>Release notes</CardTitle>\n\t\t\t\t\t<CardDescription>Northstar 2.8.0</CardDescription>\n\t\t\t\t</CardHeader>\n\t\t\t\t<CardPanel>\n\t\t\t\t\t<Text>\n\t\t\t\t\t\tThis release makes the workspace calmer. Navigation is quieter,\n\t\t\t\t\t\ttables are easier to scan, and forms explain their errors in place.\n\t\t\t\t\t</Text>\n\t\t\t\t</CardPanel>\n\t\t\t</Card>\n\t\t\t<Card>\n\t\t\t\t<CardHeader>\n\t\t\t\t\t<CardTitle>Details</CardTitle>\n\t\t\t\t</CardHeader>\n\t\t\t\t<CardPanel>\n\t\t\t\t\t<PropertyList aria-label=\"Release details\">\n\t\t\t\t\t\t<PropertyListItem>\n\t\t\t\t\t\t\t<PropertyListLabel>Owner</PropertyListLabel>\n\t\t\t\t\t\t\t<PropertyListValue>Maya Chen</PropertyListValue>\n\t\t\t\t\t\t</PropertyListItem>\n\t\t\t\t\t\t<PropertyListItem>\n\t\t\t\t\t\t\t<PropertyListLabel>Status</PropertyListLabel>\n\t\t\t\t\t\t\t<PropertyListValue>In review</PropertyListValue>\n\t\t\t\t\t\t</PropertyListItem>\n\t\t\t\t\t</PropertyList>\n\t\t\t\t</CardPanel>\n\t\t\t</Card>\n\t\t</Grid>\n\t);\n}\n"
+      },
+      {
+        "name": "GridTileGalleryExample3",
+        "title": "Tile gallery",
+        "description": "columns auto-sm fits as many tiles of at least 9rem as there is room for: two in a row on a phone. Use auto for larger cards.",
+        "path": "entities/documentation/ui/examples/grid-variants.tsx",
+        "code": "import {\n\tBadge,\n\tCard,\n\tCardDescription,\n\tCardHeader,\n\tCardPanel,\n\tCardTitle,\n\tGrid,\n} from \"@mizen-labs/ui\";\n\nconst items = [\n\t[\"AK-47 | Redline\", \"$24.10\", \"Tradable\"],\n\t[\"AWP | Asiimov\", \"$96.50\", \"Tradable\"],\n\t[\"M4A1-S | Printstream\", \"$61.20\", \"On hold\"],\n\t[\"Glock-18 | Fade\", \"$1,284.00\", \"Tradable\"],\n\t[\"Desert Eagle | Blaze\", \"$410.00\", \"On hold\"],\n\t[\"USP-S | Kill Confirmed\", \"$58.90\", \"Tradable\"],\n] as const;\n\nexport function GridTileGalleryExample3() {\n\treturn (\n\t\t<Grid columns=\"auto-sm\" gap=\"4\">\n\t\t\t{items.map(([name, price, status]) => (\n\t\t\t\t<Card key={name}>\n\t\t\t\t\t<CardHeader>\n\t\t\t\t\t\t<CardTitle>{name}</CardTitle>\n\t\t\t\t\t\t<CardDescription>{price}</CardDescription>\n\t\t\t\t\t</CardHeader>\n\t\t\t\t\t<CardPanel>\n\t\t\t\t\t\t<Badge\n\t\t\t\t\t\t\tappearance=\"soft\"\n\t\t\t\t\t\t\tvariant={status === \"Tradable\" ? \"success\" : \"warning\"}\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t{status}\n\t\t\t\t\t\t</Badge>\n\t\t\t\t\t</CardPanel>\n\t\t\t\t</Card>\n\t\t\t))}\n\t\t</Grid>\n\t);\n}\n"
       }
     ],
     "group": [

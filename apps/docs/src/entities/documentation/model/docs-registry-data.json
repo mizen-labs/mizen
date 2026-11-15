@@ -186,7 +186,15 @@
     "description": "Focuses a short task above the current page with managed focus.",
     "name": "Dialog",
     "slug": "dialog",
-    "status": "stable"
+    "status": "stable",
+    "usageSections": [
+      {
+        "id": "form",
+        "title": "Form",
+        "description": "Wrap DialogPanel and DialogFooter in a form. Enter in a field submits, the submit button sits in the footer, and the spacing stays as without the form. Close the dialog after the save succeeds.",
+        "code": "<DialogPopup size=\"sm\">\n  <DialogHeader>\n    <DialogTitle>Change user category</DialogTitle>\n    <DialogDescription>Choose a new category for the user.</DialogDescription>\n  </DialogHeader>\n  <form onSubmit={save}>\n    <DialogPanel>\n      <Field>\n        <FieldLabel>Category</FieldLabel>\n        <Input name=\"category\" required />\n      </Field>\n    </DialogPanel>\n    <DialogFooter>\n      <DialogClose render={<Button variant=\"ghost\">Cancel</Button>} />\n      <Button type=\"submit\">Save</Button>\n    </DialogFooter>\n  </form>\n</DialogPopup>"
+      }
+    ]
   },
   {
     "api": [
@@ -1433,9 +1441,9 @@
       },
       {
         "defaultValue": "\"2\"",
-        "description": "Sets the widest arrangement. \"2\", \"3\", and \"4\" are equal columns; \"4\" steps down to two, never to three and one. \"auto\" fits as many equal columns of at least 16rem as there is room for. \"2:1\" and \"1:2\" put a main column beside a narrower one. Columns stack when the grid is too narrow for them: two columns need 30rem, three columns and the ratios need 45rem, four need 60rem.",
+        "description": "Sets the widest arrangement. \"2\", \"3\", and \"4\" are equal columns; \"4\" steps down to two, never to three and one. \"auto\" fits as many equal columns of at least 16rem as there is room for; \"auto-sm\" does the same at 9rem, for small tiles, two in a row on a phone. \"2:1\" and \"1:2\" put a main column beside a narrower one. Columns stack when the grid is too narrow for them: two columns need 30rem, three columns and the ratios need 45rem, four need 60rem.",
         "name": "columns",
-        "type": "\"1\" | \"2\" | \"3\" | \"4\" | \"auto\" | \"2:1\" | \"1:2\""
+        "type": "\"1\" | \"2\" | \"3\" | \"4\" | \"auto\" | \"auto-sm\" | \"2:1\" | \"1:2\""
       },
       {
         "defaultValue": "\"3\" (12px)",

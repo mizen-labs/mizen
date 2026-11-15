@@ -361,7 +361,8 @@
     "recommendations": [
       "Give the task a clear title. Keep the main action and cancel action visible and predictable.",
       "DialogTitle names the popup. DialogDescription supplies supporting context. Tab stays within a modal dialog; Escape closes it and returns focus to its trigger.",
-      "An uncontrolled composition can live in a Server Component. Use a Client Component for open state and callbacks. Close after a save succeeds, not before."
+      "An uncontrolled composition can live in a Server Component. Use a Client Component for open state and callbacks. Close after a save succeeds, not before.",
+      "For a form, wrap DialogPanel and DialogFooter in the form and put the submit button in the footer. Keep DialogHeader outside the form."
     ]
   },
   "distribution": {

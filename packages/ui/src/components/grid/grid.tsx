@@ -10,7 +10,8 @@ export type GridGap = keyof typeof stackGapStyles;
 
 export type GridProps = Omit<NativeDivProps, "className" | "role" | "style"> & {
 	/**
-	 * Equal columns (`"1"` to `"4"`), as many as fit (`"auto"`), or a main
+	 * Equal columns (`"1"` to `"4"`), as many as fit (`"auto"`, each at
+	 * least 16rem; `"auto-sm"`, at least 9rem, for small tiles), or a main
 	 * column beside a narrower one (`"2:1"`, `"1:2"`). Columns stack when the
 	 * grid is too narrow for them.
 	 */

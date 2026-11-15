@@ -101,3 +101,37 @@ export function GridMainAsideExample2() {
 		</Grid>
 	);
 }
+
+const items = [
+	["AK-47 | Redline", "$24.10", "Tradable"],
+	["AWP | Asiimov", "$96.50", "Tradable"],
+	["M4A1-S | Printstream", "$61.20", "On hold"],
+	["Glock-18 | Fade", "$1,284.00", "Tradable"],
+	["Desert Eagle | Blaze", "$410.00", "On hold"],
+	["USP-S | Kill Confirmed", "$58.90", "Tradable"],
+] as const;
+
+// columns auto-sm fits small tiles of at least 9rem: two in a row on a
+// phone, six on a wide screen.
+export function GridTileGalleryExample3() {
+	return (
+		<Grid columns="auto-sm" gap="4">
+			{items.map(([name, price, status]) => (
+				<Card key={name}>
+					<CardHeader>
+						<CardTitle>{name}</CardTitle>
+						<CardDescription>{price}</CardDescription>
+					</CardHeader>
+					<CardPanel>
+						<Badge
+							appearance="soft"
+							variant={status === "Tradable" ? "success" : "warning"}
+						>
+							{status}
+						</Badge>
+					</CardPanel>
+				</Card>
+			))}
+		</Grid>
+	);
+}

@@ -197,6 +197,11 @@
       "description": "Keep open and onOpenChange together so Escape, dismissal, and application actions share one state."
     },
     {
+      "name": "DialogFormExample",
+      "title": "Form",
+      "description": "Wrap DialogPanel and DialogFooter in a form, so Enter in a field submits and the submit button sits in the footer. The spacing stays as without the form. Close the dialog after the save succeeds."
+    },
+    {
       "name": "DialogNorthstarLaunchExample1",
       "title": "Northstar launch",
       "description": "Review and edit the details of this project.",
@@ -1347,6 +1352,12 @@
       "name": "GridMainAsideExample2",
       "title": "Main and aside",
       "description": "columns 2:1 puts the main content beside a narrower column. The two stack when the grid is narrow.",
+      "path": "entities/documentation/ui/examples/grid-variants.tsx"
+    },
+    {
+      "name": "GridTileGalleryExample3",
+      "title": "Tile gallery",
+      "description": "columns auto-sm fits as many tiles of at least 9rem as there is room for: two in a row on a phone. Use auto for larger cards.",
       "path": "entities/documentation/ui/examples/grid-variants.tsx"
     }
   ],

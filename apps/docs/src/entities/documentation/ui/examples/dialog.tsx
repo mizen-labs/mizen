@@ -7,11 +7,17 @@ import {
 	DialogDescription,
 	DialogFooter,
 	DialogHeader,
+	DialogPanel,
 	DialogPopup,
 	DialogTitle,
 	DialogTrigger,
+	Field,
+	FieldLabel,
+	Input,
+	Stack,
+	Text,
 } from "@mizen-labs/ui";
-import { useCallback, useState } from "react";
+import { type FormEvent, useCallback, useState } from "react";
 
 export function BasicDialog() {
 	return (
@@ -55,5 +61,50 @@ export function ControlledDialog() {
 				</DialogFooter>
 			</DialogPopup>
 		</Dialog>
+	);
+}
+
+// A form holds the panel and the footer, so Enter in a field submits and
+// the submit button sits in the footer. The spacing stays as without it.
+export function DialogFormExample() {
+	const [open, setOpen] = useState(false);
+	const [category, setCategory] = useState("Regular");
+	const save = useCallback((event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const data = new FormData(event.currentTarget);
+		setCategory(String(data.get("category") ?? ""));
+		setOpen(false);
+	}, []);
+	return (
+		<Stack gap="2">
+			<Dialog onOpenChange={setOpen} open={open}>
+				<DialogTrigger
+					render={<Button variant="outline">Change category</Button>}
+				/>
+				<DialogPopup showCloseButton={false} size="sm">
+					<DialogHeader>
+						<DialogTitle>Change user category</DialogTitle>
+						<DialogDescription>
+							Choose a new category for the user.
+						</DialogDescription>
+					</DialogHeader>
+					<form onSubmit={save}>
+						<DialogPanel>
+							<Field>
+								<FieldLabel>Category</FieldLabel>
+								<Input defaultValue={category} name="category" required />
+							</Field>
+						</DialogPanel>
+						<DialogFooter>
+							<DialogClose render={<Button variant="ghost">Cancel</Button>} />
+							<Button type="submit">Save</Button>
+						</DialogFooter>
+					</form>
+				</DialogPopup>
+			</Dialog>
+			<Text size="ui" tone="muted">
+				Category: {category}
+			</Text>
+		</Stack>
 	);
 }

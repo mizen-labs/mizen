@@ -3322,7 +3322,7 @@
     {
       "name": "PageRecordDetailExample3",
       "title": "Record detail",
-      "description": "The record's history, then its details. On a wide screen the details sit in a narrower column beside the history.",
+      "description": "The record's avatar in PageMedia beside its name, then its history and details. On a wide screen the details sit in a narrower column beside the history.",
       "path": "entities/documentation/ui/examples/page-variants.tsx"
     },
     {

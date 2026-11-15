@@ -23,7 +23,7 @@ export const pageStyles = create({
 		display: "flex",
 		flexWrap: "wrap",
 		gap: space["2"],
-		gridColumn: { [WIDE]: "2", default: "1 / -1" },
+		gridColumn: { [WIDE]: "3", default: "1 / -1" },
 		gridRow: { [WIDE]: "1", default: "auto" },
 		justifySelf: { [WIDE]: "end", default: "start" },
 		marginBlock: {
@@ -37,7 +37,7 @@ export const pageStyles = create({
 		color: colors.mutedContent,
 		fontSize: fontSize["14"],
 		fontWeight: fontWeight.regular,
-		gridColumn: { [WIDE]: "1", default: "1 / -1" },
+		gridColumn: { [WIDE]: "2", default: "1 / -1" },
 		letterSpacing: letterSpacing.ui,
 		lineHeight: lineHeight["20"],
 		margin: 0,
@@ -46,15 +46,27 @@ export const pageStyles = create({
 	},
 	// The query container and the grid in one element. A container cannot
 	// change its own columns, so the parts choose their places instead. With
-	// no width from its parent, it is 16rem wide instead of nothing.
+	// no width from its parent, it is 16rem wide instead of nothing. The
+	// first column holds PageMedia; without it, the column has no width.
 	header: {
 		alignItems: "center",
 		containerType: "inline-size",
 		containIntrinsicInlineSize: "16rem",
 		display: "grid",
-		gridTemplateColumns: "minmax(0, 1fr) auto",
+		gridTemplateColumns: "auto minmax(0, 1fr) auto",
 		minWidth: 0,
 		rowGap: space["1"],
+	},
+	// Before the title and the description, spanning both. On a narrow
+	// header it sits above the text.
+	media: {
+		alignItems: "center",
+		display: "flex",
+		gridColumn: { [WIDE]: "1", default: "1 / -1" },
+		gridRow: { [WIDE]: "1 / span 2", default: "auto" },
+		justifySelf: "start",
+		marginBlockEnd: { [WIDE]: 0, default: space["3"] },
+		marginInlineEnd: { [WIDE]: space["4"], default: 0 },
 	},
 	// A form or settings page reads best in one narrow column.
 	narrow: { maxWidth: "42rem" },
@@ -75,7 +87,7 @@ export const pageStyles = create({
 	},
 	title: {
 		color: colors.content,
-		gridColumn: { [WIDE]: "1", default: "1 / -1" },
+		gridColumn: { [WIDE]: "2", default: "1 / -1" },
 		margin: 0,
 		minWidth: 0,
 	},

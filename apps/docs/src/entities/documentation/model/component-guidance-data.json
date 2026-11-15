@@ -1133,6 +1133,7 @@
     ],
     "recommendations": [
       "Use one Page per screen, with one PageTitle.",
+      "On a page that names a record, such as a user or a customer, put its avatar in PageMedia before the title.",
       "Put the main action in PageAction as the brand button. Other actions are outline or ghost.",
       "Use width narrow for forms and settings. Leave lists, tables, and dashboards at full width.",
       "Start from the closest example on this page, then change its content."

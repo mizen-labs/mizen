@@ -1,6 +1,8 @@
 "use client";
 
 import {
+	Avatar,
+	AvatarFallback,
 	Badge,
 	BarList,
 	Button,
@@ -21,6 +23,7 @@ import {
 	PageAction,
 	PageDescription,
 	PageHeader,
+	PageMedia,
 	PageTitle,
 	PropertyList,
 	PropertyListItem,
@@ -222,6 +225,11 @@ export function PageRecordDetailExample3() {
 	return (
 		<Page>
 			<PageHeader>
+				<PageMedia>
+					<Avatar size="lg">
+						<AvatarFallback>NL</AvatarFallback>
+					</Avatar>
+				</PageMedia>
 				<PageTitle>Northstar Labs</PageTitle>
 				<PageDescription>Customer since March 2024.</PageDescription>
 				<PageAction>

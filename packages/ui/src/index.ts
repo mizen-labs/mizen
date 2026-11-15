@@ -697,6 +697,7 @@ export type {
 	PageActionProps,
 	PageDescriptionProps,
 	PageHeaderProps,
+	PageMediaProps,
 	PageProps,
 	PageTitleProps,
 	PageWidth,
@@ -706,6 +707,7 @@ export {
 	PageAction,
 	PageDescription,
 	PageHeader,
+	PageMedia,
 	PageTitle,
 } from "./components/page/page";
 export {

@@ -29,6 +29,11 @@ export type PageDescriptionProps = Omit<
 	"className" | "role" | "style"
 >;
 
+export type PageMediaProps = Omit<
+	NativeDivProps,
+	"className" | "role" | "style"
+>;
+
 export type PageActionProps = Omit<
 	NativeDivProps,
 	"className" | "role" | "style"
@@ -109,6 +114,26 @@ export function PageDescription({
 		>
 			{children}
 		</p>
+	);
+}
+
+/** An avatar, a logo, or a record icon before the title. */
+export function PageMedia({
+	children,
+	ref: forwardedRef,
+	...rest
+}: PageMediaProps) {
+	Reflect.deleteProperty(rest, "role");
+
+	return (
+		<div
+			{...rest}
+			data-slot="page-media"
+			ref={forwardedRef}
+			{...props(pageStyles.media)}
+		>
+			{children}
+		</div>
 	);
 }
 

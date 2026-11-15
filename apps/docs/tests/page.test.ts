@@ -132,6 +132,33 @@ describe("Page component and screen recipes", () => {
 		}
 	);
 
+	it.each([
+		{ beside: true, width: 1280 },
+		{ beside: false, width: 375 },
+	])(
+		"puts the record avatar before the title: $beside at a $width px window",
+		async ({ beside, width }) => {
+			await openExample("PageRecordDetailExample3", width);
+			const media = await readBox("page-media");
+			const title = await readBox("page-title");
+			const description = await readBox("page-description");
+			const action = await readBox("page-action");
+			if (beside) {
+				// Beside the text, centered on both lines; the action stays on the
+				// title line.
+				expect(media.right).toBeLessThan(title.left);
+				expect(Math.round(media.top + media.height / 2)).toBe(
+					Math.round((title.top + description.bottom) / 2)
+				);
+				expect(action.top).toBeLessThan(title.bottom);
+			} else {
+				// Above the text, aligned with it.
+				expect(media.bottom).toBeLessThanOrEqual(title.top);
+				expect(media.left).toBe(title.left);
+			}
+		}
+	);
+
 	it("uses the smaller inset on a phone", async () => {
 		expect(
 			await page

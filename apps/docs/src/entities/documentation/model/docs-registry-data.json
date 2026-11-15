@@ -2609,7 +2609,7 @@
         "properties": [
           {
             "defaultValue": "—",
-            "description": "PageTitle, then PageDescription and PageAction when needed.",
+            "description": "PageMedia when the page names a record, then PageTitle, PageDescription, and PageAction.",
             "name": "children",
             "type": "ReactNode"
           }
@@ -2634,6 +2634,18 @@
           {
             "defaultValue": "—",
             "description": "A short sentence about the screen.",
+            "name": "children",
+            "type": "ReactNode"
+          }
+        ]
+      },
+      {
+        "name": "PageMedia",
+        "description": "An avatar, a logo, or a record icon before the title. It spans the title and the description, and sits above them when the header is narrower than 30rem.",
+        "properties": [
+          {
+            "defaultValue": "—",
+            "description": "An Avatar, usually size lg.",
             "name": "children",
             "type": "ReactNode"
           }

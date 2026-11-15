@@ -33,6 +33,8 @@ export type DialogPopupProps = Omit<
 	BaseDialogPopupProps,
 	"className" | "ref" | "render" | "style"
 > & {
+	/** Props for the default close button, such as a translated aria-label. */
+	closeProps?: DialogCloseProps;
 	portalProps?: Omit<
 		BaseDialogPortalProps,
 		"children" | "className" | "ref" | "render" | "style"
@@ -86,6 +88,7 @@ export function DialogTrigger<Payload = unknown>({
 
 export function DialogPopup({
 	children,
+	closeProps,
 	portalProps,
 	ref: forwardedRef = undefined,
 	showCloseButton = true,
@@ -115,6 +118,7 @@ export function DialogPopup({
 						<BaseDialog.Close
 							aria-label="Close"
 							data-slot="dialog-default-close"
+							{...closeProps}
 							{...props(dialogStyles.close)}
 						>
 							<CloseIcon />

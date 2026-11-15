@@ -140,6 +140,12 @@
         "type": "boolean"
       },
       {
+        "defaultValue": "—",
+        "description": "Props for the default close button. Set aria-label to name it in the interface language.",
+        "name": "closeProps",
+        "type": "DialogCloseProps"
+      },
+      {
         "defaultValue": "<div>",
         "description": "Groups the title and description.",
         "name": "DialogHeader",

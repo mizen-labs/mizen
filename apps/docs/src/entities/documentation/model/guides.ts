@@ -817,6 +817,7 @@ export function ReviewAction() {
 				paragraphs: [
 					"Give every control a visible label or an accessible name. Use Field to connect labels, descriptions, and errors to inputs.",
 					"Write meaningful page titles, headings, and alt text, and keep the page's heading order. Announce async results that happen away from the user's focus.",
+					"Built-in names are English, such as Close on a dialog. In another language, name them through the component's props, such as closeProps, removeLabel, triggerLabel, or aria-label, or leave the built-in control out and compose your own, such as a DialogClose in the footer. Mizen has no locale provider.",
 				],
 				title: "What your app owns",
 			},

@@ -318,7 +318,8 @@ describe("Analytics workspace browser integration", () => {
 		const tooltip = page
 			.locator(dashboardSelector)
 			.locator("[data-slot='chart-tooltip']");
-		expect(await tooltip.isVisible()).toBe(true);
+		// The tooltip shows once it is placed, a frame or two after the key.
+		await expect.poll(() => tooltip.isVisible()).toBe(true);
 		expect(
 			await tooltip.locator("[data-slot='chart-tooltip-term']").textContent()
 		).toBe("Requests");

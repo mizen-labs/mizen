@@ -1,5 +1,107 @@
 # @mizen-labs/ui
 
+## 0.4.0
+
+### Minor Changes
+
+- 42b2ca2: Add `AlertDialogPanel`, the body of an alert dialog (#31). Put it between `AlertDialogHeader` and `AlertDialogFooter` for content such as the values an action will change. It aligns with the title, and scrolls when it is too long while the header and the footer stay in view.
+- 137bf7c: Add `AppShell`, the frame of an application (#5), from `@mizen-labs/ui` or `@mizen-labs/ui/app-shell`.
+  
+  ```tsx
+  <AppShell>
+    <AppShellSidebar aria-label="Admin navigation">
+      <AppShellSidebarHeader>…</AppShellSidebarHeader>
+      <AppShellNav aria-label="Main">
+        <AppShellGroup collapsible label="Finance">
+          <AppShellItem render={<Link to="/balances" />}>
+            <IconWallet aria-hidden="true" />
+            Balances
+          </AppShellItem>
+        </AppShellGroup>
+      </AppShellNav>
+      <AppShellSidebarFooter>…</AppShellSidebarFooter>
+    </AppShellSidebar>
+    <AppShellInset>
+      <AppShellHeader>
+        <AppShellSidebarTrigger />
+        <AppShellTitle>Balances</AppShellTitle>
+      </AppShellHeader>
+      <AppShellMain>
+        <Page>…</Page>
+      </AppShellMain>
+    </AppShellInset>
+  </AppShell>
+  ```
+  
+  - From 48rem the sidebar sits beside one inset surface. The navigation scrolls; the sidebar header and footer stay in view.
+  - `AppShellSidebarTrigger` collapses the sidebar, and its icon shows whether it will collapse or expand. Collapsed, the sidebar hides at once and slides back over the content while the pointer rests on the left edge, and while focus or an open menu is inside it. It stays above anything raised in the content, such as a sticky table header.
+  - Below 48rem the same sidebar opens in a left drawer, which closes after a link is chosen.
+  - Without `defaultSidebarOpen`, the sidebar starts open from 64rem and collapsed between 48rem and 64rem, so the content keeps its room on a small laptop.
+  - A long list scrolls the current item into view on load. A count Badge in an item never shrinks or wraps. A long group label keeps its full text as a title. Labels in another script end in their own ellipsis.
+  - A button in `AppShellSidebarFooter`, such as the account menu, spans the sidebar on one line and ends a long name in an ellipsis. In the drawer, the header keeps clear of the close button.
+  - `AppShellItem` renders a router link, marks the current page from `current` or the link's own `aria-current`, truncates a long label and keeps its full text, and fits a `Badge` count.
+  - `AppShellGroup` lists its items under a label and can fold, controlled or not.
+  - `sidebarOpen` and `onSidebarOpenChange` let the app save the state. `AppShellMain busy` shows a loading line with a status for screen readers.
+  - A skip link moves focus to the content.
+  
+  The app owns routes, permissions and saved preferences. English names (`skipLinkLabel`, `busyLabel`, `closeLabel`, the trigger's `aria-label`) are props.
+- 778a343: A `Badge` inside a `Button`, a `TabsTab` or a `SegmentedControlItem` now fits the control. Put it after the label, with no `size` and no `variant`:
+  
+  ```tsx
+  <Button variant="outline">
+    Filters <Badge>3</Badge>
+  </Button>
+  ```
+  
+  - The control sets the badge's height, padding and type size, from 18px in a 24px control to 24px in a 44px one. `size` is ignored there.
+  - A `default` or `secondary` badge takes the control's text color and a tint of it, so it shows on a filled button, an outline button, and a selected or unselected tab. Status, brand and outline badges keep their colors.
+  - A trailing badge sits concentric in the end of the control: the space above, below and after it is the same.
+  - Digits are tabular, and one digit makes a circle.
+  
+  This changes a badge that an app already put inside one of these controls: it may get a different size, and a `default` or `secondary` badge gets the tinted fill.
+- eac6224: `DialogPopup` takes `closeProps` for its default close button, as `SheetPopup` and `DrawerPopup` do, so an app can name it in its own language:
+  
+  ```tsx
+  <DialogPopup closeProps={{ "aria-label": "Закрыть" }}>
+  ```
+- 79a14f9: Add `PageMedia` for an avatar, a logo or a record icon before the page title (#28). It spans the title and the description, keeps `PageAction` on the title line, and sits above the text when the header is narrower than 30rem.
+  
+  `PageHeader` now has three columns. The first holds `PageMedia` and has no width without it, so a header without media looks the same.
+- 22fabd4: - `TableCell` takes `nowrap` for a cell that must stay on one line, such as a date or a status `Badge`. The table scrolls instead of wrapping it.
+  - A table wider than its container fades at the edge that has more columns, so a cut column reads as scrollable. The fade follows the scroll position where the browser supports scroll-driven animation; Firefox shows no fade yet. A focused table shows its focus ring instead.
+  - A numeric cell keeps a sign before its number in a right-to-left table.
+- 22fabd4: `Text` takes `truncate` and `lines` for text from data that can be long. `truncate` keeps one line with an ellipsis and lets the text shrink in a row; `lines={2}` clamps to two lines. While the text is cut, its full content shows as a tooltip, and the ellipsis sits at the end of the text's own script.
+  
+  ```tsx
+  <Inline gap="2" wrap={false}>
+    <Avatar size="sm">…</Avatar>
+    <Text size="ui" truncate>Northwind Industries Holdings International</Text>
+  </Inline>
+  ```
+- 7ad3522: `Token` accepts `removeLabel`, the accessible name of its remove button. The default stays "Remove " and the label, in English. Pass the whole name in the interface language: `removeLabel="Убрать фильтр «Стример»"`.
+
+### Patch Changes
+
+- 923533e: A bare `PopoverPopup` is as wide as its content in every browser. In 0.3.0 a bare popup that opened upward or to the left was 0px wide in Safari, so a `DatePicker` or `DateRangePicker` calendar could not be seen or clicked there. In other browsers it was squeezed to its narrowest width. The popup no longer takes its width from the positioner.
+- e9434e1: A chart tooltip no longer appears squeezed, and no longer makes a chart or its container scroll.
+  
+  - Near an edge of a chart, a tooltip first showed a few characters wide and hundreds of pixels tall, then grew to its size over several frames. It is now as wide as its content from the first frame it shows.
+  - Every chart opens its tooltip in the browser's top layer. It adds no scrollable overflow, no card clips it, and the window, not the chart, limits where it goes. A tooltip can therefore extend past the edge of its chart.
+  - `ChartTooltip` is as wide as its content and does not wrap.
+  
+  For your own `ChartFrame` definition, pass `tooltip: { use: tooltip, portal }` with `portal` from `@tanstack/charts/tooltip/portal` to get the same behavior.
+- 22fabd4: Long and short data no longer break these components:
+  
+  - `MetricTrend` and `Metric` keep a value on one line. In a MetricTrend card narrower than 14rem the value steps down from 28px to 20px. A value and a `MetricDelta` keep their sign in place in a right-to-left page.
+  - `CalendarHeatmap` with a few days stops growing at a 24px pitch. One day used to fill the width and make the chart 900px tall.
+  - `AreaChart` and the shared time axis show a single point as a dot, with one date label (`Jan 1, 2026`) instead of a millisecond timestamp.
+- 2c3c73d: - A `Menu` or `ContextMenu` with a long item now wraps the item at 20rem. Before, the menu grew to the width of the window.
+  - A `PropertyList` stacked on a narrow screen puts 4px between a label and its value and 12px before the next label, so each pair reads as one. Before, both spaces were about the same.
+- 40f8cb0: Fix two overlay defects.
+  
+  - A `Select`, `Combobox`, `Menu`, `Popover` or `DatePicker` inside a `Drawer` now opens above the drawer and takes mouse and touch input (#27). The drawer viewport now sits in the same layer as the `Dialog` and `Sheet` viewports.
+  - A closed `Sheet`, `Dialog` or `Drawer` with `keepMounted` is now hidden and takes no clicks (#26). Their popup and viewport no longer override the `hidden` attribute.
+
 ## 0.3.0
 
 ### Minor Changes

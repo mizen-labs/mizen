@@ -291,6 +291,8 @@ function RootDocument({ children }) {
 					'The app can replace these groups: color, field-color, font, shape, letter-spacing, space, control-size, glyph-size, shadow, duration, and easing. To change a token, declare it again on :root; add a [data-theme="dark"] rule for a separate dark value. Components follow it.',
 					"These scales are fixed: font-size, font-weight, line-height, border-width, and palette. Read them; declaring one again does not change the components.",
 					"The same tokens are StyleX modules at @mizen-labs/ui/<name>.stylex. An app needs them only when it compiles StyleX itself. Such an app compiles the Mizen source in the same StyleX build and does not import styles.css: two separately compiled StyleX stylesheets do not agree on rule priority.",
+					"Compile the whole source, not a list of token files: add node_modules/@mizen-labs/ui/src/**/*.{ts,tsx} to the StyleX include. A build that compiles only some modules leaves a token, such as a palette color, as a var() with no value, and nothing fails: the element falls back to the inherited color.",
+					"An app with styles.css computes colors in plain CSS from the same tokens, palette included: color-mix(in oklab, var(--mizen-palette-green500) 15%, var(--mizen-color-surface)).",
 				],
 				title: "Token variables",
 			},

@@ -25,16 +25,12 @@ export const drawerPositionsStyles = create({
 		},
 		width: "100%",
 	},
+	// An inset drawer floats as a card at every width, 8px from the edges on
+	// a phone and 12px from 40rem.
 	popup_inset: {
-		borderRadius: {
-			[conditions.sm]: shape.floatingRadius,
-			default: 0,
-		},
+		borderRadius: shape.floatingRadius,
 		borderStyle: "solid",
-		borderWidth: {
-			[conditions.sm]: borderWidth.thin,
-			default: 0,
-		},
+		borderWidth: borderWidth.thin,
 	},
 	popup_left: {
 		borderEndEndRadius: shape.floatingRadius,
@@ -102,11 +98,11 @@ export const drawerPositionsStyles = create({
 	viewport_inset: {
 		"--drawer-viewport-inset": {
 			[conditions.sm]: space["3"],
-			default: "0px",
+			default: space["2"],
 		},
 		padding: {
 			[conditions.sm]: space["3"],
-			default: 0,
+			default: space["2"],
 		},
 	},
 	viewport_left: {

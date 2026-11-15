@@ -22,6 +22,7 @@ import {
 	IconChevronDown,
 	IconLayoutSidebarLeftCollapse,
 	IconLayoutSidebarLeftExpand,
+	IconX,
 } from "../../icons";
 import { assignRef } from "../../ref-utils";
 import { protectRenderSlot } from "../../render-utils";
@@ -32,7 +33,13 @@ import {
 	CollapsiblePanel,
 	CollapsibleTrigger,
 } from "../collapsible/collapsible";
-import { Drawer, DrawerContent, DrawerPopup } from "../drawer/drawer";
+import {
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerPopup,
+	DrawerPrimitive,
+} from "../drawer/drawer";
 import { ScrollArea } from "../scroll-area/scroll-area";
 import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { appShellStyles as styles } from "./app-shell.styles";
@@ -269,11 +276,17 @@ function NavigationDrawer({
 	const close = useCallback(() => setDrawerOpen(false), [setDrawerOpen]);
 	return (
 		<Drawer onOpenChange={setDrawerOpen} open={drawerOpen} position="left">
+			{/* A swipe from the left edge opens it; the strip stays clear of
+			the header's menu button. */}
+			<DrawerPrimitive.SwipeArea
+				data-slot="app-shell-swipe-area"
+				{...props(styles.swipeArea)}
+			/>
 			<DrawerPopup
 				aria-label={label}
-				closeProps={{ "aria-label": closeLabel }}
 				onClick={closeOnNavigate(close)}
-				showCloseButton
+				showCloseButton={false}
+				variant="inset"
 			>
 				<DrawerContent
 					render={
@@ -285,6 +298,18 @@ function NavigationDrawer({
 				>
 					{children}
 				</DrawerContent>
+				{/* A swipe, a tap outside, or Escape closes it. Keyboard and
+				touch screen readers get this button; it shows only when
+				focused from the keyboard. */}
+				<span {...props(styles.drawerClose)}>
+					<DrawerClose
+						render={
+							<Button aria-label={closeLabel} size="icon-sm" variant="ghost" />
+						}
+					>
+						<IconX aria-hidden="true" />
+					</DrawerClose>
+				</span>
 			</DrawerPopup>
 		</Drawer>
 	);

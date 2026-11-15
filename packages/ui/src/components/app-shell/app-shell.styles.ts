@@ -59,6 +59,14 @@ export const appShellStyles = create({
 		marginInline: `calc(-1 * ${space["2"]})`,
 		minBlockSize: 0,
 	},
+	// Invisible until it has keyboard focus; screen readers always reach it.
+	drawerClose: {
+		insetBlockStart: space["2"],
+		insetInlineEnd: space["2"],
+		opacity: { ":has(:focus-visible)": 1, default: 0 },
+		pointerEvents: { ":has(:focus-visible)": "auto", default: "none" },
+		position: "absolute",
+	},
 	// A strip at the start edge: a pointer that rests on it shows the sidebar.
 	edge: {
 		display: { default: "none", [WIDE]: "block" },
@@ -190,16 +198,11 @@ export const appShellStyles = create({
 		},
 	},
 	// Inside the drawer on a narrow screen.
-	// The first row of the header keeps clear of the drawer's close button.
 	inDrawer: {
 		display: "flex",
 		flexGrow: 1,
 		paddingBlock: space["3"],
 		paddingInline: space["3"],
-		paddingInlineEnd: {
-			":is(*) > [data-slot='app-shell-sidebar-header'] > :first-child":
-				"2.5rem",
-		},
 	},
 
 	// The surface beside the sidebar: a header, then the scrolling content.
@@ -363,6 +366,16 @@ export const appShellStyles = create({
 			default: "translateY(calc(-100% - 1rem))",
 		},
 		zIndex: 3,
+	},
+	// A strip at the left edge of a phone screen, narrower than the header's
+	// inset, so the menu button stays tappable.
+	swipeArea: {
+		insetBlock: 0,
+		insetInlineStart: 0,
+		position: "fixed",
+		touchAction: "none",
+		width: space["3"],
+		zIndex: 50,
 	},
 	title: {
 		flexGrow: 1,

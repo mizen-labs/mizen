@@ -289,6 +289,78 @@ describe.each([
 	});
 });
 
+describe("AppShell drawer gestures", { timeout: 60_000 }, () => {
+	let browser: Browser;
+
+	beforeAll(async () => {
+		handle ??= await setupTestServer(docsRoot);
+		browser = await chromium.launch({
+			executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH,
+			headless: true,
+		});
+	}, 120_000);
+
+	afterAll(async () => {
+		await browser?.close();
+	});
+
+	it("opens from the left edge, floats, and closes with a swipe", async () => {
+		const context = await browser.newContext({
+			hasTouch: true,
+			isMobile: true,
+			viewport: { height: 800, width: 390 },
+		});
+		const page = await context.newPage();
+		await page.goto(`${handle.url}/docs/examples/AppShellAdminExample`, {
+			waitUntil: "networkidle",
+		});
+		const touch = await context.newCDPSession(page);
+		const swipe = async (from: number, to: number) => {
+			const point = (x: number) => [{ id: 1, x, y: 400 }];
+			await touch.send("Input.dispatchTouchEvent", {
+				touchPoints: point(from),
+				type: "touchStart",
+			});
+			for (let step = 1; step <= 12; step += 1) {
+				// biome-ignore lint/performance/noAwaitInLoops: a swipe is a sequence of moves in time.
+				await touch.send("Input.dispatchTouchEvent", {
+					touchPoints: point(from + ((to - from) * step) / 12),
+					type: "touchMove",
+				});
+			}
+			await touch.send("Input.dispatchTouchEvent", {
+				touchPoints: [],
+				type: "touchEnd",
+			});
+		};
+		const drawer = page.getByRole("dialog", { name: "Admin navigation" });
+		await swipe(4, 300);
+		await drawer.waitFor({ state: "visible" });
+		// A floating card: away from the screen edges, with rounded corners.
+		await expect
+			.poll(() =>
+				drawer.evaluate((element) => element.getBoundingClientRect().left)
+			)
+			.toBe(8);
+		const card = await drawer.evaluate((element) => {
+			const { borderTopRightRadius } = getComputedStyle(element);
+			return [element.getBoundingClientRect().left, borderTopRightRadius];
+		});
+		expect(card[0]).toBeGreaterThan(0);
+		expect(card[1]).not.toBe("0px");
+		// The close button is there for screen readers but not on screen.
+		const close = drawer.getByRole("button", { name: "Close navigation" });
+		expect(
+			await close.evaluate(
+				(element) => getComputedStyle(element.parentElement as Element).opacity
+			)
+		).toBe("0");
+		await swipe(300, 20);
+		await drawer.waitFor({ state: "hidden" });
+		await context.close();
+	});
+});
+
 describe("AppShell docs", { timeout: 60_000 }, () => {
 	let browser: Browser;
 

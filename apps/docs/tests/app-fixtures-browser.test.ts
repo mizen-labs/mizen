@@ -217,18 +217,22 @@ describe("dashboard drawer", { timeout: 60_000 }, () => {
 		await teardownTestServer(handle);
 	}, 120_000);
 
-	it("keeps the product name clear of the close button", async () => {
+	it("keeps the product name inside the floating drawer", async () => {
 		const page = await open(browser, "worst", 390);
 		await page.getByRole("button", { name: "Toggle navigation" }).click();
 		const drawer = page.getByRole("dialog");
 		await drawer.waitFor({ state: "visible" });
-		await page.waitForTimeout(400);
-		const [name, close] = await Promise.all([
+		await expect
+			.poll(() =>
+				drawer.evaluate((element) => element.getBoundingClientRect().left)
+			)
+			.toBe(8);
+		const [name, card] = await Promise.all([
 			drawer.locator('[data-slot="app-shell-sidebar-header"] p').boundingBox(),
-			drawer.getByRole("button", { name: "Close navigation" }).boundingBox(),
+			drawer.boundingBox(),
 		]);
 		expect((name?.x ?? 0) + (name?.width ?? 0)).toBeLessThanOrEqual(
-			close?.x ?? 0
+			(card?.x ?? 0) + (card?.width ?? 0)
 		);
 		await page.close();
 	});

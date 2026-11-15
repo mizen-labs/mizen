@@ -63,16 +63,21 @@ interface CalendarCell {
 const NAME = "CalendarHeatmap";
 const DAY = 86_400_000;
 // The grid fills its container with near-square days, laid out at a 16px
-// pitch; below a 12px pitch it scrolls instead of shrinking further. The
-// gutter holds weekday labels and the axis holds month labels.
+// pitch; below a 12px pitch it scrolls instead of shrinking further, and
+// above a 24px pitch it stops growing, so a few weeks stay small squares.
+// The gutter holds weekday labels and the axis holds month labels.
 const PITCH = 16;
 const MIN_PITCH = 12;
+const MAX_PITCH = 24;
 const GUTTER = 40;
 const AXIS = 24;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/u;
 
 const styles = create({
-	plot: (minInlineSize: number) => ({ minInlineSize }),
+	plot: (minInlineSize: number, maxInlineSize: number) => ({
+		maxInlineSize,
+		minInlineSize,
+	}),
 	root: { minWidth: 0 },
 	scroller: { overflowX: "auto" },
 });
@@ -340,7 +345,11 @@ function CalendarHeatmapPlot({
 	return (
 		<>
 			<div {...props(styles.scroller)}>
-				<div {...props(styles.plot(weeks * MIN_PITCH + GUTTER))}>
+				<div
+					{...props(
+						styles.plot(weeks * MIN_PITCH + GUTTER, weeks * MAX_PITCH + GUTTER)
+					)}
+				>
 					<ChartFrame
 						aria-label={ariaLabel}
 						aspectRatio={inlineSize / (7 * PITCH + AXIS)}

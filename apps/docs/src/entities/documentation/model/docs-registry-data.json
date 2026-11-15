@@ -2285,8 +2285,8 @@
         "type": "ReactNode"
       },
       {
-        "defaultValue": "true",
-        "description": "Whether the sidebar starts open on a wide screen, when the shell owns the state.",
+        "defaultValue": "—",
+        "description": "Whether the sidebar starts open, when the shell owns the state. Without it, the sidebar starts open from 64rem and collapsed between 48rem and 64rem.",
         "name": "defaultSidebarOpen",
         "type": "boolean"
       },
@@ -2321,8 +2321,8 @@
             "type": "ReactNode"
           },
           {
-            "defaultValue": "true",
-            "description": "Whether the sidebar starts open on a wide screen, when the shell owns the state.",
+            "defaultValue": "—",
+            "description": "Whether the sidebar starts open, when the shell owns the state. Without it, the sidebar starts open from 64rem and collapsed between 48rem and 64rem.",
             "name": "defaultSidebarOpen",
             "type": "boolean"
           },
@@ -3191,6 +3191,18 @@
         "description": "Sets the ink. Use muted for supporting text such as descriptions and metadata.",
         "name": "tone",
         "type": "\"default\" | \"muted\""
+      },
+      {
+        "defaultValue": "false",
+        "description": "Keeps the text on one line with an ellipsis, and lets it shrink in a row. The full text shows as a tooltip while it is cut.",
+        "name": "truncate",
+        "type": "boolean"
+      },
+      {
+        "defaultValue": "—",
+        "description": "Clamps the text to this many lines, with an ellipsis on the last. The full text shows as a tooltip while it is cut.",
+        "name": "lines",
+        "type": "number"
       },
       {
         "defaultValue": "—",
@@ -6551,6 +6563,12 @@
         "type": "boolean",
         "defaultValue": "false",
         "description": "Aligns numeric values at the logical end with tabular numerals; explicit align takes precedence."
+      },
+      {
+        "defaultValue": "false",
+        "description": "Keeps a cell on one line, such as a date or a status Badge. The table scrolls instead of wrapping it.",
+        "name": "TableCell.nowrap",
+        "type": "boolean"
       },
       {
         "name": "TableHead / TableCell.sticky",

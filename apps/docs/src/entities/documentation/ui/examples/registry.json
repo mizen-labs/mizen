@@ -1601,6 +1601,12 @@
       "title": "Release notes",
       "description": "",
       "path": "entities/documentation/ui/examples/text-variants.tsx"
+    },
+    {
+      "name": "TextLongValuesExample2",
+      "title": "Long values",
+      "description": "truncate keeps a name on one line beside its avatar; lines clamps a description. The full text shows as a tooltip while it is cut.",
+      "path": "entities/documentation/ui/examples/text-variants.tsx"
     }
   ],
   "blockquote": [

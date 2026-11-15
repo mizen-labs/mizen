@@ -1,4 +1,4 @@
-import { create } from "@stylexjs/stylex";
+import { create, keyframes } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
 import {
@@ -14,6 +14,22 @@ import {
 	letterSpacing,
 	lineHeight,
 } from "../../styles/typography.stylex";
+
+// A table wider than its container fades at the edge that has more columns,
+// so a cut column reads as "scroll", not as "broken". The fade follows the
+// scroll position; where scroll-driven animation is missing, there is none.
+const EDGE = "1.5rem";
+const fadeEnd = `linear-gradient(to right, black calc(100% - ${EDGE}), transparent)`;
+const fadeStart = `linear-gradient(to left, black calc(100% - ${EDGE}), transparent)`;
+const fadeBoth = `linear-gradient(to right, transparent, black ${EDGE}, black calc(100% - ${EDGE}), transparent)`;
+const scrollEdges = keyframes({
+	"0%": { maskImage: fadeEnd },
+	"1%": { maskImage: fadeBoth },
+	"99%": { maskImage: fadeBoth },
+	"100%": { maskImage: fadeStart },
+});
+
+const SCROLL_TIMELINE = "@supports (animation-timeline: scroll())";
 
 // A hovered or selected row is a band its cells paint, so the band can round
 // its outer corners. Selected rows that touch form one band. A sheet keeps
@@ -109,17 +125,45 @@ export const tableStyles = create({
 	},
 	cellCenter: { textAlign: "center" },
 	cellEnd: { textAlign: "end" },
+	// One line, a badge inside included.
+	cellNowrap: {
+		whiteSpace: {
+			":is(*) [data-slot='badge']": "nowrap",
+			default: "nowrap",
+		},
+	},
 	cellNumeric: {
 		fontVariantNumeric: "tabular-nums",
 		whiteSpace: "nowrap",
 	},
 	container: {
+		// The mask would clip the focus ring, so a focused table shows the
+		// ring instead of the fade.
 		animationDuration: {
 			":focus-visible": focusMotion.duration,
+			[SCROLL_TIMELINE]: {
+				":focus-visible": focusMotion.duration,
+				default: "auto",
+			},
+			default: null,
 		},
+		animationFillMode: { [SCROLL_TIMELINE]: "both", default: null },
 		animationName: {
 			":focus-visible": focusMotion.ring,
+			[SCROLL_TIMELINE]: {
+				":focus-visible": focusMotion.ring,
+				default: scrollEdges,
+			},
+			default: null,
 		},
+		animationTimeline: {
+			[SCROLL_TIMELINE]: {
+				":focus-visible": "auto",
+				default: "scroll(self inline)",
+			},
+			default: null,
+		},
+		animationTimingFunction: { [SCROLL_TIMELINE]: "linear", default: null },
 		// Frameless: hairlines between rows are the only rules. The table paints
 		// the surface color so sticky cells cover the rows that scroll under them.
 		backgroundColor: colors.surface,

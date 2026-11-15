@@ -38,18 +38,25 @@ import { VisuallyHidden } from "../visually-hidden/visually-hidden";
 import { appShellStyles as styles } from "./app-shell.styles";
 
 // The width from which the navigation is a sidebar. It matches the md
-// breakpoint of the styles.
+// breakpoint of the styles. From the lg breakpoint the sidebar starts open;
+// between them it starts collapsed, so the content keeps its room.
 const WIDE_QUERY = "(min-width: 48rem)";
+const LARGE_QUERY = "(min-width: 64rem)";
 
-function subscribe(notify: () => void) {
-	const query = window.matchMedia(WIDE_QUERY);
-	query.addEventListener("change", notify);
-	return () => query.removeEventListener("change", notify);
+function watch(media: string) {
+	return (notify: () => void) => {
+		const query = window.matchMedia(media);
+		query.addEventListener("change", notify);
+		return () => query.removeEventListener("change", notify);
+	};
 }
+const subscribeWide = watch(WIDE_QUERY);
+const subscribeLarge = watch(LARGE_QUERY);
 const isWide = () => window.matchMedia(WIDE_QUERY).matches;
+const isLarge = () => window.matchMedia(LARGE_QUERY).matches;
 // The server renders the sidebar; CSS hides it on a narrow screen until the
 // client knows the width.
-const wideOnServer = () => true;
+const onServer = () => true;
 
 // A collapsed sidebar is hidden, shown while the pointer rests on the edge,
 // or leaving. Only a sidebar that was shown slides out; one that the trigger
@@ -84,7 +91,10 @@ type DivProps = Omit<Closed<ComponentPropsWithRef<"div">>, "role">;
 export type AppShellProps = DivProps & {
 	/** A sidebar and an AppShellInset. */
 	children: ReactNode;
-	/** Whether the sidebar is open on a wide screen, when it starts uncontrolled. */
+	/**
+	 * Whether the sidebar starts open, when the shell owns the state. Without
+	 * it, the sidebar starts open from 64rem and collapsed below.
+	 */
 	defaultSidebarOpen?: boolean;
 	/** Called when the sidebar opens or closes on a wide screen. Save it here. */
 	onSidebarOpenChange?: (open: boolean) => void;
@@ -102,18 +112,21 @@ export type AppShellProps = DivProps & {
  */
 export function AppShell({
 	children,
-	defaultSidebarOpen = true,
+	defaultSidebarOpen,
 	onSidebarOpenChange,
 	ref: forwardedRef,
 	sidebarOpen,
 	skipLinkLabel = "Skip to content",
 	...rest
 }: AppShellProps) {
-	const wide = useSyncExternalStore(subscribe, isWide, wideOnServer);
-	const [ownOpen, setOwnOpen] = useState(defaultSidebarOpen);
+	const wide = useSyncExternalStore(subscribeWide, isWide, onServer);
+	const large = useSyncExternalStore(subscribeLarge, isLarge, onServer);
+	const [ownOpen, setOwnOpen] = useState<boolean | undefined>(
+		defaultSidebarOpen
+	);
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [peek, setPeek] = useState<Peek>("hidden");
-	const open = sidebarOpen ?? ownOpen;
+	const open = sidebarOpen ?? ownOpen ?? large;
 	const mainId = `${useId()}main`;
 	const setOpen = useCallback(
 		(next: boolean) => {
@@ -397,6 +410,19 @@ export type AppShellGroupProps = DivProps & {
 	open?: boolean;
 };
 
+// A text label keeps its full text as a title, since it may be cut.
+function LabelText({ label }: { label: ReactNode }) {
+	return (
+		<span
+			dir="auto"
+			title={typeof label === "string" ? label : undefined}
+			{...props(styles.itemLabel)}
+		>
+			{label}
+		</span>
+	);
+}
+
 function GroupLabel({ id, label }: { id: string; label: ReactNode }) {
 	return (
 		<div
@@ -404,7 +430,7 @@ function GroupLabel({ id, label }: { id: string; label: ReactNode }) {
 			id={id}
 			{...props(styles.groupLabel)}
 		>
-			<span {...props(styles.itemLabel)}>{label}</span>
+			<LabelText label={label} />
 		</div>
 	);
 }
@@ -480,7 +506,7 @@ export function AppShellGroup({
 					/>
 				}
 			>
-				<span {...props(styles.itemLabel)}>{label}</span>
+				<LabelText label={label} />
 				<IconChevronDown aria-hidden="true" size={12} stroke={2} />
 			</CollapsibleTrigger>
 			<CollapsiblePanel gap="0">
@@ -525,12 +551,39 @@ function itemContent(children: ReactNode) {
 	return output;
 }
 
+// dir="auto" lets a label in another script end in its own ellipsis.
 function itemLabel(text: string, key: number) {
 	return (
-		<span key={`label-${key}`} title={text} {...props(styles.itemLabel)}>
+		<span
+			dir="auto"
+			key={`label-${key}`}
+			title={text}
+			{...props(styles.itemLabel)}
+		>
 			{text}
 		</span>
 	);
+}
+
+// The current page starts in view, even below the fold of a long list. Only
+// the navigation scrolls; the window and the page stay where they are.
+function revealCurrent(element: HTMLElement) {
+	if (element.getAttribute("aria-current") !== "page") {
+		return;
+	}
+	const viewport = element.closest<HTMLElement>(
+		'[data-slot="scroll-area-viewport"]'
+	);
+	if (!viewport) {
+		return;
+	}
+	const item = element.getBoundingClientRect();
+	const view = viewport.getBoundingClientRect();
+	if (item.bottom > view.bottom) {
+		viewport.scrollTop += item.bottom - view.bottom + view.height / 2;
+	} else if (item.top < view.top) {
+		viewport.scrollTop -= view.top - item.top;
+	}
 }
 
 /** A link in the navigation. Render the router's link with render. */
@@ -541,6 +594,15 @@ export function AppShellItem({
 	render,
 	...rest
 }: AppShellItemProps) {
+	const ref = useCallback(
+		(element: HTMLAnchorElement | null) => {
+			if (element) {
+				revealCurrent(element);
+			}
+			return assignRef(forwardedRef, element);
+		},
+		[forwardedRef]
+	);
 	return useRender({
 		defaultTagName: "a",
 		props: mergeProps(
@@ -551,7 +613,7 @@ export function AppShellItem({
 			props(styles.item, badgeFit.h32),
 			{ children: itemContent(children), "data-slot": "app-shell-item" }
 		),
-		ref: forwardedRef,
+		ref,
 		render: protectRenderSlot("app-shell-item", render),
 	});
 }

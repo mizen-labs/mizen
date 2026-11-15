@@ -58,6 +58,11 @@ export type TableCellProps = Omit<
 	"align"
 > & {
 	align?: Align;
+	/**
+	 * Keeps the cell on one line, such as a date or a status. The table
+	 * scrolls instead of wrapping it.
+	 */
+	nowrap?: boolean;
 	numeric?: boolean;
 	sticky?: boolean;
 };
@@ -211,11 +216,13 @@ function cellStyles(
 	align: Align | undefined,
 	numeric: boolean,
 	sticky: boolean,
-	head = false
+	head = false,
+	nowrap = false
 ) {
 	const effectiveAlign = align ?? (numeric ? "end" : "start");
 	return props(
 		tableStyles.cell,
+		nowrap && tableStyles.cellNowrap,
 		head && tableStyles.head,
 		alignStyles[effectiveAlign],
 		numeric && tableStyles.cellNumeric,
@@ -249,20 +256,24 @@ export function TableHead({
 export function TableCell({
 	align,
 	children,
+	nowrap = false,
 	numeric = false,
 	ref: forwardedRef,
 	sticky = false,
 	...rest
 }: TableCellProps) {
 	stripReservedProps(rest);
+	// A number reads left to right, so its sign stays in place in a
+	// right-to-left table.
+	const content = numeric ? <bdi dir="ltr">{children}</bdi> : children;
 	return (
 		<td
 			{...rest}
 			data-slot="table-cell"
 			ref={forwardedRef}
-			{...cellStyles(align, numeric, sticky)}
+			{...cellStyles(align, numeric, sticky, false, nowrap)}
 		>
-			{children}
+			{content}
 		</td>
 	);
 }

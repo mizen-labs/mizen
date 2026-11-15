@@ -24,7 +24,7 @@ Reflect.set(globalThis, "IS_REACT_ACT_ENVIRONMENT", true);
 
 const metricSlotRegex = /^<div[^>]*data-slot="metric"/u;
 const metricHierarchyRegex =
-	/<div[^>]*><div[^>]*>Revenue<\/div><div[^>]*>\$48,200<\/div><div[^>]*>\+12%<\/div><\/div>/u;
+	/<div[^>]*><div[^>]*>Revenue<\/div><div[^>]*><bdi dir="ltr">\$48,200<\/bdi><\/div><div[^>]*>\+12%<\/div><\/div>/u;
 
 const propsSpy = vi.fn((..._args: unknown[]) => ({}));
 
@@ -202,7 +202,8 @@ describe("Metric contract and semantics", () => {
 		expect(propsSpy).toHaveBeenCalledWith(metricStyles.label);
 		expect(propsSpy).toHaveBeenCalledWith(
 			metricStyles.value,
-			typeRoles.numeric
+			typeRoles.numeric,
+			metricStyles.valueNarrow
 		);
 		expect(propsSpy).toHaveBeenCalledWith(metricStyles.description);
 	});

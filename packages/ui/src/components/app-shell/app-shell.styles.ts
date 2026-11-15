@@ -98,8 +98,20 @@ export const appShellStyles = create({
 		visibility: "hidden",
 	},
 	floatingInstant: { transitionDuration: "0s" },
-	// The account menu sits at the start, like the items above it.
-	footer: { justifyItems: "start" },
+	// A button here, such as the account menu, spans the sidebar on one line:
+	// its content starts at the start edge, a long name ends in an ellipsis,
+	// and a trailing icon stays at the end.
+	footer: {
+		flexWrap: { ":is(*) > button": "nowrap" },
+		justifyContent: { ":is(*) > button": "flex-start" },
+		marginInlineStart: { ":is(*) > button > svg:last-child": "auto" },
+		// A control label is trimmed to its cap height, so it clips only
+		// sideways: descenders stay whole and the button keeps its height.
+		overflowX: { ":is(*) > button > span:not([data-slot])": "clip" },
+		overflowY: { ":is(*) > button > span:not([data-slot])": "visible" },
+		textOverflow: { ":is(*) > button > span:not([data-slot])": "ellipsis" },
+		whiteSpace: { ":is(*) > button > span:not([data-slot])": "nowrap" },
+	},
 
 	group: {
 		display: "flex",
@@ -178,11 +190,16 @@ export const appShellStyles = create({
 		},
 	},
 	// Inside the drawer on a narrow screen.
+	// The first row of the header keeps clear of the drawer's close button.
 	inDrawer: {
 		display: "flex",
 		flexGrow: 1,
 		paddingBlock: space["3"],
 		paddingInline: space["3"],
+		paddingInlineEnd: {
+			":is(*) > [data-slot='app-shell-sidebar-header'] > :first-child":
+				"2.5rem",
+		},
 	},
 
 	// The surface beside the sidebar: a header, then the scrolling content.
@@ -226,7 +243,8 @@ export const appShellStyles = create({
 			default: colors.mutedContent,
 		},
 		display: "flex",
-		flexShrink: { ":is(*) > svg": 0 },
+		// The icon and a count keep their size; only the label gives way.
+		flexShrink: { ":is(*) > :is(svg, [data-slot='badge'])": 0 },
 		fontSize: fontSize["14"],
 		fontWeight: {
 			":is([aria-current='page'])": fontWeight.medium,

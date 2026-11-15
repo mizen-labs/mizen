@@ -84,17 +84,40 @@ function getTooltipPrecision(resolution: number): Intl.DateTimeFormatOptions {
 	return { ...time, fractionalSecondDigits: 3, second: "2-digit" };
 }
 
+function isMidnight(time: number, timeZone: string) {
+	const clock = new Intl.DateTimeFormat("en-US", {
+		hour: "2-digit",
+		hourCycle: "h23",
+		minute: "2-digit",
+		second: "2-digit",
+		timeZone,
+	}).format(time);
+	return clock === "00:00:00";
+}
+
+function getMomentPrecision(
+	time: number,
+	timeZone: string
+): Intl.DateTimeFormatOptions {
+	return isMidnight(time, timeZone) ? {} : getTooltipPrecision(60_000);
+}
+
 export function makeDateFormatter(
 	locale: string,
 	timeZone: string,
-	points: readonly TimeSeriesDatum[] = []
+	points: readonly TimeSeriesDatum[] = [],
+	only?: number
 ) {
+	const precision =
+		only === undefined
+			? getTooltipPrecision(getResolution(points))
+			: getMomentPrecision(only, timeZone);
 	return new Intl.DateTimeFormat(locale, {
 		day: "numeric",
 		month: "short",
 		timeZone,
 		year: "numeric",
-		...getTooltipPrecision(getResolution(points)),
+		...precision,
 	});
 }
 
@@ -102,6 +125,10 @@ export function makeDateFormatter(
 export function getTickCount(points: readonly TimeSeriesDatum[]): number {
 	const duration = (points.at(-1)?.time ?? 0) - (points.at(0)?.time ?? 0);
 	const resolution = getResolution(points);
+	// One moment gets one label.
+	if (duration === 0) {
+		return 1;
+	}
 	if (!(duration > 0 && Number.isFinite(resolution))) {
 		return 5;
 	}
@@ -118,6 +145,11 @@ export function makeAxisFormatter(
 	const firstTime = points.at(0)?.time ?? 0;
 	const lastTime = points.at(-1)?.time ?? firstTime;
 	const duration = lastTime - firstTime;
+	// One moment has no span to set the precision: show its date, and its
+	// time only when it is not midnight.
+	if (duration === 0) {
+		return makeDateFormatter(locale, timeZone, points, firstTime);
+	}
 	const precision = getAxisPrecision(duration);
 	return new Intl.DateTimeFormat(locale, {
 		...precision,

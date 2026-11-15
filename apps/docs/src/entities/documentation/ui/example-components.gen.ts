@@ -482,6 +482,7 @@ export const usageComponents: Record<string, ReturnType<typeof preloadableExampl
 "TextareaForm": preloadableExample(() => import("./examples/textarea").then((module) => ({ default: module.TextareaForm }))),
 "TextareaMessageDetails": preloadableExample(() => import("./examples/textarea").then((module) => ({ default: module.TextareaMessageDetails }))),
 "TextareaReadonlyNote": preloadableExample(() => import("./examples/textarea").then((module) => ({ default: module.TextareaReadonlyNote }))),
+"TextLongValuesExample2": preloadableExample(() => import("./examples/text-variants").then((module) => ({ default: module.TextLongValuesExample2 }))),
 "TextReleaseNotesExample1": preloadableExample(() => import("./examples/text-variants").then((module) => ({ default: module.TextReleaseNotesExample1 }))),
 "ThinkingThenAnswer": preloadableExample(() => import("./examples/agent-thinking").then((module) => ({ default: module.ThinkingThenAnswer }))),
 "ThumbnailDesignAssetsExample1": preloadableExample(() => import("./examples/thumbnail-variants").then((module) => ({ default: module.ThumbnailDesignAssetsExample1 }))),

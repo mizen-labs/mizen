@@ -925,7 +925,8 @@
     "recommendations": [
       "Use row headers for identifying columns and align numeric values consistently.",
       "Keep wide records inside the named TableContainer scroll region.",
-      "Set `selected` on each selected TableRow. Selected rows that touch form one band, so do not add a background or border of your own."
+      "Set `selected` on each selected TableRow. Selected rows that touch form one band, so do not add a background or border of your own.",
+      "Set nowrap on cells that must stay on one line, such as dates and status badges."
     ]
   },
   "tabs": {
@@ -960,7 +961,8 @@
       "Use Heading for headings and Label for controls. Text renders body paragraphs."
     ],
     "recommendations": [
-      "Use body for prose, ui for dense interface text, and caption for metadata. Set tone=\"muted\" for supporting text; muted ink keeps readable contrast at every size."
+      "Use body for prose, ui for dense interface text, and caption for metadata. Set tone=\"muted\" for supporting text; muted ink keeps readable contrast at every size.",
+      "For text from data that can be long, such as a name in a row, use truncate; for a description, use lines. Do not write text-overflow CSS."
     ]
   },
   "textarea": {

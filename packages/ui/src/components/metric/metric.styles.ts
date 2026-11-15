@@ -1,5 +1,7 @@
 import { create } from "@stylexjs/stylex";
+import { applicationStructure } from "../../styles/application-structure.stylex";
 import { colors } from "../../styles/colors.stylex";
+import { conditions } from "../../styles/conditions.stylex";
 import { borderWidth } from "../../styles/interaction.stylex";
 import { space } from "../../styles/spacing.stylex";
 import {
@@ -8,6 +10,10 @@ import {
 	letterSpacing,
 	lineHeight,
 } from "../../styles/typography.stylex";
+
+// The MetricTrend card names its lead column; a value in a lead narrower
+// than 14rem steps down a size.
+const NARROW = applicationStructure.narrowMetric;
 
 // A soft change chip fills with the tint of its tone, like a soft Badge. The
 // sign carries the direction, so it needs no dot.
@@ -86,10 +92,26 @@ export const metricStyles = create({
 		margin: 0,
 		minWidth: 0,
 	},
+	// A number never breaks across lines. In a narrow MetricTrend card it
+	// steps down from 28px to 20px instead.
 	value: {
 		color: colors.content,
 		margin: 0,
 		minWidth: 0,
-		overflowWrap: "anywhere",
+		whiteSpace: "nowrap",
+	},
+	// The numeric role's sizes, plus the step down in a narrow card.
+	valueNarrow: {
+		fontSize: {
+			[conditions.sm]: { [NARROW]: fontSize["20"], default: fontSize["28"] },
+			default: fontSize["20"],
+		},
+		lineHeight: {
+			[conditions.sm]: {
+				[NARROW]: lineHeight["28"],
+				default: lineHeight["32"],
+			},
+			default: lineHeight["28"],
+		},
 	},
 });

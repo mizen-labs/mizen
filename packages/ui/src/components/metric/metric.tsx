@@ -63,9 +63,15 @@ export function MetricValue({
 			{...rest}
 			data-slot="metric-value"
 			ref={forwardedRef}
-			{...props(metricStyles.value, typeRoles.numeric)}
+			{...props(
+				metricStyles.value,
+				typeRoles.numeric,
+				metricStyles.valueNarrow
+			)}
 		>
-			{children}
+			{/* Numbers read left to right, so a sign stays before its value in a
+			right-to-left page. */}
+			<bdi dir="ltr">{children}</bdi>
 		</div>
 	);
 }
@@ -143,11 +149,13 @@ export function MetricDelta({
 				deltaTones[appearance][tone]
 			)}
 		>
-			{new Intl.NumberFormat(locale, {
-				maximumFractionDigits: 1,
-				signDisplay: "exceptZero",
-				style: "percent",
-			}).format(value)}
+			<bdi dir="ltr">
+				{new Intl.NumberFormat(locale, {
+					maximumFractionDigits: 1,
+					signDisplay: "exceptZero",
+					style: "percent",
+				}).format(value)}
+			</bdi>
 		</span>
 	);
 }

@@ -1,4 +1,5 @@
 import { create } from "@stylexjs/stylex";
+import { applicationStructure } from "../../styles/application-structure.stylex";
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
 import { controlSize, glyphSize } from "../../styles/dimensions.stylex";
@@ -68,8 +69,13 @@ export const metricTrendStyles = create({
 		gap: space["2"],
 		minWidth: 0,
 	},
+	// The query container for the value's size. Without a width from the
+	// card, it is 12rem wide instead of nothing.
 	lead: {
 		alignItems: "flex-start",
+		containerName: "mizen-metric",
+		containerType: "inline-size",
+		containIntrinsicInlineSize: "12rem",
 		display: "flex",
 		flexDirection: "column",
 		gap: space["3"],
@@ -134,10 +140,19 @@ export const metricTrendStyles = create({
 	// Units sit one step below the numeral, which is 20px on phones, 28px above.
 	unit: {
 		color: colors.mutedContent,
-		fontSize: { [conditions.sm]: fontSize["20"], default: fontSize["16"] },
+		fontSize: {
+			[conditions.sm]: {
+				[applicationStructure.narrowMetric]: fontSize["16"],
+				default: fontSize["20"],
+			},
+			default: fontSize["16"],
+		},
 		fontWeight: fontWeight.medium,
 		lineHeight: {
-			[conditions.sm]: lineHeight["28"],
+			[conditions.sm]: {
+				[applicationStructure.narrowMetric]: lineHeight["24"],
+				default: lineHeight["28"],
+			},
 			default: lineHeight["24"],
 		},
 	},

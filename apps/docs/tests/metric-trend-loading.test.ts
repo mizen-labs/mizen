@@ -52,7 +52,7 @@ describe("MetricTrend loading", { timeout: 30_000 }, () => {
 			const loading = await heights();
 			// A hidden unit with spaces must not wrap and grow the value line.
 			const unit = example
-				.locator('[data-slot="metric-value"] > span:not([aria-hidden])')
+				.locator('[data-slot="metric-value"] > bdi > span:not([aria-hidden])')
 				.first();
 			const text = await unit.textContent();
 			await unit.evaluate((element) => {

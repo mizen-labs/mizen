@@ -618,7 +618,10 @@ import {
 import { AgentPlan, FailedPlan } from "./task-list";
 import { AgentCommands, FailedCommand } from "./terminal";
 import { ReadingText } from "./text";
-import { TextReleaseNotesExample1 } from "./text-variants";
+import {
+	TextLongValuesExample2,
+	TextReleaseNotesExample1,
+} from "./text-variants";
 import {
 	ProjectSummaryTextarea,
 	TextareaDisabledNote,
@@ -1179,6 +1182,7 @@ export const usageComponents: Record<string, ComponentType> = {
 	TextareaForm,
 	TextareaMessageDetails,
 	TextareaReadonlyNote,
+	TextLongValuesExample2,
 	TextReleaseNotesExample1,
 	ThinkingThenAnswer,
 	ThumbnailDesignAssetsExample1,

@@ -125,6 +125,7 @@ Rules:
   not build a sidebar of your own. Read `/docs/components/app-shell/markdown`.
 - One `Page` per screen, with one `PageTitle`, inside `AppShellMain`. The shell
   adds no padding; `Page` owns the inset and the space between sections.
+- Text from data can be long. Give a name in a row `Text truncate`, a description `Text lines={2}`, and a date or status cell `TableCell nowrap`. Never write `text-overflow` or `white-space` CSS.
 - Set space only with `gap` props. Steps are 4px each: `"1"` is 4px, `"4"` is
   16px. Use `"2"` inside a group, `"4"` between fields or cards. `Page` already
   puts 32px between sections.

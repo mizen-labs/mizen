@@ -1,7 +1,7 @@
 "use client";
 
 import { props } from "@stylexjs/stylex";
-import { areaY, defineChart, lineY, stackRowsY } from "@tanstack/charts";
+import { areaY, defineChart, dot, lineY, stackRowsY } from "@tanstack/charts";
 import { decorative } from "@tanstack/charts/mark/decorative";
 import type { ChartTooltipBodyRenderContext } from "@tanstack/charts/react/tooltip";
 import { scaleLinear } from "@tanstack/charts/scales/linear";
@@ -270,7 +270,22 @@ function getMarks(series: readonly PreparedSeries[], rows: AreaChartRow[]) {
 			z: "series",
 		})
 	);
-	return [...areas, ...lines];
+	// A series of one point draws no area or line, so it shows a dot.
+	const dots = series
+		.filter(({ id }) => bySeries(id).length === 1)
+		.map(({ id, tone }) =>
+			decorative(
+				dot(bySeries(id), {
+					fill: chartColors[tone],
+					id: `area-chart-dot-${id}`,
+					key: (row) => row.id,
+					r: 3,
+					x: "x",
+					y: "y2",
+				})
+			)
+		);
+	return [...areas, ...lines, ...dots];
 }
 
 function renderTooltip(

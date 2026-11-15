@@ -28,10 +28,18 @@ async function measure(width: number, height: number) {
 		const panel = popup.querySelector(
 			'[data-slot="alert-dialog-panel"]'
 		) as HTMLElement;
+		// The space under each label and under each value, in reading order.
+		const rows = [...popup.querySelectorAll("dt, dd")].map((element) =>
+			element.getBoundingClientRect()
+		);
+		const spaces = rows
+			.slice(1)
+			.map((rect, index) => Math.round(rect.top - (rows[index]?.bottom ?? 0)));
 		return {
 			footer: box("alert-dialog-footer"),
 			list: box("property-list"),
 			panelScrolls: panel.scrollHeight > panel.clientHeight,
+			spaces,
 			title: box("alert-dialog-title"),
 		};
 	});
@@ -60,7 +68,9 @@ describe("AlertDialogPanel", { timeout: 60_000 }, () => {
 	});
 
 	it("scrolls on a short phone screen while the title and actions stay", async () => {
-		const { footer, panelScrolls, title } = await measure(390, 420);
+		const { footer, panelScrolls, spaces, title } = await measure(390, 420);
+		// A stacked value sits closer to its own label than to the next one.
+		expect(spaces).toEqual([4, 12, 4, 12, 4, 12, 4]);
 		expect(panelScrolls).toBe(true);
 		expect(title.top).toBeGreaterThanOrEqual(0);
 		expect(footer.bottom).toBeLessThanOrEqual(420);

@@ -197,12 +197,13 @@ describe("PropertyList contract and semantics", () => {
 		expect(propertyListStyles).toMatchObject({
 			item: {
 				alignItems: "baseline",
+				columnGap: space["3"],
 				display: "grid",
-				gap: space["3"],
 				gridColumnEnd: "-1",
 				gridColumnStart: "1",
 				gridTemplateColumns: "subgrid",
 				minWidth: 0,
+				rowGap: space["1"],
 			},
 			label: {
 				color: colors.mutedContent,
@@ -215,12 +216,15 @@ describe("PropertyList contract and semantics", () => {
 			},
 			root: {
 				display: "grid",
-				gap: space["2"],
 				gridTemplateColumns: {
 					"@media (min-width: 40rem)": "fit-content(8rem) minmax(0, 1fr)",
 					default: "minmax(0, 1fr)",
 				},
 				margin: 0,
+				rowGap: {
+					"@media (min-width: 40rem)": space["2"],
+					default: space["3"],
+				},
 			},
 			value: {
 				color: colors.content,

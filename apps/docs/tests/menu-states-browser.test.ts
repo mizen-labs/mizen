@@ -336,6 +336,12 @@ describe("Menu visual and interaction states", () => {
 			await closeMenu();
 			await page.emulateMedia({ reducedMotion: "no-preference" });
 			await page.setViewportSize({ height: 900, width: 1280 });
+			// On a wide screen its long rows wrap at 20rem.
+			const wide = await openMenu("Switch project");
+			expect(
+				await wide.evaluate((el) => el.getBoundingClientRect().width)
+			).toBeLessThanOrEqual(320);
+			await closeMenu();
 			expect(errors).toEqual([]);
 		},
 		30_000

@@ -10,14 +10,17 @@ import {
 } from "../../styles/typography.stylex";
 
 export const propertyListStyles = create({
+	// Stacked on a narrow screen, a value sits 4px under its label and 12px
+	// above the next label, so each pair reads as one.
 	item: {
 		alignItems: "baseline",
+		columnGap: space["3"],
 		display: "grid",
-		gap: space["3"],
 		gridColumnEnd: "-1",
 		gridColumnStart: "1",
 		gridTemplateColumns: "subgrid",
 		minWidth: 0,
+		rowGap: space["1"],
 	},
 	label: {
 		color: colors.mutedContent,
@@ -31,12 +34,12 @@ export const propertyListStyles = create({
 	},
 	root: {
 		display: "grid",
-		gap: space["2"],
 		gridTemplateColumns: {
 			[conditions.sm]: "fit-content(8rem) minmax(0, 1fr)",
 			default: "minmax(0, 1fr)",
 		},
 		margin: 0,
+		rowGap: { [conditions.sm]: space["2"], default: space["3"] },
 	},
 	value: {
 		color: colors.content,

@@ -149,7 +149,10 @@ export const menuStyles = create({
 		flexDirection: "column",
 		// About ten rows, then the list scrolls; long menus never fill the screen.
 		maxHeight: "min(var(--available-height), 20rem)",
-		maxWidth: "min(var(--available-width), calc(100vw - 2rem))",
+		// A long item wraps at 20rem instead of stretching the menu across the
+		// window. Mizen renders no Menu viewport, so --available-width is a
+		// length here.
+		maxWidth: "min(20rem, var(--available-width), calc(100vw - 2rem))",
 		minWidth: "12rem",
 		opacity: {
 			"[data-ending-style]": 0,

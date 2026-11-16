@@ -1,5 +1,28 @@
 # @mizen-labs/ui
 
+## 0.5.0
+
+### Minor Changes
+
+- 7788f25: On a phone, the `AppShell` navigation is a floating drawer with gestures:
+  
+  - A swipe from the left edge opens it, and it follows the finger. A swipe back, a tap outside, Escape, or choosing a link closes it. The edge strip is 12px, so the header's menu button stays tappable.
+  - It floats as a card 8px from the screen edges, with rounded corners, and has no visible close button. Keyboard and touch screen reader users still get a close button; it shows only while it has keyboard focus.
+  
+  `Drawer` with `variant="inset"` now floats on phones too: 8px from the edges below 40rem, 12px above, with its border and rounded corners at every width. Before, an inset drawer was full-bleed on a phone.
+- e56d6a9: - A `Dialog`, `Sheet` or `Drawer` header without the close button uses its full width (#33). With the button, only the title keeps clear of it, so the description no longer wraps early either way.
+  - A `form` around `DialogPanel` and `DialogFooter` keeps the dialog's spacing and scrolling (#34). The Dialog docs and `mizen info dialog` show the pattern.
+  - `Grid columns="auto-sm"` fits as many tiles of at least 9rem as there is room for: two in a row on a phone (#32). `"auto"` stays at 16rem.
+
+### Patch Changes
+
+- a4e83e0: Plain Node can load every component module, such as a server build or a test runner that does not bundle Mizen.
+  
+  - Each import in the built JavaScript and declarations names its file (`../../icons.js`), as Node's ES module loader and TypeScript's `node16` resolution require.
+  - No module imports CSS anymore. The few component rules StyleX cannot express (Button icons, ButtonGroup, Composer, Diagram) ship in `@mizen-labs/ui/styles.css`, the one stylesheet an app already imports.
+  
+  The `*.stylex` token entries still point at TypeScript source; they are for a StyleX build, which compiles them.
+
 ## 0.4.0
 
 ### Minor Changes

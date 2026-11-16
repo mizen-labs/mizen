@@ -1,0 +1,101 @@
+import {
+	ACCENTS,
+	DEFAULT_CHOICES,
+	DENSITIES,
+	decodePreset,
+	FONTS,
+	NEUTRALS,
+	ORDER,
+	RADII,
+	type ThemeChoices,
+} from "../../../../../../packages/cli/src/theme/create";
+export type Field = keyof ThemeChoices;
+export type PreviewView = "app" | "components";
+
+export const FIELDS: readonly Field[] = [
+	"accent",
+	"neutral",
+	"radius",
+	"font",
+	"density",
+];
+
+export const FIELD_LABELS: Record<Field, string> = {
+	accent: "Accent",
+	density: "Density",
+	font: "Font",
+	neutral: "Neutral tone",
+	radius: "Radius",
+};
+
+const TABLES = {
+	accent: ACCENTS,
+	density: DENSITIES,
+	font: FONTS,
+	neutral: NEUTRALS,
+	radius: RADII,
+};
+
+export function optionLabel(field: Field, name: string): string {
+	return (
+		(TABLES[field] as Record<string, { label: string }>)[name]?.label ?? name
+	);
+}
+
+// A swatch color for an accent or a neutral, in the light theme.
+export function swatch(field: "accent" | "neutral", name: string): string {
+	if (field === "accent") {
+		const { chroma, hue } = ACCENTS[name as keyof typeof ACCENTS];
+		return chroma === 0 ? "oklch(0.2046 0 0)" : `oklch(0.48 ${chroma} ${hue})`;
+	}
+	const { chroma, hue } = NEUTRALS[name as keyof typeof NEUTRALS];
+	return `oklch(0.62 ${chroma * 4} ${hue})`;
+}
+
+export function choicesFrom(code: string | undefined): ThemeChoices {
+	return (code && decodePreset(code)) || DEFAULT_CHOICES;
+}
+
+// A random pick for every field the reader has not locked. Accents and
+// neutrals weigh the default lower, so a shuffle usually shows a change.
+export function randomize(
+	current: ThemeChoices,
+	locked: ReadonlySet<Field>,
+	random: () => number = Math.random
+): ThemeChoices {
+	const next = { ...current } as Record<Field, string>;
+	for (const field of FIELDS) {
+		if (!locked.has(field)) {
+			const names = ORDER[field] as readonly string[];
+			next[field] = names[Math.floor(random() * names.length)] ?? names[0];
+		}
+	}
+	return next as unknown as ThemeChoices;
+}
+
+// The message the Create page sends its preview frame.
+export interface PreviewMessage {
+	dark: boolean;
+	preset: string;
+	type: "mizen-create";
+	view: PreviewView;
+}
+
+export function isPreviewMessage(data: unknown): data is PreviewMessage {
+	return (
+		typeof data === "object" &&
+		data !== null &&
+		(data as { type?: unknown }).type === "mizen-create"
+	);
+}
+
+export const PACKAGE_MANAGERS = [
+	["npm", "npx"],
+	["pnpm", "pnpm dlx"],
+	["yarn", "yarn dlx"],
+	["bun", "bunx"],
+] as const;
+
+export function initCommand(runner: string, code: string): string {
+	return `${runner} @mizen-labs/cli@latest init --preset ${code}`;
+}

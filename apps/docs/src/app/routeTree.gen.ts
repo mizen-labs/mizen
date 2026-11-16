@@ -10,11 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CreateRouteImport } from './routes/create'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as AppsIndexRouteImport } from './routes/apps.index'
 import { Route as AppsAppRouteImport } from './routes/apps.$app'
 import { Route as ComponentsSlugRouteImport } from './routes/components_.$slug'
+import { Route as CreatePreviewRouteImport } from './routes/create_.preview'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
 import { Route as DocsGuideRouteImport } from './routes/docs.$guide'
 import { Route as InternalAppFixturesRouteImport } from './routes/internal.app-fixtures'
@@ -35,6 +37,11 @@ import { Route as DocsComponentsSlugMetadataRouteImport } from './routes/docs_.c
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateRoute = CreateRouteImport.update({
+  id: '/create',
+  path: '/create',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocsRoute = DocsRouteImport.update({
@@ -60,6 +67,11 @@ const AppsAppRoute = AppsAppRouteImport.update({
 const ComponentsSlugRoute = ComponentsSlugRouteImport.update({
   id: '/components_/$slug',
   path: '/components/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatePreviewRoute = CreatePreviewRouteImport.update({
+  id: '/create_/preview',
+  path: '/create/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocsIndexRoute = DocsIndexRouteImport.update({
@@ -148,10 +160,12 @@ const DocsComponentsSlugMetadataRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/create': typeof CreateRoute
   '/docs': typeof DocsRouteWithChildren
   '/llms.txt': typeof LlmsDottxtRoute
   '/apps/$app': typeof AppsAppRoute
   '/components/$slug': typeof ComponentsSlugRoute
+  '/create/preview': typeof CreatePreviewRoute
   '/docs/$guide': typeof DocsGuideRoute
   '/internal/app-fixtures': typeof InternalAppFixturesRoute
   '/internal/composer-fixtures': typeof InternalComposerFixturesRoute
@@ -172,9 +186,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/create': typeof CreateRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/apps/$app': typeof AppsAppRoute
   '/components/$slug': typeof ComponentsSlugRoute
+  '/create/preview': typeof CreatePreviewRoute
   '/docs/$guide': typeof DocsGuideRoute
   '/internal/app-fixtures': typeof InternalAppFixturesRoute
   '/internal/composer-fixtures': typeof InternalComposerFixturesRoute
@@ -196,10 +212,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/create': typeof CreateRoute
   '/docs': typeof DocsRouteWithChildren
   '/llms.txt': typeof LlmsDottxtRoute
   '/apps/$app': typeof AppsAppRoute
   '/components_/$slug': typeof ComponentsSlugRoute
+  '/create_/preview': typeof CreatePreviewRoute
   '/docs/$guide': typeof DocsGuideRoute
   '/internal/app-fixtures': typeof InternalAppFixturesRoute
   '/internal/composer-fixtures': typeof InternalComposerFixturesRoute
@@ -222,10 +240,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/create'
     | '/docs'
     | '/llms.txt'
     | '/apps/$app'
     | '/components/$slug'
+    | '/create/preview'
     | '/docs/$guide'
     | '/internal/app-fixtures'
     | '/internal/composer-fixtures'
@@ -246,9 +266,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/create'
     | '/llms.txt'
     | '/apps/$app'
     | '/components/$slug'
+    | '/create/preview'
     | '/docs/$guide'
     | '/internal/app-fixtures'
     | '/internal/composer-fixtures'
@@ -269,10 +291,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/create'
     | '/docs'
     | '/llms.txt'
     | '/apps/$app'
     | '/components_/$slug'
+    | '/create_/preview'
     | '/docs/$guide'
     | '/internal/app-fixtures'
     | '/internal/composer-fixtures'
@@ -294,10 +318,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CreateRoute: typeof CreateRoute
   DocsRoute: typeof DocsRouteWithChildren
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   AppsAppRoute: typeof AppsAppRoute
   ComponentsSlugRoute: typeof ComponentsSlugRoute
+  CreatePreviewRoute: typeof CreatePreviewRoute
   InternalAppFixturesRoute: typeof InternalAppFixturesRoute
   InternalComposerFixturesRoute: typeof InternalComposerFixturesRoute
   InternalPressRoute: typeof InternalPressRoute
@@ -321,6 +347,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create': {
+      id: '/create'
+      path: '/create'
+      fullPath: '/create'
+      preLoaderRoute: typeof CreateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/docs': {
@@ -356,6 +389,13 @@ declare module '@tanstack/react-router' {
       path: '/components/$slug'
       fullPath: '/components/$slug'
       preLoaderRoute: typeof ComponentsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create_/preview': {
+      id: '/create_/preview'
+      path: '/create/preview'
+      fullPath: '/create/preview'
+      preLoaderRoute: typeof CreatePreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/docs/': {
@@ -489,10 +529,12 @@ const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CreateRoute: CreateRoute,
   DocsRoute: DocsRouteWithChildren,
   LlmsDottxtRoute: LlmsDottxtRoute,
   AppsAppRoute: AppsAppRoute,
   ComponentsSlugRoute: ComponentsSlugRoute,
+  CreatePreviewRoute: CreatePreviewRoute,
   InternalAppFixturesRoute: InternalAppFixturesRoute,
   InternalComposerFixturesRoute: InternalComposerFixturesRoute,
   InternalPressRoute: InternalPressRoute,

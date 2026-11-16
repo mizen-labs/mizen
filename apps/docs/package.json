@@ -27,7 +27,10 @@
   },
   "dependencies": {
     "@fontsource-variable/geist": "5.3.0",
+    "@fontsource-variable/ibm-plex-sans": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/manrope": "^5.3.0",
     "@mizen-labs/ui": "workspace:*",
     "@stylexjs/stylex": "^0.19.1",
     "@tabler/icons-react": "^3.50.0",

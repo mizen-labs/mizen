@@ -210,6 +210,20 @@ test("an unknown preset stops before any change and names the supported ones", (
 	assert.equal(readFileSync(join(root, "app/layout.tsx"), "utf8"), before);
 });
 
+test("--preset takes a theme code from the Create page", async (t) => {
+	const { decodePreset, presetCss } = await import("../dist/theme/create.js");
+	const root = fixture(t);
+	const applied = run(root, ["--preset", "m1m4l", "--yes"]);
+	assert.equal(applied.exit, 0, JSON.stringify(applied));
+	assert.equal(
+		readFileSync(join(root, "app/mizen-theme.css"), "utf8"),
+		presetCss(decodePreset("m1m4l"))
+	);
+	const unreadable = run(fixture(t), ["--preset", "mzzzzzz", "--yes"]);
+	assert.equal(unreadable.error.reason, "conflict");
+	assert.ok(unreadable.error.message.includes("Update @mizen-labs/cli"));
+});
+
 test("source directives, comments, existing themes, and unrelated config survive", (t) => {
 	const root = fixture(t);
 	put(root, "app/layout.tsx", `"use client";\n${nextRoot}`);

@@ -41,7 +41,7 @@ const optionHelp: Record<OptionName, readonly [string, string]> = {
 	],
 	preset: [
 		"--preset <NAME>",
-		"Write a theme file the app owns and import it. Accepts: vivid",
+		"Write a theme file the app owns and import it. Accepts: vivid, or a code from /create",
 	],
 	strict: ["--strict", "Fail when any check is unverified"],
 	version: ["-v, --version", "Show the version"],

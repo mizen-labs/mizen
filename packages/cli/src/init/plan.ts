@@ -6,6 +6,7 @@ import { versionCheck } from "../doctor/packages.js";
 import { frameworkOf, targetProject } from "../doctor/project.js";
 import { diagnosticDetail } from "../doctor/report.js";
 import { CliError } from "../errors.js";
+import { decodePreset, isPresetCode, presetCss } from "../theme/create.js";
 import { configEdit } from "./config.js";
 import { type Install, installation, managerFor } from "./dependencies.js";
 import { conflict, type FileEdit } from "./edit.js";
@@ -91,15 +92,24 @@ async function validateProjectFiles(project: string): Promise<void> {
 	}
 }
 
+// A named preset, or a code from the Create page such as m3x.
 function presetSource(name: string | undefined, catalog: Catalog) {
 	if (name === undefined) {
 		return;
 	}
 	const names = Object.keys(catalog.presets);
-	if (!names.includes(name)) {
-		return conflict(`The supported presets are: ${names.join(", ")}.`);
+	if (names.includes(name)) {
+		return catalog.presets[name];
 	}
-	return catalog.presets[name];
+	const choices = decodePreset(name);
+	if (choices) {
+		return presetCss(choices);
+	}
+	return conflict(
+		isPresetCode(name)
+			? `${name} is not a theme code this CLI can read. Update @mizen-labs/cli, or make the theme again at https://ui.mizen-labs.dev/create.`
+			: `The supported presets are: ${names.join(", ")}, or a theme code from https://ui.mizen-labs.dev/create.`
+	);
 }
 
 export async function planInit(

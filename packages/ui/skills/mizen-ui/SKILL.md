@@ -58,7 +58,8 @@ Components do not need it. Add or remove it only when the user asks.
 The app's theme is one file, `mizen-theme.css`, when it has one. It declares
 `--mizen-*` token variables on `:root`, with dark values under
 `[data-theme="dark"]`. Change the look there and nowhere else: never per page
-or per component. `init --preset vivid` writes a starting file. Read
+or per component. `init --preset vivid` writes a starting file, and so does
+`init --preset <code>` with a code from https://ui.mizen-labs.dev/create. Read
 `/docs/theming/markdown` before changing it.
 
 The docs site, https://ui.mizen-labs.dev, has the guides and the full

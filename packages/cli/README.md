@@ -221,6 +221,11 @@ the Mizen stylesheet. The file sets `--mizen-*` token variables and belongs to t
 app. It also works on an app already set up. Init stops when the file exists and
 differs from the preset.
 
+`--preset` also takes a theme code from https://ui.mizen-labs.dev/create, such as
+`--preset m1m4l`. The code holds the accent, neutral tone, radius, font, and
+density. A code from a newer Create page stops before any change and asks to
+update the CLI.
+
 `--package` installs a local archive instead of the published version.
 Archives must contain `@mizen-labs/ui` at the catalog version. Init inspects the archive
 without extracting it and records its SHA-256 for a check before application.

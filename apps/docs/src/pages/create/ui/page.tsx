@@ -226,61 +226,63 @@ export default function CreatePage({
 				setHover={create.setHover}
 				shuffle={create.shuffle}
 				toggleLock={create.toggleLock}
+				toolbar={
+					<div {...props(createStyles.toolbar)}>
+						<Inline gap="1" wrap={false}>
+							<IconAction
+								disabled={!create.canUndo}
+								hint={`${modifier()}Z`}
+								label="Undo"
+								onClick={undo}
+								shortcut="Meta+Z"
+							>
+								<IconArrowBackUp aria-hidden="true" />
+							</IconAction>
+							<IconAction
+								disabled={!create.canRedo}
+								hint={`⇧${modifier()}Z`}
+								label="Redo"
+								onClick={redo}
+								shortcut="Meta+Shift+Z"
+							>
+								<IconArrowForwardUp aria-hidden="true" />
+							</IconAction>
+							<IconAction
+								hint="⇧R"
+								label="Reset to the default theme"
+								onClick={create.reset}
+								shortcut="Shift+R"
+							>
+								<IconRestore aria-hidden="true" />
+							</IconAction>
+							<IconAction
+								hint="D"
+								label={create.dark ? "Light preview" : "Dark preview"}
+								onClick={create.toggleDark}
+								shortcut="D"
+							>
+								{create.dark ? (
+									<IconSun aria-hidden="true" />
+								) : (
+									<IconMoon aria-hidden="true" />
+								)}
+							</IconAction>
+						</Inline>
+						<SegmentedControl
+							aria-label="Preview"
+							onValueChange={changeView}
+							size="sm"
+							value={[create.view]}
+						>
+							<SegmentedControlItem value="app">App</SegmentedControlItem>
+							<SegmentedControlItem value="components">
+								Components
+							</SegmentedControlItem>
+						</SegmentedControl>
+					</div>
+				}
 			/>
 			<section aria-label="Preview" {...props(createStyles.preview)}>
-				<div {...props(createStyles.toolbar)}>
-					<Inline gap="1" wrap={false}>
-						<IconAction
-							disabled={!create.canUndo}
-							hint={`${modifier()}Z`}
-							label="Undo"
-							onClick={undo}
-							shortcut="Meta+Z"
-						>
-							<IconArrowBackUp aria-hidden="true" />
-						</IconAction>
-						<IconAction
-							disabled={!create.canRedo}
-							hint={`⇧${modifier()}Z`}
-							label="Redo"
-							onClick={redo}
-							shortcut="Meta+Shift+Z"
-						>
-							<IconArrowForwardUp aria-hidden="true" />
-						</IconAction>
-						<IconAction
-							hint="⇧R"
-							label="Reset to the default theme"
-							onClick={create.reset}
-							shortcut="Shift+R"
-						>
-							<IconRestore aria-hidden="true" />
-						</IconAction>
-						<IconAction
-							hint="D"
-							label={create.dark ? "Light preview" : "Dark preview"}
-							onClick={create.toggleDark}
-							shortcut="D"
-						>
-							{create.dark ? (
-								<IconSun aria-hidden="true" />
-							) : (
-								<IconMoon aria-hidden="true" />
-							)}
-						</IconAction>
-					</Inline>
-					<SegmentedControl
-						aria-label="Preview"
-						onValueChange={changeView}
-						size="sm"
-						value={[create.view]}
-					>
-						<SegmentedControlItem value="app">App</SegmentedControlItem>
-						<SegmentedControlItem value="components">
-							Components
-						</SegmentedControlItem>
-					</SegmentedControl>
-				</div>
 				<PreviewFrame message={message} />
 			</section>
 		</main>

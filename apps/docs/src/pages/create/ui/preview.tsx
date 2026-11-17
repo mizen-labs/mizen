@@ -13,6 +13,9 @@ import {
 } from "../model/create";
 import { ComponentsPreview } from "./components-preview";
 
+// The preview bundles every font, so the theme's font imports are dropped.
+const IMPORTS = /^@import [^\n]*\n/gmu;
+
 const DARK_CLASSES = String(props(darkTheme).className ?? "")
 	.split(" ")
 	.filter(Boolean);
@@ -88,7 +91,7 @@ export default function CreatePreview({
 	const { App } = apps.dashboard;
 	return (
 		<div data-slot="app-preview" ref={listen}>
-			<style>{presetCss(choicesFrom(state.preset))}</style>
+			<style>{presetCss(choicesFrom(state.preset)).replace(IMPORTS, "")}</style>
 			{state.view === "app" && App ? <App /> : <ComponentsPreview />}
 		</div>
 	);

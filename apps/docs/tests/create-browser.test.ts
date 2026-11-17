@@ -61,11 +61,18 @@ function shown(page: Page) {
 	});
 }
 
-// A field's trigger in the theme panel; its name holds the field and value.
+const panel = (page: Page) =>
+	page.getByRole("complementary", { name: "Theme" });
+// A font field's menu trigger; its name holds the field and the font.
 const picker = (page: Page, field: string) =>
-	page
-		.getByRole("region", { name: "Theme" })
-		.getByRole("button", { name: new RegExp(`^${field}`, "u") });
+	panel(page).getByRole("button", { name: new RegExp(`^${field}`, "u") });
+// A size field's segment.
+const segment = (page: Page, field: string, name: string) =>
+	panel(page)
+		.getByRole("group", { name: field })
+		.getByRole("button", { exact: true, name });
+const swatch = (page: Page, name: string) =>
+	panel(page).getByRole("radio", { exact: true, name });
 
 const shownCode = async (page: Page) =>
 	THEME_CODE.exec((await shown(page)).theme)?.groups?.code;
@@ -107,47 +114,48 @@ describe.each([
 
 	it("reads the code from the address and falls back to the default", async () => {
 		const page = await open(browser, "m33ut", errors);
-		expect(await picker(page, "Accent").textContent()).toContain("Blue");
+		expect(await swatch(page, "Blue").isChecked()).toBe(true);
 		await page.goto(`${handle.url}/create?preset=nonsense`, {
 			waitUntil: "networkidle",
 		});
 		await expect.poll(() => shownCode(page)).toBe("m0");
-		expect(await picker(page, "Accent").textContent()).toContain("Wine");
+		expect(await swatch(page, "Wine").isChecked()).toBe(true);
 		await page.close();
 	});
 
-	it("previews a hovered or highlighted option without choosing it", async () => {
+	it("previews a hovered swatch, or a highlighted font, without choosing it", async () => {
 		const page = await open(browser, "m33ut", errors);
-		await picker(page, "Accent").click();
-		await page.getByRole("menuitemradio", { name: "Orange" }).hover();
+		await swatch(page, "Orange").hover({ force: true });
 		await expect
 			.poll(async () => (await shown(page)).theme)
 			.toContain("Orange accent");
 		expect(addressCode(page)).toBe("m33ut");
+		await page.mouse.move(400, 400);
+		await expect.poll(() => shownCode(page)).toBe("m33ut");
+		await picker(page, "Font").click();
+		await page.getByRole("menuitemradio", { name: "Inter" }).hover();
 		await page.keyboard.press("ArrowDown");
 		await expect
 			.poll(async () => (await shown(page)).theme)
-			.toContain("Green accent");
+			.toContain("IBM Plex Sans");
 		await page.keyboard.press("Escape");
 		await expect.poll(() => shownCode(page)).toBe("m33ut");
 		expect(addressCode(page)).toBe("m33ut");
 		await page.close();
 	});
 
-	it("chooses from a menu that stays open, and lists sizes small to large", async () => {
+	it("lists sizes small to large and chooses with one click", async () => {
 		const page = await open(browser, "m33ut", errors);
-		await picker(page, "Radius").click();
-		const options = page.getByRole("menuitemradio");
-		await expect
-			.poll(() => options.allTextContents())
-			.toEqual(["None", "Small", "Default", "Large"]);
-		await options.filter({ hasText: "Small" }).click();
+		// One read of the group: per-button reads before a pointer move crash
+		// Firefox's content process under Playwright 1.65.
+		expect(
+			await panel(page).getByRole("group", { name: "Radius" }).textContent()
+		).toBe("NoneSmallDefaultLarge");
+		await segment(page, "Radius", "Small").click();
 		await expect.poll(() => addressCode(page)).not.toBe("m33ut");
-		expect(await page.getByRole("menu").isVisible()).toBe(true);
-		await page.keyboard.press("Escape");
 		await expect
-			.poll(() => picker(page, "Radius").textContent())
-			.toContain("Small");
+			.poll(async () => (await shown(page)).theme)
+			.toContain("small radius");
 		await page.close();
 	});
 
@@ -159,13 +167,9 @@ describe.each([
 		for (let round = 0; round < 5; round += 1) {
 			// biome-ignore lint/performance/noAwaitInLoops: each shuffle starts from the last.
 			await page.getByRole("button", { name: "Shuffle" }).click();
-			expect(await picker(page, "Accent").textContent()).toContain("Blue");
+			expect(await swatch(page, "Blue").isChecked()).toBe(true);
 		}
-		await picker(page, "Radius").click();
-		await page.getByRole("menuitemradio", { name: "None" }).click();
-		await page.keyboard.press("Escape");
-		// Shortcuts wait for focus to leave the menu.
-		await expect.poll(() => page.getByRole("menu").count()).toBe(0);
+		await segment(page, "Radius", "None").click();
 		const chosen = addressCode(page);
 		await expect.poll(() => shownCode(page)).toBe(chosen);
 		await page.keyboard.press("ControlOrMeta+z");
@@ -255,8 +259,9 @@ describe.each([
 
 	it("ends each menu row with its selected dot", async () => {
 		const page = await open(browser, "m33ut", errors);
-		await picker(page, "Radius").click();
-		const chosen = page.getByRole("menuitemradio", { name: "Large" });
+		await picker(page, "Font").click();
+		const chosen = page.getByRole("menuitemradio", { name: "Inter" });
+		await expect.poll(() => chosen.isVisible()).toBe(true);
 		const [row, dot] = await Promise.all([
 			chosen.boundingBox(),
 			chosen.locator(":scope > :last-child").boundingBox(),
@@ -268,7 +273,7 @@ describe.each([
 		await page.close();
 	});
 
-	it("keeps the preview in view on a phone and closes a menu on choice", async () => {
+	it("keeps the preview and the inspector in view on a phone", async () => {
 		const page = await browser.newPage({
 			hasTouch: true,
 			viewport: { height: 844, width: 390 },
@@ -286,9 +291,7 @@ describe.each([
 			);
 		});
 		expect(overflow).toBeLessThanOrEqual(0);
-		await picker(page, "Neutral tone").click();
-		await page.getByRole("menuitemradio", { name: "Stone" }).click();
-		await expect.poll(() => page.getByRole("menu").count()).toBe(0);
+		await swatch(page, "Stone").tap({ force: true });
 		await expect
 			.poll(async () => (await shown(page)).theme)
 			.toContain("Stone neutrals");

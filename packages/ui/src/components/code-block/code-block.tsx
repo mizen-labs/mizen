@@ -88,6 +88,7 @@ export function CodeBlockTitle({
 export function CodeBlockContent({
 	"aria-label": ariaLabel,
 	children,
+	dir = "ltr",
 	language,
 	ref: forwardedRef,
 	...rest
@@ -105,6 +106,8 @@ export function CodeBlockContent({
 			{...rest}
 			aria-label={ariaLabel}
 			data-slot="code-block-content"
+			// Code reads left to right in every language.
+			dir={dir}
 			ref={forwardedRef}
 			role="region"
 			// biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard focus lets users scroll long code.

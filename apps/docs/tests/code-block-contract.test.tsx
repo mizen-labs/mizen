@@ -98,11 +98,22 @@ describe("CodeBlock contract", () => {
 			'<span data-slot="code-block-title">Install command</span>'
 		);
 		expect(markup).toContain(
-			'<pre aria-label="Install command" data-slot="code-block-content" role="region" tabindex="0">'
+			'<pre dir="ltr" aria-label="Install command" data-slot="code-block-content" role="region" tabindex="0">'
 		);
 		expect(markup).toContain("<code>pnpm install</code>");
 		expect(markup).toContain('data-slot="code-block-copy-status"');
 		expect(contract.every(Boolean)).toBe(true);
+	});
+
+	it("reads code left to right in a right-to-left page, unless told otherwise", () => {
+		const content = (dir?: "rtl") =>
+			renderToStaticMarkup(
+				<CodeBlockContent aria-label="Command" dir={dir}>
+					npm install
+				</CodeBlockContent>
+			);
+		expect(content()).toContain('<pre dir="ltr"');
+		expect(content("rtl")).toContain('<pre dir="rtl"');
 	});
 
 	it("rejects an empty scroll-region accessible name", () => {

@@ -11,6 +11,7 @@ export interface ThemeChoices {
 	font: FontName;
 	heading: HeadingName;
 	neutral: NeutralName;
+	primary: PrimaryName;
 	radius: RadiusName;
 }
 
@@ -141,6 +142,13 @@ export type NeutralName = keyof typeof NEUTRALS;
 export type RadiusName = keyof typeof RADII;
 export type DensityName = keyof typeof DENSITIES;
 
+// What fills the main action: ink, as Mizen does, or the accent, as Vivid does.
+export const PRIMARIES = {
+	accent: { label: "Accent" },
+	ink: { label: "Ink" },
+} as const;
+export type PrimaryName = keyof typeof PRIMARIES;
+
 // The order each option takes in the code and in the Create page. Index 0
 // is Mizen's default. Add a name only at the end of a list, and a field only
 // at the end of FIELDS, so old codes keep their meaning.
@@ -160,6 +168,7 @@ export const ORDER = {
 	font: ["default", "system", ...CATALOG_NAMES],
 	heading: ["body", "system", ...CATALOG_NAMES],
 	neutral: ["neutral", "stone", "slate", "zinc", "olive"],
+	primary: ["ink", "accent"],
 	radius: ["default", "none", "small", "large"],
 } as const satisfies { [Field in keyof ThemeChoices]: ThemeChoices[Field][] };
 
@@ -171,6 +180,7 @@ const FIELDS = [
 	["font", 5],
 	["density", 3],
 	["heading", 5],
+	["primary", 1],
 ] as const;
 
 const PREFIX = "m";
@@ -183,6 +193,7 @@ export const DEFAULT_CHOICES: ThemeChoices = {
 	font: "default",
 	heading: "body",
 	neutral: "neutral",
+	primary: "ink",
 	radius: "default",
 };
 
@@ -349,10 +360,26 @@ function declarations(rules: readonly [string, string][]) {
 	return rules.map(([name, value]) => `\t--mizen-${name}: ${value};`);
 }
 
+const PRIMARY_TOKENS = new Set(["color-primary", "color-primary-content"]);
+const PRIMARY_RULES: Rule[] = [
+	["color-primary", "var(--mizen-color-accent)", "var(--mizen-color-accent)"],
+	[
+		"color-primary-content",
+		"var(--mizen-color-accent-content)",
+		"var(--mizen-color-accent-content)",
+	],
+];
+
 function themeRules(choices: ThemeChoices) {
+	const filled = choices.primary === "accent";
+	// The accent then fills the main action in both themes, so the neutral
+	// tone leaves primary alone.
 	const colors = [
 		...(choices.accent === "wine" ? [] : accentRules(ACCENTS[choices.accent])),
-		...neutralRules(NEUTRALS[choices.neutral]),
+		...neutralRules(NEUTRALS[choices.neutral]).filter(
+			([name]) => !(filled && PRIMARY_TOKENS.has(name))
+		),
+		...(filled ? PRIMARY_RULES : []),
 	];
 	const { factor } = RADII[choices.radius];
 	const pill = PILL_RADII[choices.radius];
@@ -437,6 +464,7 @@ export function describe(choices: ThemeChoices): string {
 		`${RADII[choices.radius].label.toLowerCase()} radius`,
 		`${FONTS[choices.font].label}`,
 		...(heading.family ? [`${heading.label} headings`] : []),
+		...(choices.primary === "accent" ? ["accent buttons"] : []),
 		`${DENSITIES[choices.density].label.toLowerCase()} density`,
 	].join(", ");
 }

@@ -15,6 +15,16 @@ import { header } from "../../../shared/styles/header.stylex";
 const WIDE = conditions.md;
 
 export const createStyles = create({
+	chevron: {
+		display: "inline-flex",
+		transform: "rotate(180deg)",
+		transitionDuration: {
+			[conditions.reducedMotion]: duration.instant,
+			default: duration.fast,
+		},
+		transitionProperty: "transform",
+	},
+	chevronOpen: { transform: "none" },
 	code: {
 		fontFamily: "ui-monospace, monospace",
 		fontSize: fontSize["13"],
@@ -23,6 +33,25 @@ export const createStyles = create({
 		whiteSpace: "nowrap",
 	},
 	color: (value: string) => ({ backgroundColor: value, color: value }),
+	// The phone's fold: a full-width row that opens the sections.
+	disclosure: {
+		alignItems: "center",
+		backgroundColor: "transparent",
+		borderStyle: "none",
+		color: colors.content,
+		cursor: "pointer",
+		display: { default: "flex", [WIDE]: "none" },
+		fontFamily: "inherit",
+		fontSize: fontSize["14"],
+		fontWeight: fontWeight.medium,
+		justifyContent: "space-between",
+		minBlockSize: "2.75rem",
+		outlineColor: colors.focusRing,
+		outlineOffset: `-${borderWidth.focus}`,
+		outlineStyle: { ":focus-visible": "solid", default: "none" },
+		outlineWidth: borderWidth.focus,
+		paddingInline: space["4"],
+	},
 	family: (value: string) => ({ fontFamily: value }),
 	field: { display: "grid", gap: space["2"], minWidth: 0 },
 	fieldHeader: {
@@ -66,16 +95,25 @@ export const createStyles = create({
 		boxSizing: "border-box",
 		display: "block",
 		flexGrow: 1,
-		inlineSize: "100%",
+		marginInline: "auto",
+		maxInlineSize: "100%",
 		minHeight: 0,
+		transitionDuration: {
+			[conditions.reducedMotion]: duration.instant,
+			default: duration.disclosure,
+		},
+		transitionProperty: "inline-size",
+		transitionTimingFunction: easing.expoOut,
 	},
+	// The frame keeps its width on a narrow screen and centers in the space.
+	frameWidth: (width: string) => ({ inlineSize: width }),
 	inspector: {
 		display: "flex",
 		flexDirection: "column",
 		gap: space["2"],
 		gridColumn: { default: "1", [WIDE]: "2" },
 		gridRow: { default: "2", [WIDE]: "1" },
-		maxHeight: { default: "48svh", [WIDE]: "none" },
+		maxHeight: { default: "60svh", [WIDE]: "none" },
 		minHeight: 0,
 		minWidth: 0,
 	},
@@ -139,6 +177,7 @@ export const createStyles = create({
 		overflowY: "auto",
 		overscrollBehavior: "contain",
 	},
+	sectionsClosed: { display: { default: "none", [WIDE]: "block" } },
 	sectionTitle: {
 		color: colors.mutedContent,
 		fontSize: fontSize["12"],
@@ -239,4 +278,5 @@ export const createStyles = create({
 		gap: space["2"],
 		justifyContent: "space-between",
 	},
+	viewports: { display: { default: "none", [WIDE]: "contents" } },
 });

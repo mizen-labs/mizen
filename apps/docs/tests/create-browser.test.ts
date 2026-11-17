@@ -291,6 +291,9 @@ describe.each([
 			);
 		});
 		expect(overflow).toBeLessThanOrEqual(0);
+		// The sections fold away until asked for.
+		expect(await swatch(page, "Stone").isVisible()).toBe(false);
+		await page.getByRole("button", { name: "Theme options" }).tap();
 		await swatch(page, "Stone").tap({ force: true });
 		await expect
 			.poll(async () => (await shown(page)).theme)
@@ -357,6 +360,46 @@ describe.each([
 				page.getByRole("menu").getByText("Serif", { exact: true }).count()
 			)
 			.toBe(1);
+		await page.close();
+	});
+
+	it("fills the main buttons with the accent when asked", async () => {
+		const page = await open(browser, "m33ut", errors);
+		const fill = () =>
+			frame(page).evaluate(() => {
+				const style = getComputedStyle(document.documentElement);
+				return {
+					accent: style.getPropertyValue("--mizen-color-accent").trim(),
+					primary: style.getPropertyValue("--mizen-color-primary").trim(),
+				};
+			});
+		const before = await fill();
+		expect(before.primary).not.toBe(before.accent);
+		await segment(page, "Main buttons", "Accent").click();
+		await expect
+			.poll(async () => {
+				const { accent, primary } = await fill();
+				return primary === accent;
+			})
+			.toBe(true);
+		await page.close();
+	});
+
+	it("previews at desktop, tablet, and phone widths", async () => {
+		const page = await open(browser, "m33ut", errors);
+		const width = () =>
+			page
+				.getByTitle("Theme preview")
+				.evaluate((element) =>
+					Math.round(element.getBoundingClientRect().width)
+				);
+		const desktop = await width();
+		await page.getByRole("button", { name: "Phone" }).click();
+		await expect.poll(width).toBe(390);
+		await page.getByRole("button", { name: "Tablet" }).click();
+		await expect.poll(width).toBe(Math.min(834, desktop));
+		await page.getByRole("button", { name: "Desktop" }).click();
+		await expect.poll(width).toBe(desktop);
 		await page.close();
 	});
 });

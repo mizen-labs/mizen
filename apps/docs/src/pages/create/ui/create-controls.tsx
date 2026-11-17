@@ -33,6 +33,7 @@ import {
 	type SyntheticEvent,
 	useCallback,
 	useRef,
+	useState,
 	useSyncExternalStore,
 } from "react";
 import {
@@ -287,11 +288,12 @@ const KINDS = {
 	font: FontField,
 	heading: FontField,
 	neutral: SwatchField,
+	primary: SegmentField,
 	radius: SegmentField,
 } as const;
 
 const SECTIONS: readonly [string, readonly Field[]][] = [
-	["Color", ["accent", "neutral"]],
+	["Color", ["accent", "primary", "neutral"]],
 	["Type", ["font", "heading"]],
 	["Shape", ["radius", "density"]],
 ];
@@ -328,6 +330,7 @@ export interface PanelProps
 	locked: ReadonlySet<Field>;
 	shuffle: () => void;
 	toolbar: ReactNode;
+	views: ReactNode;
 }
 
 // The inspector: the preview's view and history, the theme in sections for
@@ -337,16 +340,41 @@ export function CreatePanel({
 	locked,
 	shuffle,
 	toolbar,
+	views,
 	...actions
 }: PanelProps) {
 	const anchor = useRef<HTMLElement>(null);
 	const wide = useSyncExternalStore(subscribeWide, isWide, wideOnServer);
 	const code = encodePreset(choices);
+	// On a phone the sections fold away, so the preview keeps the screen.
+	const [open, setOpen] = useState(false);
+	const toggle = useCallback(() => setOpen((value) => !value), []);
 	return (
 		<aside aria-label="Theme" ref={anchor} {...props(createStyles.inspector)}>
 			{toolbar}
+			{views}
 			<div {...props(createStyles.panel)}>
-				<div {...props(createStyles.sections)}>
+				<button
+					aria-controls="create-sections"
+					aria-expanded={open}
+					onClick={toggle}
+					type="button"
+					{...props(createStyles.disclosure)}
+				>
+					Theme options
+					<span
+						{...props(createStyles.chevron, open && createStyles.chevronOpen)}
+					>
+						<IconChevronDown aria-hidden="true" size={16} />
+					</span>
+				</button>
+				<div
+					id="create-sections"
+					{...props(
+						createStyles.sections,
+						!open && createStyles.sectionsClosed
+					)}
+				>
 					{SECTIONS.map(([title, fields]) => (
 						<section
 							aria-label={title}

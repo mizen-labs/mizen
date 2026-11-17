@@ -8,11 +8,17 @@ import {
 	Tooltip,
 	TooltipPopup,
 	TooltipTrigger,
+	useCopyToClipboard,
 } from "@mizen-labs/ui";
 import { props } from "@stylexjs/stylex";
 import {
 	IconArrowBackUp,
 	IconArrowForwardUp,
+	IconCheck,
+	IconDeviceDesktop,
+	IconDeviceMobile,
+	IconDeviceTablet,
+	IconLink,
 	IconMoon,
 	IconRestore,
 	IconSun,
@@ -111,7 +117,21 @@ function useShortcuts(actions: Actions) {
 	);
 }
 
-function PreviewFrame({ message }: { message: PreviewMessage }) {
+// The widths the preview can take; Desktop fills the space.
+const VIEWPORTS = [
+	["desktop", "Desktop", "100%", IconDeviceDesktop],
+	["tablet", "Tablet", "834px", IconDeviceTablet],
+	["phone", "Phone", "390px", IconDeviceMobile],
+] as const;
+type Viewport = (typeof VIEWPORTS)[number][0];
+
+function PreviewFrame({
+	message,
+	width,
+}: {
+	message: PreviewMessage;
+	width: string;
+}) {
 	// The frame loads once; later choices reach it as messages.
 	const [src] = useState(
 		() => `/create/preview?preset=${message.preset}&view=${message.view}`
@@ -134,7 +154,7 @@ function PreviewFrame({ message }: { message: PreviewMessage }) {
 			ref={send}
 			src={src}
 			title="Theme preview"
-			{...props(createStyles.frame)}
+			{...props(createStyles.frame, createStyles.frameWidth(width))}
 		/>
 	);
 }
@@ -149,10 +169,10 @@ function IconAction({
 }: {
 	children: React.ReactNode;
 	disabled?: boolean;
-	hint: string;
+	hint?: string;
 	label: string;
 	onClick: () => void;
-	shortcut: string;
+	shortcut?: string;
 }) {
 	return (
 		<Tooltip>
@@ -170,15 +190,31 @@ function IconAction({
 			>
 				{children}
 			</TooltipTrigger>
-			<TooltipPopup>
-				{label} · {hint}
-			</TooltipPopup>
+			<TooltipPopup>{[label, hint].filter(Boolean).join(" · ")}</TooltipPopup>
 		</Tooltip>
 	);
 }
 
 // Mizen Create: pick a theme, see it on a whole app or on components, and
 // take the code that sets it up.
+// The address holds the theme, so the link shares it.
+function CopyLink() {
+	const { copy, status } = useCopyToClipboard();
+	const run = useCallback(() => copy(window.location.href), [copy]);
+	return (
+		<IconAction
+			label={status === "copied" ? "Link copied" : "Copy link"}
+			onClick={run}
+		>
+			{status === "copied" ? (
+				<IconCheck aria-hidden="true" />
+			) : (
+				<IconLink aria-hidden="true" />
+			)}
+		</IconAction>
+	);
+}
+
 export default function CreatePage({
 	initial,
 	onChange,
@@ -200,6 +236,13 @@ export default function CreatePage({
 		[create.reset, create.shuffle, create.toggleDark, redo, undo]
 	);
 	const shortcuts = useShortcuts(actions);
+	const [viewport, setViewport] = useState<Viewport>("desktop");
+	const changeViewport = useCallback((next: string[]) => {
+		if (next[0]) {
+			setViewport(next[0] as Viewport);
+		}
+	}, []);
+	const width = VIEWPORTS.find(([name]) => name === viewport)?.[2] ?? "100%";
 	const changeView = useCallback(
 		(next: string[]) => {
 			if (next[0]) {
@@ -267,7 +310,12 @@ export default function CreatePage({
 									<IconMoon aria-hidden="true" />
 								)}
 							</IconAction>
+							<CopyLink />
 						</Inline>
+					</div>
+				}
+				views={
+					<div {...props(createStyles.toolbar)}>
 						<SegmentedControl
 							aria-label="Preview"
 							onValueChange={changeView}
@@ -279,11 +327,29 @@ export default function CreatePage({
 								Components
 							</SegmentedControlItem>
 						</SegmentedControl>
+						<span {...props(createStyles.viewports)}>
+							<SegmentedControl
+								aria-label="Preview width"
+								onValueChange={changeViewport}
+								size="sm"
+								value={[viewport]}
+							>
+								{VIEWPORTS.map(([name, label, , Glyph]) => (
+									<SegmentedControlItem
+										aria-label={label}
+										key={name}
+										value={name}
+									>
+										<Glyph aria-hidden="true" />
+									</SegmentedControlItem>
+								))}
+							</SegmentedControl>
+						</span>
 					</div>
 				}
 			/>
 			<section aria-label="Preview" {...props(createStyles.preview)}>
-				<PreviewFrame message={message} />
+				<PreviewFrame message={message} width={width} />
 			</section>
 		</main>
 	);

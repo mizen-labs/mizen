@@ -8,6 +8,7 @@ import {
 	HEADINGS,
 	NEUTRALS,
 	ORDER,
+	PRIMARIES,
 	RADII,
 	type ThemeChoices,
 } from "../../../../../../packages/cli/src/theme/create";
@@ -16,6 +17,7 @@ export type PreviewView = "app" | "components";
 
 export const FIELDS: readonly Field[] = [
 	"accent",
+	"primary",
 	"neutral",
 	"radius",
 	"font",
@@ -29,6 +31,7 @@ export const FIELD_LABELS: Record<Field, string> = {
 	font: "Font",
 	heading: "Heading",
 	neutral: "Neutral tone",
+	primary: "Main buttons",
 	radius: "Radius",
 };
 
@@ -38,6 +41,7 @@ const TABLES = {
 	font: FONTS,
 	heading: HEADINGS,
 	neutral: NEUTRALS,
+	primary: PRIMARIES,
 	radius: RADII,
 };
 

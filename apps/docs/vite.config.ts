@@ -37,6 +37,9 @@ export default defineConfig({
 		react(),
 		babel({ plugins: babelConfig.plugins }),
 	],
+	// pnpm test:visual's browser runs in a container and reaches the preview
+	// through Docker's host name.
+	preview: { allowedHosts: ["host.docker.internal"] },
 	resolve: { dedupe: ["react", "react-dom"] },
 	// Dev and preview must let the docs endpoints answer OPTIONS themselves.
 	server: { cors: { preflightContinue: true }, port: 3000 },

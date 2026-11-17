@@ -23,6 +23,7 @@
     "lint": "eslint .",
     "preview": "vp preview",
     "test": "vp test run",
+    "test:visual": "node scripts/visual.mjs",
     "typecheck": "tsc --noEmit && tsc -p tests/package-types/tsconfig.json"
   },
   "dependencies": {
@@ -76,12 +77,15 @@
     "@stylexjs/postcss-plugin": "^0.19.1",
     "@tanstack/react-router-devtools": "1.167.3",
     "@types/node": "^26.6.6",
+    "@types/pngjs": "^6.0.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "6.2.1",
     "happy-dom": "21.0.4",
     "next": "^16.4.5",
+    "pixelmatch": "^7.2.0",
     "playwright": "^1.65.0",
+    "pngjs": "^7.0.0",
     "postcss-lightningcss": "^1.1.2",
     "vite": "npm:@voidzero-dev/vite-plus-core@1.5.0",
     "vite-plus": "1.5.0",

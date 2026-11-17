@@ -58,6 +58,19 @@ Review both package versions, both changelogs, and `pnpm-lock.yaml`. Commit thos
 changes and open one release PR using the normal GitHub review flow. Version
 preparation does not commit, push, create tags, or publish automatically.
 
+Before the release PR, compare the Create themes with their screenshots. With
+Docker running, build the docs and serve them on every interface, then run:
+
+```sh
+pnpm build
+pnpm --filter @mizen-labs/docs exec vp preview --port 3211 --host 0.0.0.0
+pnpm --filter @mizen-labs/docs test:visual
+```
+
+The browser runs in the Playwright image, so screenshots match on every machine.
+After an intended visual change, review the new images and update them with
+`MIZEN_VISUAL_UPDATE=1 pnpm --filter @mizen-labs/docs test:visual`.
+
 The release PR must pass CI. Merge it, then wait for the **push to main** CI run
 for that exact merge commit to finish successfully. A PR CI run is not eligible.
 If main advances before starting Release, use its new successful CI run after

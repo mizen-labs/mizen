@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { choicesFrom } from "../../pages/create/model/create";
+import { choicesFrom, unreadableCode } from "../../pages/create/model/create";
 import CreatePage from "../../pages/create/ui/page";
 import SiteLayout from "../layouts/site-layout";
 import { canonical } from "../lib/canonical";
@@ -33,7 +33,11 @@ function Create() {
 	);
 	return (
 		<SiteLayout>
-			<CreatePage initial={choicesFrom(preset)} onChange={keep} />
+			<CreatePage
+				initial={choicesFrom(preset)}
+				notice={unreadableCode(preset)}
+				onChange={keep}
+			/>
 		</SiteLayout>
 	);
 }

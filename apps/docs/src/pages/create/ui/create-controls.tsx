@@ -2,6 +2,8 @@
 
 import "./fonts";
 import {
+	Alert,
+	AlertDescription,
 	Button,
 	Menu,
 	MenuGroup,
@@ -320,6 +322,9 @@ function CopyCommand({ code }: { code: string }) {
 				</TooltipTrigger>
 				<TooltipPopup>Copy the init command</TooltipPopup>
 			</Tooltip>
+			<span role="status" {...props(createStyles.screenReader)}>
+				{status === "copied" ? "Command copied" : ""}
+			</span>
 		</span>
 	);
 }
@@ -328,6 +333,7 @@ export interface PanelProps
 	extends Pick<FieldProps, "choose" | "setHover" | "toggleLock"> {
 	choices: ThemeChoices;
 	locked: ReadonlySet<Field>;
+	notice?: string;
 	shuffle: () => void;
 	toolbar: ReactNode;
 	views: ReactNode;
@@ -338,6 +344,7 @@ export interface PanelProps
 export function CreatePanel({
 	choices,
 	locked,
+	notice,
 	shuffle,
 	toolbar,
 	views,
@@ -351,6 +358,11 @@ export function CreatePanel({
 	const toggle = useCallback(() => setOpen((value) => !value), []);
 	return (
 		<aside aria-label="Theme" ref={anchor} {...props(createStyles.inspector)}>
+			{notice ? (
+				<Alert variant="warning">
+					<AlertDescription>{notice}</AlertDescription>
+				</Alert>
+			) : null}
 			{toolbar}
 			{views}
 			<div {...props(createStyles.panel)}>

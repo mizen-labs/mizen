@@ -25,6 +25,7 @@ import {
 } from "@tabler/icons-react";
 import { useCallback, useMemo, useState } from "react";
 import {
+	describe,
 	encodePreset,
 	type ThemeChoices,
 } from "../../../../../../packages/cli/src/theme/create";
@@ -202,24 +203,32 @@ function CopyLink() {
 	const { copy, status } = useCopyToClipboard();
 	const run = useCallback(() => copy(window.location.href), [copy]);
 	return (
-		<IconAction
-			label={status === "copied" ? "Link copied" : "Copy link"}
-			onClick={run}
-		>
-			{status === "copied" ? (
-				<IconCheck aria-hidden="true" />
-			) : (
-				<IconLink aria-hidden="true" />
-			)}
-		</IconAction>
+		<>
+			<IconAction
+				label={status === "copied" ? "Link copied" : "Copy link"}
+				onClick={run}
+			>
+				{status === "copied" ? (
+					<IconCheck aria-hidden="true" />
+				) : (
+					<IconLink aria-hidden="true" />
+				)}
+			</IconAction>
+			<span role="status" {...props(createStyles.screenReader)}>
+				{status === "copied" ? "Link copied" : ""}
+			</span>
+		</>
 	);
 }
 
 export default function CreatePage({
 	initial,
+	notice,
 	onChange,
 }: {
 	initial: ThemeChoices;
+	/** Why the address's code shows the default theme. */
+	notice?: string;
 	onChange: (code: string) => void;
 }) {
 	const create = useCreate(initial, onChange);
@@ -262,10 +271,20 @@ export default function CreatePage({
 	);
 	return (
 		<main id="docs-content" ref={shortcuts} {...props(createStyles.page)}>
+			<h1 {...props(createStyles.screenReader)}>Create a theme</h1>
+			{/* Shuffle, undo, and reset change the theme without moving focus. */}
+			<span
+				aria-live="polite"
+				role="status"
+				{...props(createStyles.screenReader)}
+			>
+				{`Theme ${encodePreset(create.choices)}: ${describe(create.choices)}.`}
+			</span>
 			<CreatePanel
 				choices={create.choices}
 				choose={create.choose}
 				locked={create.locked}
+				notice={create.canUndo ? undefined : notice}
 				setHover={create.setHover}
 				shuffle={create.shuffle}
 				toggleLock={create.toggleLock}

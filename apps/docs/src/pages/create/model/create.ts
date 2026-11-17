@@ -6,6 +6,7 @@ import {
 	FONTS,
 	type FontCategory,
 	HEADINGS,
+	isPresetCode,
 	NEUTRALS,
 	ORDER,
 	PRIMARIES,
@@ -122,6 +123,16 @@ export function radiusFactor(name: string): number {
 // The medium control height in rem, which the density glyph spaces by.
 export function densitySize(name: string): number {
 	return DENSITIES[name as keyof typeof DENSITIES]?.sizes[2] ?? 2;
+}
+
+// Why a code in the address shows the default theme instead, if it does.
+export function unreadableCode(code: string | undefined): string | undefined {
+	if (!code || decodePreset(code)) {
+		return;
+	}
+	return isPresetCode(code)
+		? `The link's theme ${code} comes from a newer version of this page. Showing the default theme.`
+		: `${code} isn't a theme code. Showing the default theme.`;
 }
 
 export function choicesFrom(code: string | undefined): ThemeChoices {

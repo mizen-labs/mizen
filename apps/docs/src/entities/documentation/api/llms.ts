@@ -49,6 +49,10 @@ export function GET() {
 				`- [${app.title}](/apps/${app.slug}/markdown): ${app.description}`
 		),
 		"",
+		"## Theme",
+		"",
+		"- [Create](/create): pick an accent, neutral tone, radius, fonts, and density on a live preview. Its code, such as m33ut, sets up an app with `npx @mizen-labs/cli@latest init --preset <code>`; see [Theming](/docs/theming/markdown).",
+		"",
 		"## Workflow examples",
 		"",
 		...examples.map(([name, href]) => `- [${name}](${href})`),

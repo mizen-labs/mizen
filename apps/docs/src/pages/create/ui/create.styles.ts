@@ -162,6 +162,15 @@ export const createStyles = create({
 		minHeight: 0,
 		minWidth: 0,
 	},
+	screenReader: {
+		blockSize: "1px",
+		clipPath: "inset(50%)",
+		inlineSize: "1px",
+		margin: "-1px",
+		overflow: "hidden",
+		position: "absolute",
+		whiteSpace: "nowrap",
+	},
 	section: {
 		borderBlockEndColor: colors.border,
 		borderBlockEndStyle: { ":last-child": "none", default: "solid" },
@@ -229,11 +238,12 @@ export const createStyles = create({
 	},
 	// The ring takes the swatch's own color through currentColor.
 	swatch: {
-		blockSize: "1.375rem",
+		// 24px: Mizen's smallest target.
+		blockSize: "1.5rem",
 		borderRadius: "9999px",
 		boxShadow: `inset 0 0 0 ${borderWidth.thin} rgb(0 0 0 / 0.12)`,
 		cursor: "pointer",
-		inlineSize: "1.375rem",
+		inlineSize: "1.5rem",
 		outlineColor: {
 			":has(:focus-visible)": colors.focusRing,
 			default: "currentColor",
@@ -261,7 +271,7 @@ export const createStyles = create({
 		borderStyle: "none",
 		display: "flex",
 		flexWrap: "wrap",
-		gap: space["2"],
+		gap: space["1.5"],
 		margin: 0,
 		padding: 0,
 	},

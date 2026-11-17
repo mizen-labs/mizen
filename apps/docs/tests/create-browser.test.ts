@@ -120,6 +120,19 @@ describe.each([
 		});
 		await expect.poll(() => shownCode(page)).toBe("m0");
 		expect(await swatch(page, "Wine").isChecked()).toBe(true);
+		// The reader learns why, until they change the theme.
+		const notice = panel(page).getByText("isn't a theme code");
+		expect(await notice.isVisible()).toBe(true);
+		await page.goto(`${handle.url}/create?preset=mzzzzzzz`, {
+			waitUntil: "networkidle",
+		});
+		await expect
+			.poll(() => panel(page).getByText("newer version").isVisible())
+			.toBe(true);
+		await swatch(page, "Blue").check({ force: true });
+		await expect
+			.poll(() => panel(page).getByText("newer version").count())
+			.toBe(0);
 		await page.close();
 	});
 
@@ -400,6 +413,20 @@ describe.each([
 		await expect.poll(width).toBe(Math.min(834, desktop));
 		await page.getByRole("button", { name: "Desktop" }).click();
 		await expect.poll(width).toBe(desktop);
+		await page.close();
+	});
+
+	it("names the page and announces each new theme", async () => {
+		const page = await open(browser, "m33ut", errors);
+		expect(
+			await page
+				.getByRole("heading", { level: 1, name: "Create a theme" })
+				.count()
+		).toBe(1);
+		const status = page.getByRole("status").filter({ hasText: "Theme m" });
+		expect(await status.textContent()).toContain("Theme m33ut: Blue accent");
+		await segment(page, "Radius", "None").click();
+		await expect.poll(() => status.textContent()).toContain("none radius");
 		await page.close();
 	});
 });

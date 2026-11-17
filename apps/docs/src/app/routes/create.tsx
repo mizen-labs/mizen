@@ -3,21 +3,16 @@ import { useCallback } from "react";
 import { choicesFrom, unreadableCode } from "../../pages/create/model/create";
 import CreatePage from "../../pages/create/ui/page";
 import SiteLayout from "../layouts/site-layout";
-import { canonical } from "../lib/canonical";
+import { pageHead } from "../lib/page-head";
 
 export const Route = createFileRoute("/create")({
 	component: Create,
-	head: () => ({
-		links: [canonical("/create")],
-		meta: [
-			{ title: "Create · Mizen UI" },
-			{
-				content:
-					"Pick an accent, neutrals, radius, font, and density, see them on a whole app, and get the command that sets them up.",
-				name: "description",
-			},
-		],
-	}),
+	head: () =>
+		pageHead(
+			"/create",
+			"Create · Mizen UI",
+			"Pick an accent, main buttons, neutrals, fonts, radius, and density, see them on a whole app, and get the command that sets them up."
+		),
 	validateSearch: (search: Record<string, unknown>): { preset?: string } =>
 		typeof search.preset === "string" ? { preset: search.preset } : {},
 });

@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { loadApp } from "../../entities/documentation/api/docs-functions";
 import AppPage from "../../pages/apps/ui/app-page";
 import SiteLayout from "../layouts/site-layout";
-import { canonical } from "../lib/canonical";
+import { pageHead } from "../lib/page-head";
 
 export const Route = createFileRoute("/apps/$app")({
 	component: App,
@@ -16,13 +16,11 @@ export const Route = createFileRoute("/apps/$app")({
 	},
 	head: ({ loaderData }) =>
 		loaderData
-			? {
-					links: [canonical(`/apps/${loaderData.app.slug}/`)],
-					meta: [
-						{ title: `${loaderData.app.title} · Mizen UI` },
-						{ content: loaderData.app.description, name: "description" },
-					],
-				}
+			? pageHead(
+					`/apps/${loaderData.app.slug}/`,
+					`${loaderData.app.title} · Mizen UI`,
+					loaderData.app.description
+				)
 			: {},
 });
 function App() {

@@ -2,6 +2,7 @@ import sansFontUrl from "@fontsource-variable/geist/files/geist-latin-wght-norma
 import { createRootRoute, Link } from "@tanstack/react-router";
 import { loadNavigation } from "../../entities/documentation/api/docs-functions";
 import RootLayout from "../layouts/root-layout";
+import { siteShare } from "../lib/page-head";
 
 export const Route = createRootRoute({
 	loader: () => loadNavigation(),
@@ -26,6 +27,7 @@ export const Route = createRootRoute({
 					"Mizen UI components, documentation, blocks, and application examples.",
 				name: "description",
 			},
+			...siteShare,
 		],
 	}),
 	notFoundComponent: NotFound,

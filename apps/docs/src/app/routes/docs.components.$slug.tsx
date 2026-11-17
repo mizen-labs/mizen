@@ -1,7 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { loadComponent } from "../../entities/documentation/api/docs-functions";
 import ComponentPage from "../../pages/component/ui/page";
-import { canonical } from "../lib/canonical";
+import { pageHead } from "../lib/page-head";
 
 export const Route = createFileRoute("/docs/components/$slug")({
 	component: Component,
@@ -25,13 +25,11 @@ export const Route = createFileRoute("/docs/components/$slug")({
 	},
 	head: ({ loaderData }) =>
 		loaderData
-			? {
-					links: [canonical(`/docs/components/${loaderData.component.slug}/`)],
-					meta: [
-						{ title: `${loaderData.component.name} · Mizen UI` },
-						{ name: "description", content: loaderData.component.description },
-					],
-				}
+			? pageHead(
+					`/docs/components/${loaderData.component.slug}/`,
+					`${loaderData.component.name} · Mizen UI`,
+					loaderData.component.description
+				)
 			: {},
 });
 function Component() {

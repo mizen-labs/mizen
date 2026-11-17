@@ -78,7 +78,7 @@ export const tabsStyles = create({
 				[conditions.forcedColors]: "Highlight",
 				default: colors.accent,
 			},
-			borderRadius: "9999px",
+			borderRadius: shape.pillRadius,
 			content: '""',
 			height: {
 				"[data-orientation='vertical']": "auto",

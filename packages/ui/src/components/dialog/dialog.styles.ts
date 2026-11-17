@@ -1,6 +1,7 @@
 import { create } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
+import { fonts } from "../../styles/fonts.stylex";
 import {
 	borderWidth,
 	focus,
@@ -208,6 +209,7 @@ export const dialogStyles = create({
 	popupXl: { maxWidth: "56rem" },
 	title: {
 		color: colors.content,
+		fontFamily: fonts.heading,
 		fontSize: fontSize["16"],
 		fontWeight: fontWeight.semibold,
 		letterSpacing: letterSpacing.subheading,

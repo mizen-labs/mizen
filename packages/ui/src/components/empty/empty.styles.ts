@@ -2,6 +2,7 @@ import { create } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
 import { controlSize } from "../../styles/dimensions.stylex";
+import { fonts } from "../../styles/fonts.stylex";
 import { borderWidth } from "../../styles/interaction.stylex";
 import { shadows } from "../../styles/shadows.stylex";
 import { shape } from "../../styles/shape.stylex";
@@ -107,6 +108,7 @@ export const emptyStyles = create({
 	title: {
 		boxSizing: "border-box",
 		color: colors.content,
+		fontFamily: fonts.heading,
 		fontSize: fontSize["20"],
 		fontWeight: fontWeight.semibold,
 		letterSpacing: letterSpacing.heading,

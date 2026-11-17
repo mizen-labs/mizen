@@ -8,6 +8,9 @@ export const shape = defineVars({
 	floatingRadius: "0.75rem",
 	// Inline marks inside text, such as Code: small enough to stay rectangular.
 	inlineRadius: "0.375rem",
+	// Pill shapes: Switch, Progress, Meter, Badge, a delta chip. A theme with
+	// square corners sets 0; circles such as Radio and dots stay round.
+	pillRadius: "9999px",
 	surfaceRadius: "1rem",
 	surfaceRadiusLarge: "1.25rem",
 });

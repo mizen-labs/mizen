@@ -3,6 +3,7 @@ import { applicationStructure } from "../../styles/application-structure.stylex"
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
 import { borderWidth } from "../../styles/interaction.stylex";
+import { shape } from "../../styles/shape.stylex";
 import { space } from "../../styles/spacing.stylex";
 import {
 	fontSize,
@@ -30,7 +31,7 @@ export const metricStyles = create({
 	delta: {
 		alignItems: "center",
 		borderColor: colors.border,
-		borderRadius: "0.625rem",
+		borderRadius: shape.pillRadius,
 		borderStyle: "solid",
 		borderWidth: borderWidth.thin,
 		boxSizing: "border-box",

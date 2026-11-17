@@ -1,5 +1,6 @@
 import { create } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
+import { shape } from "../../styles/shape.stylex";
 import { space } from "../../styles/spacing.stylex";
 import { fontWeight } from "../../styles/typography.stylex";
 
@@ -10,7 +11,7 @@ export const funnelStyles = create({
 	fill: (inlineSize: string, backgroundColor: string) => ({
 		alignItems: "center",
 		backgroundColor,
-		borderRadius: "999px",
+		borderRadius: shape.pillRadius,
 		color: colors.accentContent,
 		display: "flex",
 		inlineSize,
@@ -60,7 +61,7 @@ export const funnelStyles = create({
 	track: {
 		backgroundColor: colors.controlSurface,
 		blockSize: PILL,
-		borderRadius: "999px",
+		borderRadius: shape.pillRadius,
 		display: "flex",
 		overflow: "hidden",
 	},

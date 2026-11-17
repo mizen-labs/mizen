@@ -237,7 +237,7 @@ export const stepperStyles = create({
 				},
 				default: "100% 0%",
 			},
-			borderRadius: "9999px",
+			borderRadius: shape.pillRadius,
 			content: '""',
 			display: {
 				":last-child": "none",

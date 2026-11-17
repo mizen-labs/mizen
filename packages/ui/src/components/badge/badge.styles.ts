@@ -7,6 +7,7 @@ import {
 	focusMotion,
 	focusOutline,
 } from "../../styles/interaction.stylex";
+import { shape } from "../../styles/shape.stylex";
 import { space } from "../../styles/spacing.stylex";
 import {
 	fontSize,
@@ -108,7 +109,7 @@ export const badgeStyles = create({
 	// rectangle when the label wraps. Inside a control, the control sets the
 	// size, so the three sizes are for a badge that stands alone.
 	defaultSize: {
-		borderRadius: "calc(var(--mizen-badge-size, 1.375rem) / 2)",
+		borderRadius: shape.pillRadius,
 		fontSize: `var(--mizen-badge-font-size, ${fontSize["12"]})`,
 		letterSpacing: letterSpacing.caption,
 		lineHeight: `var(--mizen-badge-line-height, ${lineHeight["16"]})`,
@@ -118,7 +119,7 @@ export const badgeStyles = create({
 	destructive: status(colors.destructive),
 	info: status(colors.infoSolid),
 	lg: {
-		borderRadius: `calc(var(--mizen-badge-size, ${controlSize.xs}) / 2)`,
+		borderRadius: shape.pillRadius,
 		fontSize: `var(--mizen-badge-font-size, ${fontSize["13"]})`,
 		letterSpacing: letterSpacing.ui,
 		lineHeight: `var(--mizen-badge-line-height, ${lineHeight["20"]})`,
@@ -136,7 +137,7 @@ export const badgeStyles = create({
 		color: `var(--mizen-badge-ink, ${colors.secondaryContent})`,
 	},
 	sm: {
-		borderRadius: "calc(var(--mizen-badge-size, 1.25rem) / 2)",
+		borderRadius: shape.pillRadius,
 		fontSize: `var(--mizen-badge-font-size, ${fontSize["12"]})`,
 		letterSpacing: letterSpacing.caption,
 		lineHeight: `var(--mizen-badge-line-height, ${lineHeight["16"]})`,

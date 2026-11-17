@@ -2,13 +2,14 @@ import { create } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
 import { duration, easing } from "../../styles/motion.stylex";
+import { shape } from "../../styles/shape.stylex";
 import { space } from "../../styles/spacing.stylex";
 import { fontWeight } from "../../styles/typography.stylex";
 
 export const meterStyles = create({
 	indicator: {
 		backgroundColor: colors.primary,
-		borderRadius: "9999px",
+		borderRadius: shape.pillRadius,
 		boxSizing: "border-box",
 		display: "block",
 		height: "inherit",
@@ -33,7 +34,7 @@ export const meterStyles = create({
 	track: {
 		// A translucent tint, like Progress, so the track shows on any surface.
 		backgroundColor: colors.border,
-		borderRadius: "9999px",
+		borderRadius: shape.pillRadius,
 		boxSizing: "border-box",
 		display: "block",
 		height: "0.5rem",

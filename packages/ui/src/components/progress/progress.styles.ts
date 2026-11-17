@@ -2,6 +2,7 @@ import { create, keyframes } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
 import { duration, easing } from "../../styles/motion.stylex";
+import { shape } from "../../styles/shape.stylex";
 import { space } from "../../styles/spacing.stylex";
 import {
 	fontSize,
@@ -35,7 +36,7 @@ export const progressStyles = create({
 		},
 		animationTimingFunction: easing.easeInOut,
 		backgroundColor: colors.accent,
-		borderRadius: "9999px",
+		borderRadius: shape.pillRadius,
 		boxSizing: "border-box",
 		display: "block",
 		height: "inherit",
@@ -67,7 +68,7 @@ export const progressStyles = create({
 	},
 	track: {
 		backgroundColor: colors.border,
-		borderRadius: "9999px",
+		borderRadius: shape.pillRadius,
 		boxSizing: "border-box",
 		display: "block",
 		height: "0.375rem",

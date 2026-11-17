@@ -10,6 +10,7 @@ import {
 } from "../../styles/interaction.stylex";
 import { duration, easing } from "../../styles/motion.stylex";
 import { shadows } from "../../styles/shadows.stylex";
+import { shape } from "../../styles/shape.stylex";
 
 export const switchStyles = create({
 	base: {
@@ -109,30 +110,30 @@ export const switchStyles = create({
 	sizeDefault: {
 		"--mizen-switch-thumb-size": "0.875rem",
 		"--mizen-switch-thumb-travel": "1rem",
-		borderEndEndRadius: "9999px",
-		borderEndStartRadius: "9999px",
-		borderStartEndRadius: "9999px",
-		borderStartStartRadius: "9999px",
+		borderEndEndRadius: shape.pillRadius,
+		borderEndStartRadius: shape.pillRadius,
+		borderStartEndRadius: shape.pillRadius,
+		borderStartStartRadius: shape.pillRadius,
 		height: "1.25rem",
 		width: "2.25rem",
 	},
 	sizeLg: {
 		"--mizen-switch-thumb-size": "1.125rem",
 		"--mizen-switch-thumb-travel": "1.25rem",
-		borderEndEndRadius: "9999px",
-		borderEndStartRadius: "9999px",
-		borderStartEndRadius: "9999px",
-		borderStartStartRadius: "9999px",
+		borderEndEndRadius: shape.pillRadius,
+		borderEndStartRadius: shape.pillRadius,
+		borderStartEndRadius: shape.pillRadius,
+		borderStartStartRadius: shape.pillRadius,
 		height: "1.5rem",
 		width: "2.75rem",
 	},
 	sizeSm: {
 		"--mizen-switch-thumb-size": "0.625rem",
 		"--mizen-switch-thumb-travel": "0.75rem",
-		borderEndEndRadius: "9999px",
-		borderEndStartRadius: "9999px",
-		borderStartEndRadius: "9999px",
-		borderStartStartRadius: "9999px",
+		borderEndEndRadius: shape.pillRadius,
+		borderEndStartRadius: shape.pillRadius,
+		borderStartEndRadius: shape.pillRadius,
+		borderStartStartRadius: shape.pillRadius,
 		height: "1rem",
 		width: "1.75rem",
 	},
@@ -142,7 +143,7 @@ export const switchStyles = create({
 			// One thumb for both states; position and track color show state.
 			default: colors.controlThumb,
 		},
-		borderRadius: "9999px",
+		borderRadius: shape.pillRadius,
 		boxShadow: {
 			[conditions.forcedColors]: "none",
 			default: `0 0 0 1px oklch(0 0 0 / 0.06), ${shadows.filledRest}`,

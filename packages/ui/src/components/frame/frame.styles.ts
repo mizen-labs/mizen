@@ -1,5 +1,6 @@
 import { create } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
+import { fonts } from "../../styles/fonts.stylex";
 import { borderWidth } from "../../styles/interaction.stylex";
 import { shadows } from "../../styles/shadows.stylex";
 import { shape } from "../../styles/shape.stylex";
@@ -61,6 +62,7 @@ export const frameStyles = create({
 	title: {
 		boxSizing: "border-box",
 		color: colors.content,
+		fontFamily: fonts.heading,
 		fontSize: fontSize["14"],
 		fontWeight: fontWeight.semibold,
 		letterSpacing: letterSpacing.ui,

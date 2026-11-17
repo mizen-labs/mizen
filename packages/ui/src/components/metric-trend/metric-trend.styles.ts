@@ -122,7 +122,7 @@ export const metricTrendStyles = create({
 	},
 	// The change chip keeps its own height and pill shape.
 	placeholderDelta: { blockSize: "1.25rem", inlineSize: "3rem" },
-	placeholderDeltaBar: { blockSize: "100%", borderRadius: "0.625rem" },
+	placeholderDeltaBar: { blockSize: "100%", borderRadius: shape.pillRadius },
 	placeholderDescription: { inlineSize: "8em" },
 	placeholderValue: { inlineSize: "4em" },
 	prefix: { marginInlineEnd: space.px },

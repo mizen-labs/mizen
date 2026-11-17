@@ -43,6 +43,7 @@ export const typeRoles = create({
 		lineHeight: lineHeight["16"],
 	},
 	display: {
+		fontFamily: fonts.heading,
 		fontSize: { [conditions.sm]: fontSize["40"], default: fontSize["32"] },
 		fontSizeAdjust: fonts.sizeAdjust,
 		fontWeight: fontWeight.semibold,
@@ -54,6 +55,7 @@ export const typeRoles = create({
 		textWrap: "balance",
 	},
 	heading: {
+		fontFamily: fonts.heading,
 		fontSize: fontSize["20"],
 		fontSizeAdjust: fonts.sizeAdjust,
 		fontWeight: fontWeight.semibold,
@@ -91,6 +93,7 @@ export const typeRoles = create({
 		},
 	},
 	subheading: {
+		fontFamily: fonts.heading,
 		fontSize: fontSize["16"],
 		fontSizeAdjust: fonts.sizeAdjust,
 		fontWeight: fontWeight.semibold,
@@ -99,6 +102,7 @@ export const typeRoles = create({
 		textWrap: "balance",
 	},
 	title: {
+		fontFamily: fonts.heading,
 		fontSize: fontSize["28"],
 		fontSizeAdjust: fonts.sizeAdjust,
 		fontWeight: fontWeight.semibold,

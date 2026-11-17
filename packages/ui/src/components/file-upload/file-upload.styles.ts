@@ -383,7 +383,7 @@ export const fileUploadStyles = create({
 				colors.surface,
 			default: colors.controlSurfaceHover,
 		},
-		borderRadius: "9999px",
+		borderRadius: shape.pillRadius,
 		boxShadow: "none",
 		fontSize: fontSize["14"],
 		insetBlockStart: space["1"],

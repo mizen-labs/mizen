@@ -10,11 +10,12 @@ const darkColorTheme = createTheme(colors, {
 	brandForeground: "oklch(0.9 0.055 315)",
 	// Reference series such as last year: quieter than the palette, 3:1 on the workarea.
 	chartReference: "oklch(0.55 0 0)",
-	// Same hue order at the dark band (L 0.64); all clear 3:1 on the dark workarea.
+	// Same hue order near the dark band (L 0.64); pink and green step apart so
+	// deuteranopia still separates them. All clear 3:1 on the dark workarea.
 	chartSeries1: "oklch(0.64 0.22 300)",
 	chartSeries2: "oklch(0.64 0.135 75)",
-	chartSeries3: "oklch(0.64 0.22 352)",
-	chartSeries4: "oklch(0.64 0.175 132)",
+	chartSeries3: "oklch(0.63 0.22 352)",
+	chartSeries4: "oklch(0.66 0.175 132)",
 	chartSeries5: "oklch(0.64 0.195 255)",
 	chartSeries6: "oklch(0.64 0.13 165)",
 	content: "oklch(0.94 0 0)",

@@ -10,14 +10,15 @@ export const colors = defineVars({
 	// Reference series such as last year: quieter than the palette, 3:1 on the workarea.
 	chartReference: "oklch(0.62 0 0)",
 	// Categorical chart hues, violet first, in a fixed order validated for
-	// colorblind separation (adjacent ΔE ≥ 13.5) and 3:1 against the workarea.
+	// colorblind separation (adjacent OKLab ΔE ≥ 13.5 under protanopia and
+	// deuteranopia) and 3:1 against the workarea. chart-palette.test.ts checks both.
 	// Reorder or retune only by re-running the validation.
 	chartSeries1: "oklch(0.66 0.21 300)",
-	chartSeries2: "oklch(0.65 0.135 75)",
+	chartSeries2: "oklch(0.64 0.135 75)",
 	chartSeries3: "oklch(0.66 0.22 352)",
-	chartSeries4: "oklch(0.63 0.175 132)",
-	chartSeries5: "oklch(0.645 0.19 255)",
-	chartSeries6: "oklch(0.63 0.13 165)",
+	chartSeries4: "oklch(0.625 0.175 132)",
+	chartSeries5: "oklch(0.64 0.19 255)",
+	chartSeries6: "oklch(0.62 0.13 165)",
 	content: "oklch(0.204627 0 0)",
 	// Field and outline-control edges: 14% ink on the surface. Quieter than
 	// 3:1 by design; controlBorderStrong carries hover and unchecked marks.

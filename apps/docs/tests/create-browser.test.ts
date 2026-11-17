@@ -159,8 +159,9 @@ describe.each([
 
 	it("lists sizes small to large and chooses with one click", async () => {
 		const page = await open(browser, "m33ut", errors);
-		// One read of the group: per-button reads before a pointer move crash
-		// Firefox's content process under Playwright 1.65.
+		// One read of the group. Playwright 1.65's Firefox crashes when it reads
+		// aria-labelledby in two worlds (microsoft/playwright#43967, Mozilla bug
+		// 2090055); return to per-button reads once a fixed Firefox ships.
 		expect(
 			await panel(page).getByRole("group", { name: "Radius" }).textContent()
 		).toBe("NoneSmallDefaultLarge");

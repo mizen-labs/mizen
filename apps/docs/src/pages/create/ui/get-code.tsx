@@ -26,40 +26,69 @@ import {
 	type ThemeChoices,
 } from "../../../../../../packages/cli/src/theme/create";
 import { SourceCode } from "../../../shared/ui/source-code";
-import { initCommand, PACKAGE_MANAGERS } from "../model/create";
+import {
+	FRAMEWORKS,
+	type Framework,
+	initCommand,
+	newProjectCommands,
+	PACKAGE_MANAGERS,
+	type PackageManager,
+} from "../model/create";
 
-function Command({ code }: { code: string }) {
-	const [manager, setManager] = useState<string>("npm");
-	const change = useCallback((next: string[]) => {
-		if (next[0]) {
-			setManager(next[0]);
-		}
-	}, []);
-	const runner =
-		PACKAGE_MANAGERS.find(([name]) => name === manager)?.[1] ?? "npx";
+function Choices<Value extends string>({
+	label,
+	onChange,
+	options,
+	value,
+}: {
+	label: string;
+	onChange: (value: Value) => void;
+	options: readonly (readonly [Value, string])[];
+	value: Value;
+}) {
+	const change = useCallback(
+		(next: Value[]) => {
+			if (next[0]) {
+				onChange(next[0]);
+			}
+		},
+		[onChange]
+	);
 	return (
-		<Stack gap="3">
-			<SegmentedControl
-				aria-label="Package manager"
-				onValueChange={change}
-				size="sm"
-				value={[manager]}
-			>
-				{PACKAGE_MANAGERS.map(([name]) => (
-					<SegmentedControlItem key={name} value={name}>
-						{name}
-					</SegmentedControlItem>
-				))}
-			</SegmentedControl>
-			<SourceCode code={initCommand(runner, code)} label="Command" />
-		</Stack>
+		<SegmentedControl
+			aria-label={label}
+			onValueChange={change}
+			size="sm"
+			value={[value]}
+		>
+			{options.map(([name, text]) => (
+				<SegmentedControlItem key={name} value={name}>
+					{text}
+				</SegmentedControlItem>
+			))}
+		</SegmentedControl>
 	);
 }
 
-// The code for the chosen theme: a command for a new or an existing app, or
-// the theme file to paste.
+const MANAGER_OPTIONS = PACKAGE_MANAGERS.map(([name]) => [name, name] as const);
+const FRAMEWORK_OPTIONS = FRAMEWORKS.map(
+	([name, label]) => [name, label] as const
+);
+
+// The code for the chosen theme: commands that start a new app with it or
+// add it to an app already set up, or the theme file to paste.
 export function GetCode({ choices }: { choices: ThemeChoices }) {
 	const code = encodePreset(choices);
+	const [manager, setManager] = useState<PackageManager>("npm");
+	const [framework, setFramework] = useState<Framework>("next");
+	const managers = (
+		<Choices
+			label="Package manager"
+			onChange={setManager}
+			options={MANAGER_OPTIONS}
+			value={manager}
+		/>
+	);
 	return (
 		<Dialog>
 			<DialogTrigger render={<Button>Get code</Button>} />
@@ -67,7 +96,7 @@ export function GetCode({ choices }: { choices: ThemeChoices }) {
 				<DialogHeader>
 					<DialogTitle>Theme {code}</DialogTitle>
 					<DialogDescription>
-						init sets up Mizen and writes mizen-theme.css with these choices.
+						Init sets up Mizen and writes mizen-theme.css with these choices.
 					</DialogDescription>
 				</DialogHeader>
 				<DialogPanel>
@@ -81,18 +110,30 @@ export function GetCode({ choices }: { choices: ThemeChoices }) {
 						<TabsPanel value="new">
 							<Stack gap="3">
 								<Text size="ui" tone="muted">
-									Run it in a Next, Vite, or TanStack Start app.
+									Start an app, then set it up with the theme.
 								</Text>
-								<Command code={code} />
+								<Choices
+									label="Framework"
+									onChange={setFramework}
+									options={FRAMEWORK_OPTIONS}
+									value={framework}
+								/>
+								{managers}
+								<SourceCode
+									code={newProjectCommands(manager, framework, code)}
+									label="Commands"
+								/>
 							</Stack>
 						</TabsPanel>
 						<TabsPanel value="existing">
 							<Stack gap="3">
 								<Text size="ui" tone="muted">
-									In an app already set up, it adds the theme file and its
-									import. It never replaces a mizen-theme.css you edited.
+									Run it in a Next.js, Vite, or TanStack Start app. It adds the
+									theme file and its import, and never replaces a
+									mizen-theme.css you edited.
 								</Text>
-								<Command code={code} />
+								{managers}
+								<SourceCode code={initCommand(manager, code)} label="Command" />
 							</Stack>
 						</TabsPanel>
 						<TabsPanel value="css">

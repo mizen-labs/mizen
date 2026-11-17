@@ -68,7 +68,7 @@ function subscribe(onChange: (message: PreviewMessage) => void) {
 export default function CreatePreview({
 	initial,
 }: {
-	initial: PreviewMessage;
+	initial: Omit<PreviewMessage, "dark"> & { dark?: boolean };
 }) {
 	const [state, setState] = useState(initial);
 	// Messages replace the state; the first render uses the URL's.
@@ -77,7 +77,9 @@ export default function CreatePreview({
 			if (!element) {
 				return;
 			}
-			applyDark(initial.dark);
+			if (initial.dark !== undefined) {
+				applyDark(initial.dark);
+			}
 			return subscribe((message) => {
 				applyDark(message.dark);
 				setState(message);

@@ -3,7 +3,7 @@ import type { PreviewView } from "../../pages/create/model/create";
 import CreatePreview from "../../pages/create/ui/preview";
 
 interface PreviewSearch {
-	dark: boolean;
+	dark?: boolean;
 	preset: string;
 	view: PreviewView;
 }
@@ -19,7 +19,11 @@ export const Route = createFileRoute("/create_/preview")({
 		],
 	}),
 	validateSearch: (search: Record<string, unknown>): PreviewSearch => ({
-		dark: search.dark === true || search.dark === "true",
+		// Without it, the preview keeps the site's theme.
+		dark:
+			search.dark === undefined
+				? undefined
+				: search.dark === true || search.dark === "true",
 		preset: typeof search.preset === "string" ? search.preset : "m0",
 		view: search.view === "components" ? "components" : "app",
 	}),

@@ -216,12 +216,45 @@ const INK_RULES: Rule[] = [
 	["color-brand-background", oklch(0.95, 0, 0), oklch(0.25, 0, 0)],
 ];
 
+// WCAG relative luminance of an OKLCH color, clipped to sRGB.
+function luminance(l: number, c: number, h: number): number {
+	const a = c * Math.cos((h * Math.PI) / 180);
+	const b = c * Math.sin((h * Math.PI) / 180);
+	const lms = [
+		(l + 0.396_337_777_4 * a + 0.215_803_757_3 * b) ** 3,
+		(l - 0.105_561_345_8 * a - 0.063_854_172_8 * b) ** 3,
+		(l - 0.089_484_177_5 * a - 1.291_485_548 * b) ** 3,
+	] as const;
+	const [lc, mc, sc] = lms;
+	const rgb = [
+		4.076_741_662_1 * lc - 3.307_711_591_3 * mc + 0.230_969_929_2 * sc,
+		-1.268_438_004_6 * lc + 2.609_757_401_1 * mc - 0.341_319_396_5 * sc,
+		-0.004_196_086_3 * lc - 0.703_418_614_7 * mc + 1.707_614_701 * sc,
+	].map((channel) => Math.min(1, Math.max(0, channel)));
+	const [r = 0, g = 0, bl = 0] = rgb;
+	return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+}
+
+// White text on an accent clears 4.5:1 with a margin for gamut mapping.
+const WHITE_TEXT = 4.6;
+
+// The accent's lightness: the design value, darkened in steps until white
+// text on it reads. A hue that is light at a given lightness, such as teal,
+// gets a deeper fill; the rest keep the design value.
+function readableLightness(start: number, chroma: number, hue: number) {
+	let lightness = start;
+	while (1.05 / (luminance(lightness, chroma, hue) + 0.05) < WHITE_TEXT) {
+		lightness -= 0.005;
+	}
+	return round(lightness);
+}
+
 function accentRules({ chroma, hue }: { chroma: number; hue: number }): Rule[] {
 	if (chroma === 0) {
 		return INK_RULES;
 	}
-	const accent = oklch(0.48, chroma, hue);
-	const accentDark = oklch(0.55, chroma, hue);
+	const accent = oklch(readableLightness(0.48, chroma, hue), chroma, hue);
+	const accentDark = oklch(readableLightness(0.55, chroma, hue), chroma, hue);
 	return [
 		["color-accent", accent, accentDark],
 		["color-focus-ring", accent, oklch(0.72, chroma * 0.7, hue)],

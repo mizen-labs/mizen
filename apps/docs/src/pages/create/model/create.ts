@@ -111,13 +111,43 @@ export function isPreviewMessage(data: unknown): data is PreviewMessage {
 	);
 }
 
+// A package manager and the command that runs a package without installing it.
 export const PACKAGE_MANAGERS = [
 	["npm", "npx"],
 	["pnpm", "pnpm dlx"],
 	["yarn", "yarn dlx"],
 	["bun", "bunx"],
 ] as const;
+export type PackageManager = (typeof PACKAGE_MANAGERS)[number][0];
 
-export function initCommand(runner: string, code: string): string {
-	return `${runner} @mizen-labs/cli@latest init --preset ${code}`;
+// The apps init sets up, and the scaffolder that starts each one. Vite's
+// template leaves the install to the reader; init needs React installed.
+export const FRAMEWORKS = [
+	["next", "Next.js", "create-next-app@latest my-app --yes", false],
+	["vite", "Vite", "create-vite@latest my-app --template react-ts", true],
+	["start", "TanStack Start", "@tanstack/cli@latest create my-app", false],
+] as const;
+export type Framework = (typeof FRAMEWORKS)[number][0];
+
+const runnerOf = (manager: PackageManager) =>
+	PACKAGE_MANAGERS.find(([name]) => name === manager)?.[1] ?? "npx";
+
+export function initCommand(manager: PackageManager, code: string): string {
+	return `${runnerOf(manager)} @mizen-labs/cli@latest init --preset ${code}`;
+}
+
+// The commands that start an app and set it up with the theme.
+export function newProjectCommands(
+	manager: PackageManager,
+	framework: Framework,
+	code: string
+): string {
+	const [, , create, install] =
+		FRAMEWORKS.find(([name]) => name === framework) ?? FRAMEWORKS[0];
+	return [
+		`${runnerOf(manager)} ${create}`,
+		"cd my-app",
+		...(install ? [`${manager} install`] : []),
+		initCommand(manager, code),
+	].join("\n");
 }

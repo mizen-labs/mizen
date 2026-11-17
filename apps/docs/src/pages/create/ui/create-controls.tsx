@@ -259,7 +259,7 @@ const GROUPS: readonly (readonly Field[])[] = [
 // Copies the init command; the preset code is its face.
 function CopyCommand({ code }: { code: string }) {
 	const { copy, status } = useCopyToClipboard();
-	const run = useCallback(() => copy(initCommand("npx", code)), [code, copy]);
+	const run = useCallback(() => copy(initCommand("npm", code)), [code, copy]);
 	return (
 		<span {...props(createStyles.codeButton)}>
 			<Tooltip>

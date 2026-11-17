@@ -70,7 +70,8 @@ const EDITABLE =
 	"input, textarea, select, [contenteditable='true'], [role='listbox']";
 
 // r shuffles, ⇧R resets, d switches the preview to dark, ⌘Z and ⇧⌘Z undo
-// and redo; also while the preview has focus.
+// and redo. They act only while focus is in the page or its preview, never
+// in a field or an open menu, so typing elsewhere cannot trigger them.
 function useShortcuts(actions: Actions) {
 	return useCallback(
 		(element: HTMLElement | null) => {
@@ -79,7 +80,7 @@ function useShortcuts(actions: Actions) {
 			}
 			const keydown = (event: KeyboardEvent) => {
 				const target = event.target as HTMLElement | null;
-				if (target?.closest(EDITABLE)) {
+				if (!(target && element.contains(target)) || target.closest(EDITABLE)) {
 					return;
 				}
 				const press = {
@@ -113,8 +114,7 @@ function useShortcuts(actions: Actions) {
 function PreviewFrame({ message }: { message: PreviewMessage }) {
 	// The frame loads once; later choices reach it as messages.
 	const [src] = useState(
-		() =>
-			`/create/preview?preset=${message.preset}&view=${message.view}&dark=${message.dark}`
+		() => `/create/preview?preset=${message.preset}&view=${message.view}`
 	);
 	const send = useCallback(
 		(frame: HTMLIFrameElement | null) => {

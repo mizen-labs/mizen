@@ -160,6 +160,8 @@ describe.each([
 		await picker(page, "Radius").click();
 		await page.getByRole("menuitemradio", { name: "None" }).click();
 		await page.keyboard.press("Escape");
+		// Shortcuts wait for focus to leave the menu.
+		await expect.poll(() => page.getByRole("menu").count()).toBe(0);
 		const chosen = addressCode(page);
 		await expect.poll(() => shownCode(page)).toBe(chosen);
 		await page.keyboard.press("ControlOrMeta+z");
@@ -188,21 +190,77 @@ describe.each([
 		await page.close();
 	});
 
-	it("gives the init command and the theme file", async () => {
+	it("starts an app, sets one up, or gives the theme file", async () => {
 		const page = await open(browser, "m1m4l", errors);
 		await page.getByRole("button", { exact: true, name: "Get code" }).click();
 		const dialog = page.getByRole("dialog");
+		const shownPanel = dialog.getByRole("tabpanel");
+		const choose = (name: string) =>
+			shownPanel.getByText(name, { exact: true }).click();
 		await expect
-			.poll(() => dialog.textContent())
-			.toContain("npx @mizen-labs/cli@latest init --preset m1m4l");
-		await dialog.getByText("pnpm", { exact: true }).click();
+			.poll(() => shownPanel.textContent())
+			.toContain(
+				"npx create-next-app@latest my-app --yes\ncd my-app\nnpx @mizen-labs/cli@latest init --preset m1m4l"
+			);
+		await choose("Vite");
+		await choose("pnpm");
 		await expect
-			.poll(() => dialog.textContent())
+			.poll(() => shownPanel.textContent())
+			.toContain(
+				"pnpm dlx create-vite@latest my-app --template react-ts\ncd my-app\npnpm install\npnpm dlx @mizen-labs/cli@latest init --preset m1m4l"
+			);
+		await dialog.getByRole("tab", { name: "Existing project" }).click();
+		await expect
+			.poll(() => shownPanel.textContent())
 			.toContain("pnpm dlx @mizen-labs/cli@latest init --preset m1m4l");
+		expect(await shownPanel.textContent()).not.toContain("create-");
 		await dialog.getByRole("tab", { name: "CSS" }).click();
 		await expect
-			.poll(() => dialog.textContent())
+			.poll(() => shownPanel.textContent())
 			.toContain("--mizen-color-accent: oklch(0.48 0.18 255);");
+		await page.close();
+	});
+
+	it("starts the preview in the site's theme", async () => {
+		const page = await browser.newPage({
+			viewport: { height: 900, width: 1280 },
+		});
+		page.on("pageerror", (error) => errors.push(error.message));
+		await page.addInitScript(() => localStorage.setItem("mizen-theme", "dark"));
+		await page.goto(`${handle.url}/create?preset=m1m4l`, {
+			waitUntil: "networkidle",
+		});
+		await expect.poll(async () => (await shown(page)).mode).toBe("dark");
+		await page.getByRole("button", { name: "Light preview" }).click();
+		await expect.poll(async () => (await shown(page)).mode).toBe("light");
+		expect(
+			await page.evaluate(() => document.documentElement.dataset.theme)
+		).toBe("dark");
+		await page.close();
+	});
+
+	it("ignores shortcut keys while focus is outside the page", async () => {
+		const page = await open(browser, "m1m4l", errors);
+		await page.getByRole("link", { name: "Docs" }).first().focus();
+		await page.keyboard.press("r");
+		await page.keyboard.press("d");
+		expect(addressCode(page)).toBe("m1m4l");
+		expect((await shown(page)).mode).toBe("light");
+		await page.close();
+	});
+
+	it("ends each menu row with its selected dot", async () => {
+		const page = await open(browser, "m1m4l", errors);
+		await picker(page, "Radius").click();
+		const chosen = page.getByRole("menuitemradio", { name: "Large" });
+		const [row, dot] = await Promise.all([
+			chosen.boundingBox(),
+			chosen.locator(":scope > :last-child").boundingBox(),
+		]);
+		// The dot sits in the last quarter of the row, after the label.
+		expect((dot?.x ?? 0) - (row?.x ?? 0)).toBeGreaterThan(
+			(row?.width ?? 0) * 0.75
+		);
 		await page.close();
 	});
 

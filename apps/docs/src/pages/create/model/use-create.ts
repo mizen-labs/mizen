@@ -1,3 +1,4 @@
+import { useTheme } from "@mizen-labs/ui/theme";
 import { useCallback, useMemo, useState } from "react";
 import {
 	DEFAULT_CHOICES,
@@ -26,7 +27,10 @@ export function useCreate(
 	});
 	const [locked, setLocked] = useState<ReadonlySet<Field>>(new Set());
 	const [hover, setHover] = useState<Partial<ThemeChoices> | null>(null);
-	const [dark, setDark] = useState(false);
+	// The preview follows the site's theme until the reader switches it.
+	const { resolvedTheme } = useTheme();
+	const [darkChoice, setDarkChoice] = useState<boolean | null>(null);
+	const dark = darkChoice ?? resolvedTheme === "dark";
 	const [view, setView] = useState<PreviewView>("app");
 
 	const commit = useCallback(
@@ -91,7 +95,7 @@ export function useCreate(
 		[commit, history.present, locked]
 	);
 	const reset = useCallback(() => commit(DEFAULT_CHOICES), [commit]);
-	const toggleDark = useCallback(() => setDark((value) => !value), []);
+	const toggleDark = useCallback(() => setDarkChoice(!dark), [dark]);
 	// Pointer moves repeat the same option; only a different one renders.
 	const preview = useCallback(
 		(next: Partial<ThemeChoices> | null) =>

@@ -5,7 +5,6 @@ import {
 	Inline,
 	SegmentedControl,
 	SegmentedControlItem,
-	Text,
 	Tooltip,
 	TooltipPopup,
 	TooltipTrigger,
@@ -14,8 +13,8 @@ import { props } from "@stylexjs/stylex";
 import {
 	IconArrowBackUp,
 	IconArrowForwardUp,
-	IconDice5,
 	IconMoon,
+	IconRestore,
 	IconSun,
 } from "@tabler/icons-react";
 import { useCallback, useMemo, useState } from "react";
@@ -23,11 +22,10 @@ import {
 	encodePreset,
 	type ThemeChoices,
 } from "../../../../../../packages/cli/src/theme/create";
-import { FIELDS, type PreviewMessage, type PreviewView } from "../model/create";
+import type { PreviewMessage, PreviewView } from "../model/create";
 import { useCreate } from "../model/use-create";
 import { createStyles } from "./create.styles";
-import { ControlField } from "./create-controls";
-import { GetCode } from "./get-code";
+import { CreatePanel } from "./create-controls";
 
 interface Actions {
 	dark: () => void;
@@ -59,6 +57,14 @@ function act(actions: Actions, { key, meta, shift }: KeyPress): boolean {
 	plain[lower]?.();
 	return lower in plain;
 }
+
+const APPLE = /Mac|iPhone|iPad/u;
+// The undo key as the reader's keyboard names it. Tooltips mount on hover,
+// so the server never renders it.
+const modifier = () =>
+	typeof navigator !== "undefined" && APPLE.test(navigator.platform)
+		? "⌘"
+		: "Ctrl+";
 
 const EDITABLE =
 	"input, textarea, select, [contenteditable='true'], [role='listbox']";
@@ -136,12 +142,14 @@ function PreviewFrame({ message }: { message: PreviewMessage }) {
 function IconAction({
 	children,
 	disabled = false,
+	hint,
 	label,
 	onClick,
 	shortcut,
 }: {
 	children: React.ReactNode;
 	disabled?: boolean;
+	hint: string;
 	label: string;
 	onClick: () => void;
 	shortcut: string;
@@ -162,7 +170,9 @@ function IconAction({
 			>
 				{children}
 			</TooltipTrigger>
-			<TooltipPopup>{label}</TooltipPopup>
+			<TooltipPopup>
+				{label} · {hint}
+			</TooltipPopup>
 		</Tooltip>
 	);
 }
@@ -207,30 +217,22 @@ export default function CreatePage({
 		}),
 		[create.dark, create.shown, create.view]
 	);
-	const code = encodePreset(create.choices);
 	return (
 		<main id="docs-content" ref={shortcuts} {...props(createStyles.page)}>
-			<section aria-label="Theme" {...props(createStyles.controls)}>
-				{FIELDS.map((field) => (
-					<ControlField
-						choose={create.choose}
-						field={field}
-						key={field}
-						locked={create.locked.has(field)}
-						setHover={create.setHover}
-						toggleLock={create.toggleLock}
-						value={create.choices[field]}
-					/>
-				))}
-			</section>
+			<CreatePanel
+				choices={create.choices}
+				choose={create.choose}
+				locked={create.locked}
+				setHover={create.setHover}
+				shuffle={create.shuffle}
+				toggleLock={create.toggleLock}
+			/>
 			<section aria-label="Preview" {...props(createStyles.preview)}>
 				<div {...props(createStyles.toolbar)}>
 					<Inline gap="1" wrap={false}>
-						<IconAction label="Shuffle" onClick={create.shuffle} shortcut="R">
-							<IconDice5 aria-hidden="true" />
-						</IconAction>
 						<IconAction
 							disabled={!create.canUndo}
+							hint={`${modifier()}Z`}
 							label="Undo"
 							onClick={undo}
 							shortcut="Meta+Z"
@@ -239,6 +241,7 @@ export default function CreatePage({
 						</IconAction>
 						<IconAction
 							disabled={!create.canRedo}
+							hint={`⇧${modifier()}Z`}
 							label="Redo"
 							onClick={redo}
 							shortcut="Meta+Shift+Z"
@@ -246,6 +249,15 @@ export default function CreatePage({
 							<IconArrowForwardUp aria-hidden="true" />
 						</IconAction>
 						<IconAction
+							hint="⇧R"
+							label="Reset to the default theme"
+							onClick={create.reset}
+							shortcut="Shift+R"
+						>
+							<IconRestore aria-hidden="true" />
+						</IconAction>
+						<IconAction
+							hint="D"
 							label={create.dark ? "Light preview" : "Dark preview"}
 							onClick={create.toggleDark}
 							shortcut="D"
@@ -256,24 +268,18 @@ export default function CreatePage({
 								<IconMoon aria-hidden="true" />
 							)}
 						</IconAction>
-						<Text size="ui" tone="muted">
-							<span {...props(createStyles.code)}>{code}</span>
-						</Text>
 					</Inline>
-					<Inline gap="2" wrap={false}>
-						<SegmentedControl
-							aria-label="Preview"
-							onValueChange={changeView}
-							size="sm"
-							value={[create.view]}
-						>
-							<SegmentedControlItem value="app">App</SegmentedControlItem>
-							<SegmentedControlItem value="components">
-								Components
-							</SegmentedControlItem>
-						</SegmentedControl>
-						<GetCode choices={create.choices} />
-					</Inline>
+					<SegmentedControl
+						aria-label="Preview"
+						onValueChange={changeView}
+						size="sm"
+						value={[create.view]}
+					>
+						<SegmentedControlItem value="app">App</SegmentedControlItem>
+						<SegmentedControlItem value="components">
+							Components
+						</SegmentedControlItem>
+					</SegmentedControl>
 				</div>
 				<PreviewFrame message={message} />
 			</section>

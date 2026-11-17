@@ -1,197 +1,355 @@
 "use client";
 
+import "@fontsource-variable/inter/wght.css";
+import "@fontsource-variable/ibm-plex-sans/wght.css";
+import "@fontsource-variable/manrope/wght.css";
 import {
 	Button,
-	SegmentedControl,
-	SegmentedControlItem,
-	Select,
-	SelectItem,
-	SelectPopup,
-	SelectTrigger,
-	SelectValue,
-	Stack,
+	Menu,
+	MenuPopup,
+	MenuRadioGroup,
+	MenuRadioItem,
+	MenuTrigger,
+	Tooltip,
+	TooltipPopup,
+	TooltipTrigger,
+	useCopyToClipboard,
 } from "@mizen-labs/ui";
 import { props } from "@stylexjs/stylex";
-import { IconLock, IconLockOpen } from "@tabler/icons-react";
+import { IconDice5, IconLock, IconLockOpen } from "@tabler/icons-react";
 import {
-	type ChangeEvent,
-	type PointerEvent,
+	Fragment,
+	type RefObject,
+	type SyntheticEvent,
 	useCallback,
-	useMemo,
+	useRef,
+	useSyncExternalStore,
 } from "react";
 import {
-	ORDER,
+	encodePreset,
 	type ThemeChoices,
 } from "../../../../../../packages/cli/src/theme/create";
-import { FIELD_LABELS, type Field, optionLabel, swatch } from "../model/create";
+import {
+	densitySize,
+	FIELD_LABELS,
+	type Field,
+	fontFamily,
+	initCommand,
+	MENU_ORDER,
+	optionLabel,
+	radiusFactor,
+	swatch,
+} from "../model/create";
 import { createStyles } from "./create.styles";
+import { GetCode } from "./get-code";
 
-export interface ControlProps {
+const WIDE_QUERY = "(min-width: 48rem)";
+
+function subscribeWide(onChange: () => void) {
+	const query = window.matchMedia(WIDE_QUERY);
+	query.addEventListener("change", onChange);
+	return () => query.removeEventListener("change", onChange);
+}
+const isWide = () => window.matchMedia(WIDE_QUERY).matches;
+const wideOnServer = () => true;
+
+interface GlyphProps {
+	field: Field;
+	name: string;
+}
+
+function Dot({ field, name }: GlyphProps) {
+	return (
+		<span
+			{...props(
+				createStyles.dot,
+				createStyles.color(swatch(field as "accent", name))
+			)}
+		/>
+	);
+}
+
+function FontSample({ name }: GlyphProps) {
+	return (
+		<span
+			{...props(createStyles.fontSample, createStyles.family(fontFamily(name)))}
+		>
+			Aa
+		</span>
+	);
+}
+
+// A corner whose curve follows the radius.
+function RadiusGlyph({ name }: GlyphProps) {
+	const r = radiusFactor(name) * 7;
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			height="16"
+			viewBox="0 0 16 16"
+			width="16"
+		>
+			<path
+				d={`M3 14V${3 + r}${r ? `Q3 3 ${3 + r} 3` : ""}H14`}
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeWidth="1.75"
+			/>
+		</svg>
+	);
+}
+
+// Three rows, spaced by the control height.
+function DensityGlyph({ name }: GlyphProps) {
+	const gap = (densitySize(name) - 1.5) * 4 + 1.5;
+	return (
+		<svg
+			aria-hidden="true"
+			fill="none"
+			height="16"
+			viewBox="0 0 16 16"
+			width="16"
+		>
+			{[-gap, 0, gap].map((offset) => (
+				<path
+					d={`M3 ${8 + offset}H13`}
+					key={offset}
+					stroke="currentColor"
+					strokeLinecap="round"
+					strokeWidth="1.75"
+				/>
+			))}
+		</svg>
+	);
+}
+
+const GLYPHS = {
+	accent: Dot,
+	density: DensityGlyph,
+	font: FontSample,
+	neutral: Dot,
+	radius: RadiusGlyph,
+} as const;
+
+function Indicator({ field, name }: GlyphProps) {
+	const Glyph = GLYPHS[field];
+	return (
+		<span aria-hidden="true" {...props(createStyles.indicator)}>
+			<Glyph field={field} name={name} />
+		</span>
+	);
+}
+
+export interface PickerProps {
+	anchor: RefObject<HTMLElement | null>;
 	choose: <F extends Field>(field: F, value: ThemeChoices[F]) => void;
 	field: Field;
 	locked: boolean;
 	setHover: (hover: Partial<ThemeChoices> | null) => void;
 	toggleLock: (field: Field) => void;
 	value: string;
+	wide: boolean;
 }
 
-// Hovering an option previews it; leaving the control restores the choice.
-function usePreviewOption(field: Field, setHover: ControlProps["setHover"]) {
-	const enter = useCallback(
-		(event: PointerEvent<HTMLElement>) => {
-			const { value } = event.currentTarget.dataset;
-			if (value) {
-				setHover({ [field]: value } as Partial<ThemeChoices>);
+// One theme field: its name and value, a menu of its options that previews
+// the option under the pointer or the keyboard, and a lock that keeps it
+// through a shuffle.
+function Picker({
+	anchor,
+	choose,
+	field,
+	locked,
+	setHover,
+	toggleLock,
+	value,
+	wide,
+}: PickerProps) {
+	const show = useCallback(
+		(event: SyntheticEvent<HTMLElement>) => {
+			const { value: name } = event.currentTarget.dataset;
+			if (name && wide) {
+				setHover({ [field]: name } as Partial<ThemeChoices>);
 			}
 		},
-		[field, setHover]
+		[field, setHover, wide]
 	);
-	const leave = useCallback(() => setHover(null), [setHover]);
-	return { enter, leave };
-}
-
-function Swatches({ choose, field, setHover, value }: ControlProps) {
-	const { enter, leave } = usePreviewOption(field, setHover);
-	const change = useCallback(
-		(event: ChangeEvent<HTMLInputElement>) =>
-			choose(field, event.currentTarget.value as never),
-		[choose, field]
-	);
-	return (
-		<fieldset
-			aria-labelledby={`${field}-label`}
-			onPointerLeave={leave}
-			{...props(createStyles.swatches)}
-		>
-			{ORDER[field].map((name) => (
-				<label
-					data-value={name}
-					key={name}
-					onPointerEnter={enter}
-					title={optionLabel(field, name)}
-					{...props(
-						createStyles.swatch,
-						createStyles.color(swatch(field as "accent", name))
-					)}
-				>
-					<input
-						aria-label={optionLabel(field, name)}
-						checked={value === name}
-						name={field}
-						onChange={change}
-						type="radio"
-						value={name}
-						{...props(createStyles.swatchInput)}
-					/>
-				</label>
-			))}
-		</fieldset>
-	);
-}
-
-function Segments({ choose, field, setHover, value }: ControlProps) {
-	const { enter, leave } = usePreviewOption(field, setHover);
-	const change = useCallback(
-		(next: string[]) => {
-			if (next[0]) {
-				choose(field, next[0] as never);
-			}
-		},
-		[choose, field]
-	);
-	return (
-		<SegmentedControl
-			aria-label={FIELD_LABELS[field]}
-			onPointerLeave={leave}
-			onValueChange={change}
-			size="sm"
-			value={[value]}
-		>
-			{ORDER[field].map((name) => (
-				<SegmentedControlItem
-					data-value={name}
-					key={name}
-					onPointerEnter={enter}
-					value={name}
-				>
-					{optionLabel(field, name)}
-				</SegmentedControlItem>
-			))}
-		</SegmentedControl>
-	);
-}
-
-function Choice({ choose, field, setHover, value }: ControlProps) {
-	const { enter, leave } = usePreviewOption(field, setHover);
-	const items = useMemo(
-		() =>
-			Object.fromEntries(
-				ORDER[field].map((name) => [name, optionLabel(field, name)])
-			),
-		[field]
-	);
+	const clear = useCallback(() => setHover(null), [setHover]);
 	const change = useCallback(
 		(next: unknown) => {
-			setHover(null);
 			if (typeof next === "string") {
 				choose(field, next as never);
 			}
 		},
-		[choose, field, setHover]
+		[choose, field]
 	);
-	return (
-		<Select items={items} onValueChange={change} value={value}>
-			<SelectTrigger aria-label={FIELD_LABELS[field]}>
-				<SelectValue />
-			</SelectTrigger>
-			<SelectPopup onPointerLeave={leave}>
-				{ORDER[field].map((name) => (
-					<SelectItem
-						data-value={name}
-						key={name}
-						onPointerEnter={enter}
-						value={name}
-					>
-						{optionLabel(field, name)}
-					</SelectItem>
-				))}
-			</SelectPopup>
-		</Select>
+	const openChange = useCallback(
+		(open: boolean) => {
+			if (!open) {
+				clear();
+			}
+		},
+		[clear]
 	);
-}
-
-const KINDS = {
-	accent: Swatches,
-	density: Segments,
-	font: Choice,
-	neutral: Swatches,
-	radius: Segments,
-} as const;
-
-// One theme field: its name, a lock that keeps it through a shuffle, and its
-// options.
-export function ControlField(control: ControlProps) {
-	const { field, locked, toggleLock } = control;
-	const toggle = useCallback(() => toggleLock(field), [field, toggleLock]);
-	const Kind = KINDS[field];
+	const lock = useCallback(() => toggleLock(field), [field, toggleLock]);
+	const label = FIELD_LABELS[field];
 	const Glyph = locked ? IconLock : IconLockOpen;
 	return (
-		<Stack gap="2">
-			<div {...props(createStyles.fieldHeader)}>
-				<p id={`${field}-label`} {...props(createStyles.fieldLabel)}>
-					{FIELD_LABELS[field]}
-				</p>
+		<div {...props(createStyles.picker)}>
+			<Menu onOpenChange={openChange}>
+				<MenuTrigger
+					render={<button type="button" {...props(createStyles.trigger)} />}
+				>
+					<span {...props(createStyles.triggerText)}>
+						<span {...props(createStyles.triggerLabel)}>{label}</span>
+						<span {...props(createStyles.triggerValue)}>
+							{optionLabel(field, value)}
+						</span>
+					</span>
+					<Indicator field={field} name={value} />
+				</MenuTrigger>
+				<MenuPopup
+					align={wide ? "start" : "center"}
+					anchor={wide ? undefined : anchor}
+					aria-label={label}
+					onPointerLeave={clear}
+					side={wide ? "inline-end" : "top"}
+					sideOffset={8}
+				>
+					<MenuRadioGroup onValueChange={change} value={value}>
+						{MENU_ORDER[field].map((name) => (
+							<MenuRadioItem
+								closeOnClick={!wide}
+								data-value={name}
+								key={name}
+								onFocus={show}
+								onPointerMove={show}
+								value={name}
+							>
+								<span {...props(createStyles.option)}>
+									<Indicator field={field} name={name} />
+									{optionLabel(field, name)}
+								</span>
+							</MenuRadioItem>
+						))}
+					</MenuRadioGroup>
+				</MenuPopup>
+			</Menu>
+			<span {...props(createStyles.lock)}>
 				<Button
-					aria-label={`Keep ${FIELD_LABELS[field].toLowerCase()} when shuffling`}
+					aria-label={`Keep ${label.toLowerCase()} when shuffling`}
 					aria-pressed={locked}
-					onClick={toggle}
+					onClick={lock}
 					size="icon-xs"
 					variant="ghost"
 				>
 					<Glyph aria-hidden="true" />
 				</Button>
+			</span>
+		</div>
+	);
+}
+
+const GROUPS: readonly (readonly Field[])[] = [
+	["accent", "neutral"],
+	["font"],
+	["radius", "density"],
+];
+
+// Copies the init command; the preset code is its face.
+function CopyCommand({ code }: { code: string }) {
+	const { copy, status } = useCopyToClipboard();
+	const run = useCallback(() => copy(initCommand("npx", code)), [code, copy]);
+	return (
+		<span {...props(createStyles.codeButton)}>
+			<Tooltip>
+				<TooltipTrigger
+					render={
+						<Button
+							aria-label={`Copy the init command for ${code}`}
+							onClick={run}
+							variant="outline"
+						/>
+					}
+				>
+					<span {...props(createStyles.code)}>
+						{status === "copied" ? (
+							"Copied"
+						) : (
+							<>
+								<span {...props(createStyles.codePrefix)}>--preset </span>
+								{code}
+							</>
+						)}
+					</span>
+				</TooltipTrigger>
+				<TooltipPopup>Copy the init command</TooltipPopup>
+			</Tooltip>
+		</span>
+	);
+}
+
+export interface PanelProps
+	extends Pick<PickerProps, "choose" | "setHover" | "toggleLock"> {
+	choices: ThemeChoices;
+	locked: ReadonlySet<Field>;
+	shuffle: () => void;
+}
+
+// The theme panel: a picker per field, grouped by color, type and shape,
+// then the code, Shuffle and Get code.
+export function CreatePanel({
+	choices,
+	locked,
+	shuffle,
+	...actions
+}: PanelProps) {
+	const anchor = useRef<HTMLElement>(null);
+	const wide = useSyncExternalStore(subscribeWide, isWide, wideOnServer);
+	const code = encodePreset(choices);
+	return (
+		<section aria-label="Theme" ref={anchor} {...props(createStyles.panel)}>
+			<div {...props(createStyles.pickers)}>
+				{GROUPS.map((fields, index) => (
+					<Fragment key={fields.join()}>
+						{index > 0 ? <hr {...props(createStyles.separator)} /> : null}
+						{fields.map((field) => (
+							<Picker
+								{...actions}
+								anchor={anchor}
+								field={field}
+								key={field}
+								locked={locked.has(field)}
+								value={choices[field]}
+								wide={wide}
+							/>
+						))}
+					</Fragment>
+				))}
 			</div>
-			<Kind {...control} />
-		</Stack>
+			<div {...props(createStyles.footer)}>
+				<CopyCommand code={code} />
+				<span {...props(createStyles.footerAction)}>
+					<Tooltip>
+						<TooltipTrigger
+							render={
+								<Button
+									aria-keyshortcuts="R"
+									onClick={shuffle}
+									variant="outline"
+								/>
+							}
+						>
+							<IconDice5 aria-hidden="true" />
+							Shuffle
+						</TooltipTrigger>
+						<TooltipPopup>Shuffle the unlocked fields · R</TooltipPopup>
+					</Tooltip>
+				</span>
+				<span {...props(createStyles.footerAction)}>
+					<GetCode choices={choices} />
+				</span>
+			</div>
+		</section>
 	);
 }

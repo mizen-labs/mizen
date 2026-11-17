@@ -92,6 +92,14 @@ export function useCreate(
 	);
 	const reset = useCallback(() => commit(DEFAULT_CHOICES), [commit]);
 	const toggleDark = useCallback(() => setDark((value) => !value), []);
+	// Pointer moves repeat the same option; only a different one renders.
+	const preview = useCallback(
+		(next: Partial<ThemeChoices> | null) =>
+			setHover((current) =>
+				JSON.stringify(current) === JSON.stringify(next) ? current : next
+			),
+		[]
+	);
 
 	// The preview shows the option under the pointer without choosing it.
 	const shown = useMemo(
@@ -107,7 +115,7 @@ export function useCreate(
 		dark,
 		locked,
 		reset,
-		setHover,
+		setHover: preview,
 		setView,
 		shown,
 		shuffle,

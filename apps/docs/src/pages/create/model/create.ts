@@ -52,6 +52,28 @@ export function swatch(field: "accent" | "neutral", name: string): string {
 	return `oklch(0.62 ${chroma * 4} ${hue})`;
 }
 
+// The order a menu lists each field's options: sizes from small to large.
+// The code keeps ORDER, so old codes keep their meaning.
+export const MENU_ORDER: { [F in Field]: readonly ThemeChoices[F][] } = {
+	...ORDER,
+	density: ["compact", "default", "comfortable"],
+	radius: ["none", "small", "default", "large"],
+};
+
+// The font a sample renders in; the app font is the page's own.
+export function fontFamily(name: string): string {
+	return FONTS[name as keyof typeof FONTS]?.family ?? "inherit";
+}
+
+export function radiusFactor(name: string): number {
+	return RADII[name as keyof typeof RADII]?.factor ?? 1;
+}
+
+// The medium control height in rem, which the density glyph spaces by.
+export function densitySize(name: string): number {
+	return DENSITIES[name as keyof typeof DENSITIES]?.sizes[2] ?? 2;
+}
+
 export function choicesFrom(code: string | undefined): ThemeChoices {
 	return (code && decodePreset(code)) || DEFAULT_CHOICES;
 }

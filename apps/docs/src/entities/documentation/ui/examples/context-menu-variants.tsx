@@ -78,7 +78,7 @@ export function ContextMenuFileWorkspaceActionsExample1() {
 				<ContextMenuSeparator />
 
 				<ContextMenuGroup>
-					<ContextMenuGroupLabel inset>Validation mode</ContextMenuGroupLabel>
+					<ContextMenuGroupLabel>Validation mode</ContextMenuGroupLabel>
 					<ContextMenuRadioGroup defaultValue="strict">
 						<ContextMenuRadioItem value="strict">Strict</ContextMenuRadioItem>
 						<ContextMenuRadioItem value="lax">Lax</ContextMenuRadioItem>

@@ -184,9 +184,8 @@ export function ContextMenuCheckboxItem({
 			render={protectSlot("context-menu-checkbox-item", render)}
 			{...props(menuStyles.item, menuStyles.itemDefault)}
 		>
-			{variant === "default" && indicator}
 			{controlLabel(children)}
-			{variant === "switch" && indicator}
+			{indicator}
 		</BaseContextMenu.CheckboxItem>
 	);
 }
@@ -218,13 +217,13 @@ export function ContextMenuRadioItem<Value = unknown>({
 			render={protectSlot("context-menu-radio-item", render)}
 			{...props(menuStyles.item, menuStyles.itemDefault)}
 		>
+			{controlLabel(children)}
 			<BaseContextMenu.RadioItemIndicator
 				keepMounted
 				{...props(menuStyles.indicator)}
 			>
 				<span {...props(menuStyles.radioDot)} />
 			</BaseContextMenu.RadioItemIndicator>
-			{controlLabel(children)}
 		</BaseContextMenu.RadioItem>
 	);
 }

@@ -100,6 +100,12 @@ describe("Combobox anatomy rendering", () => {
 		]) {
 			expect(document.querySelector(`[data-slot="${slot}"]`)).not.toBeNull();
 		}
+		// The check ends the row, after the label, as in Select and Menu.
+		expect(
+			document
+				.querySelector('[data-slot="combobox-item"]')
+				?.lastElementChild?.getAttribute("data-slot")
+		).toBe("combobox-item-indicator");
 
 		const popup = document.querySelector('[data-slot="combobox-popup"]');
 		const list = document.querySelector('[data-slot="combobox-list"]');

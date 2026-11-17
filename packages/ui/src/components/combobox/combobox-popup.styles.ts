@@ -74,7 +74,8 @@ export const comboboxPopupStyles = create({
 			"[data-highlighted]": forcedColorAdjust.selectedState,
 		},
 		gap: space["2"],
-		gridTemplateColumns: "1rem minmax(0, 1fr)",
+		// The check ends the row, as in Select and Menu.
+		gridTemplateColumns: "minmax(0, 1fr) 1rem",
 		letterSpacing: letterSpacing.ui,
 		lineHeight: lineHeight["20"],
 		minHeight: "2rem",
@@ -102,13 +103,15 @@ export const comboboxPopupStyles = create({
 		transitionTimingFunction: easing.expoOut,
 	},
 	itemContent: {
-		gridColumnStart: "2",
+		gridColumnStart: "1",
 		minWidth: 0,
 		overflowWrap: "anywhere",
 	},
 	itemIndicator: {
 		alignItems: "center",
 		display: "inline-flex",
+		gridColumnStart: "2",
+		gridRowStart: "1",
 		height: "1rem",
 		justifyContent: "center",
 		opacity: { "[data-selected]": 1, default: 0 },

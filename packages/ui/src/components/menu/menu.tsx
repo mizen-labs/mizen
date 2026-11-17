@@ -379,9 +379,8 @@ export function MenuCheckboxItem({
 			render={protectRenderSlot("menu-checkbox-item", render)}
 			{...props(menuStyles.item, menuStyles.itemDefault)}
 		>
-			{variant === "default" && indicator}
 			{controlLabel(children)}
-			{variant === "switch" && indicator}
+			{indicator}
 		</BaseMenu.CheckboxItem>
 	);
 }
@@ -411,10 +410,10 @@ export function MenuRadioItem<Value = unknown>({
 			render={protectRenderSlot("menu-radio-item", render)}
 			{...props(menuStyles.item, menuStyles.itemDefault)}
 		>
+			{controlLabel(children)}
 			<BaseMenu.RadioItemIndicator keepMounted {...props(menuStyles.indicator)}>
 				<span {...props(menuStyles.radioDot)} />
 			</BaseMenu.RadioItemIndicator>
-			{controlLabel(children)}
 		</BaseMenu.RadioItem>
 	);
 }

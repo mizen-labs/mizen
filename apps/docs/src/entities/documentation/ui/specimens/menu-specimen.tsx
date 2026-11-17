@@ -53,7 +53,7 @@ export function MenuSpecimen() {
 						<MenuCheckboxItem variant="switch">Compact view</MenuCheckboxItem>
 						<MenuSeparator />
 						<MenuGroup>
-							<MenuGroupLabel inset>Density</MenuGroupLabel>
+							<MenuGroupLabel>Density</MenuGroupLabel>
 							<MenuRadioGroup defaultValue="comfortable">
 								<MenuRadioItem value="compact">Compact</MenuRadioItem>
 								<MenuRadioItem value="comfortable">Comfortable</MenuRadioItem>

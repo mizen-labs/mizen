@@ -175,9 +175,7 @@ export function ContextMenuSpecimen() {
 							<ContextMenuSeparator />
 
 							<ContextMenuGroup>
-								<ContextMenuGroupLabel inset>
-									Validation mode
-								</ContextMenuGroupLabel>
+								<ContextMenuGroupLabel>Validation mode</ContextMenuGroupLabel>
 								<ContextMenuRadioGroup defaultValue="strict">
 									<ContextMenuRadioItem value="strict">
 										Strict

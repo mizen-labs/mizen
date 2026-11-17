@@ -57,6 +57,8 @@ export const menuStyles = create({
 		flexShrink: 0,
 		height: "1rem",
 		justifyContent: "center",
+		// The indicator ends the row, after the label, as in Select.
+		marginInlineStart: "auto",
 		opacity: { "[data-checked]": 1, default: 0 },
 		transform: { "[data-checked]": "scale(1)", default: "scale(0.5)" },
 		transitionDuration: {

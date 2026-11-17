@@ -73,18 +73,18 @@ export function ComboboxItem({
 			render={protectSlot("combobox-item", render)}
 			{...props(comboboxPopupStyles.item)}
 		>
-			<ComboboxPrimitive.ItemIndicator
-				data-slot="combobox-item-indicator"
-				{...props(comboboxPopupStyles.itemIndicator)}
-			>
-				<CheckIcon />
-			</ComboboxPrimitive.ItemIndicator>
 			<div
 				data-slot="combobox-item-content"
 				{...props(comboboxPopupStyles.itemContent)}
 			>
 				{controlLabel(children)}
 			</div>
+			<ComboboxPrimitive.ItemIndicator
+				data-slot="combobox-item-indicator"
+				{...props(comboboxPopupStyles.itemIndicator)}
+			>
+				<CheckIcon />
+			</ComboboxPrimitive.ItemIndicator>
 		</ComboboxPrimitive.Item>
 	);
 }

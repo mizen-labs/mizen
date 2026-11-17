@@ -429,7 +429,14 @@ export function presetCss(choices: ThemeChoices): string {
 				"",
 			]
 		: [];
-	const body = family ? block("body", [`\tfont-family: ${family};`]) : [];
+	// :root body outranks an app's own body rule or font class, which load
+	// later; delete the rule to keep the app's font.
+	const body = family
+		? [
+				"/* The body font. It outranks the app's own; delete this rule to keep yours. */",
+				...block(":root body", [`\tfont-family: ${family};`]),
+			]
+		: [];
 	return [
 		"/*",
 		` * Mizen theme ${code}: ${describe(choices)}.`,

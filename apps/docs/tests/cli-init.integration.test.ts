@@ -9,6 +9,10 @@ import { expect as expectLocator } from "playwright/test";
 import { expect, it, onTestFinished } from "vite-plus/test";
 import { INSTALL_TIMEOUT_MS } from "../../../packages/cli/scripts/process.js";
 import { stopProcess } from "../../../packages/cli/scripts/stop-process.js";
+import {
+	DEFAULT_CHOICES,
+	encodePreset,
+} from "../../../packages/cli/src/theme/create";
 import { cleanup } from "../../../scripts/cleanup.mjs";
 import { verifyReset } from "./reset-probe";
 
@@ -154,6 +158,39 @@ async function productionServer(app: string, start: boolean) {
 	return { origin, processHandle };
 }
 
+// A Create code with fonts from two packages, square pills, and a blue
+// accent: init installs the fonts, and each bundler must resolve their
+// imports from the theme file.
+const THEME = encodePreset({
+	...DEFAULT_CHOICES,
+	accent: "blue",
+	font: "inter",
+	heading: "fraunces",
+	radius: "none",
+});
+
+async function themeChecks(page: import("playwright").Page) {
+	const theme = await page.evaluate(async () => {
+		await document.fonts.ready;
+		const root = getComputedStyle(document.documentElement);
+		const faces = await document.fonts.load('16px "Fraunces Variable"');
+		return {
+			body: getComputedStyle(document.body).fontFamily,
+			heading: root.getPropertyValue("--mizen-font-heading"),
+			headingLoads: faces.length > 0,
+			inter: document.fonts.check('16px "Inter Variable"'),
+			pill: root.getPropertyValue("--mizen-shape-pill-radius").trim(),
+		};
+	});
+	expect(theme).toMatchObject({
+		body: expect.stringContaining("Inter Variable"),
+		heading: expect.stringContaining("Fraunces Variable"),
+		headingLoads: true,
+		inter: true,
+		pill: "0rem",
+	});
+}
+
 async function browserChecks(origin: string, clientOnly = false) {
 	const browser = await chromium.launch({
 		executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH,
@@ -181,6 +218,7 @@ async function browserChecks(origin: string, clientOnly = false) {
 	const errors: string[] = [];
 	page.on("pageerror", (error) => errors.push(error.message));
 	await page.goto(origin, { waitUntil: "networkidle" });
+	await themeChecks(page);
 	await expectLocator(page.locator("html")).toHaveAttribute(
 		"data-theme",
 		"dark"
@@ -289,6 +327,8 @@ for (const start of [false, true]) {
 				app,
 				"--package",
 				uiArchive,
+				"--preset",
+				THEME,
 				"--json",
 			];
 			const preview = JSON.parse(
@@ -465,6 +505,8 @@ for (const typescript of [false, true]) {
 				app,
 				"--package",
 				uiArchive,
+				"--preset",
+				THEME,
 				"--json",
 			];
 			const preview = JSON.parse(
@@ -472,7 +514,10 @@ for (const typescript of [false, true]) {
 			);
 			expect(
 				preview.data.plan.edits.map((edit: { path: string }) => edit.path)
-			).toEqual([typescript ? "src/main.tsx" : "src/main.jsx"]);
+			).toEqual([
+				"src/mizen-theme.css",
+				typescript ? "src/main.tsx" : "src/main.jsx",
+			]);
 			const applied = JSON.parse(
 				(await command(process.execPath, [...args, "--yes"], app)).stdout
 			);

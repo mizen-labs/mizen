@@ -222,7 +222,7 @@ app. It also works on an app already set up. Init stops when the file exists and
 differs from the preset.
 
 `--preset` also takes a theme code from https://ui.mizen-labs.dev/create, such as
-`--preset m1m4l`. The code holds the accent, neutral tone, radius, font, and
+`--preset m33ut`. The code holds the accent, neutral tone, radius, font, and
 density. A code from a newer Create page stops before any change and asks to
 update the CLI.
 

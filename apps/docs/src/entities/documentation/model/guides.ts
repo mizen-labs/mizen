@@ -484,8 +484,9 @@ body {
 				paragraphs: [
 					"A theme is one CSS file in the app that declares token variables. Mizen keeps its own values in a cascade layer, so a plain :root rule replaces them wherever the file loads. Tokens the file leaves out keep their defaults.",
 					"mizen init --preset vivid writes mizen-theme.css beside the app root and imports it after the Mizen stylesheet. Vivid fills the primary action with the accent, tints the selection, and deepens the status colors. The file belongs to the app: change its values, and init never replaces it.",
-					"To pick the accent, neutral tone, radius, font, and density yourself, use the Create page at /create. It previews the theme on a whole app and gives a code such as m1m4l: mizen init --preset m1m4l writes that theme the same way.",
-					"A theme changes color, shape, density, depth, and motion. It does not change structure or behavior. Mizen checks contrast for its own values and presets only: check text against each fill you change, in both themes. Keep the smallest control at 24px or more, and leave --mizen-space-0 at zero.",
+					"To pick the accent, neutral tone, radius, fonts, and density yourself, use the Create page at /create. It previews the theme on a whole app and gives a code such as m33ut: mizen init --preset m33ut writes that theme the same way, and installs its fonts from Google Fonts as @fontsource-variable packages that the theme file imports.",
+					"--mizen-shape-pill-radius shapes pills: Switch, Progress, Meter, Badge, and delta chips. Set it to 0 for square corners. Radio buttons and dots stay round. --mizen-font-heading sets the family of headings and titles; it inherits the body font until a theme sets it.",
+					"A theme changes color, shape, density, depth, and motion. It does not change structure or behavior. Mizen checks contrast for its own values, its presets, and every Create theme only: check text against each fill you change, in both themes. Keep the smallest control at 24px or more, and leave --mizen-space-0 at zero.",
 					"The press return, the focus ring fade, and the tab indicator keep part of their own timing. Font sizes, weights, line heights, and border widths are fixed.",
 				],
 				title: "Theme file",

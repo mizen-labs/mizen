@@ -198,7 +198,8 @@ export async function installation(
 	catalog: Release,
 	specifier: string | undefined,
 	features: string[],
-	manager: Awaited<ReturnType<typeof managerFor>>
+	manager: Awaited<ReturnType<typeof managerFor>>,
+	fonts: string[] = []
 ): Promise<Install | null> {
 	const release = await selectedRelease(project, manifest, catalog, specifier);
 	// Only a local copy can be a stale build without the initializer.
@@ -214,11 +215,18 @@ export async function installation(
 	const packages = [
 		...mizenPackage(manifest, release, catalog.uiVersion),
 		...(await optionalPackages(project, manifest, release.ui, features)),
+		...missing(manifest, fonts),
 	];
 	if (!(packages.length || manager.needsLockfile)) {
 		return null;
 	}
 	return installCommand(manager.command, packages, release.archive);
+}
+
+// Packages the app does not declare yet, such as a theme's fonts.
+function missing(manifest: Manifest, names: string[]): string[] {
+	const declared = { ...manifest.dependencies, ...manifest.devDependencies };
+	return names.filter((name) => !declared[name]);
 }
 
 function selectedManager(explicit?: string, detected?: string): "npm" | "pnpm" {

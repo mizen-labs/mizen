@@ -11,6 +11,10 @@ import {
 } from "playwright";
 import { afterAll, beforeAll, describe, expect, it } from "vite-plus/test";
 import {
+	DEFAULT_CHOICES,
+	encodePreset,
+} from "../../../packages/cli/src/theme/create";
+import {
 	setupTestServer,
 	type TestServerHandle,
 	teardownTestServer,
@@ -102,7 +106,7 @@ describe.each([
 	});
 
 	it("reads the code from the address and falls back to the default", async () => {
-		const page = await open(browser, "m1m4l", errors);
+		const page = await open(browser, "m33ut", errors);
 		expect(await picker(page, "Accent").textContent()).toContain("Blue");
 		await page.goto(`${handle.url}/create?preset=nonsense`, {
 			waitUntil: "networkidle",
@@ -113,32 +117,32 @@ describe.each([
 	});
 
 	it("previews a hovered or highlighted option without choosing it", async () => {
-		const page = await open(browser, "m1m4l", errors);
+		const page = await open(browser, "m33ut", errors);
 		await picker(page, "Accent").click();
 		await page.getByRole("menuitemradio", { name: "Orange" }).hover();
 		await expect
 			.poll(async () => (await shown(page)).theme)
 			.toContain("Orange accent");
-		expect(addressCode(page)).toBe("m1m4l");
+		expect(addressCode(page)).toBe("m33ut");
 		await page.keyboard.press("ArrowDown");
 		await expect
 			.poll(async () => (await shown(page)).theme)
 			.toContain("Green accent");
 		await page.keyboard.press("Escape");
-		await expect.poll(() => shownCode(page)).toBe("m1m4l");
-		expect(addressCode(page)).toBe("m1m4l");
+		await expect.poll(() => shownCode(page)).toBe("m33ut");
+		expect(addressCode(page)).toBe("m33ut");
 		await page.close();
 	});
 
 	it("chooses from a menu that stays open, and lists sizes small to large", async () => {
-		const page = await open(browser, "m1m4l", errors);
+		const page = await open(browser, "m33ut", errors);
 		await picker(page, "Radius").click();
 		const options = page.getByRole("menuitemradio");
 		await expect
 			.poll(() => options.allTextContents())
 			.toEqual(["None", "Small", "Default", "Large"]);
 		await options.filter({ hasText: "Small" }).click();
-		await expect.poll(() => addressCode(page)).not.toBe("m1m4l");
+		await expect.poll(() => addressCode(page)).not.toBe("m33ut");
 		expect(await page.getByRole("menu").isVisible()).toBe(true);
 		await page.keyboard.press("Escape");
 		await expect
@@ -148,7 +152,7 @@ describe.each([
 	});
 
 	it("keeps locked fields through a shuffle, and undoes and redoes", async () => {
-		const page = await open(browser, "m1m4l", errors);
+		const page = await open(browser, "m33ut", errors);
 		await page
 			.getByRole("button", { name: "Keep accent when shuffling" })
 			.click();
@@ -173,7 +177,7 @@ describe.each([
 	});
 
 	it("switches the preview to dark and to components", async () => {
-		const page = await open(browser, "m1m4l", errors);
+		const page = await open(browser, "m33ut", errors);
 		expect(await shown(page)).toMatchObject({ heading: "Home", mode: "light" });
 		await page.getByText("Components", { exact: true }).click();
 		await page.keyboard.press("d");
@@ -191,7 +195,7 @@ describe.each([
 	});
 
 	it("starts an app, sets one up, or gives the theme file", async () => {
-		const page = await open(browser, "m1m4l", errors);
+		const page = await open(browser, "m33ut", errors);
 		await page.getByRole("button", { exact: true, name: "Get code" }).click();
 		const dialog = page.getByRole("dialog");
 		const shownPanel = dialog.getByRole("tabpanel");
@@ -200,19 +204,19 @@ describe.each([
 		await expect
 			.poll(() => shownPanel.textContent())
 			.toContain(
-				"npx create-next-app@latest my-app --yes\ncd my-app\nnpx @mizen-labs/cli@latest init --preset m1m4l"
+				"npx create-next-app@latest my-app --yes\ncd my-app\nnpx @mizen-labs/cli@latest init --preset m33ut"
 			);
 		await choose("Vite");
 		await choose("pnpm");
 		await expect
 			.poll(() => shownPanel.textContent())
 			.toContain(
-				"pnpm dlx create-vite@latest my-app --template react-ts\ncd my-app\npnpm install\npnpm dlx @mizen-labs/cli@latest init --preset m1m4l"
+				"pnpm dlx create-vite@latest my-app --template react-ts\ncd my-app\npnpm install\npnpm dlx @mizen-labs/cli@latest init --preset m33ut"
 			);
 		await dialog.getByRole("tab", { name: "Existing project" }).click();
 		await expect
 			.poll(() => shownPanel.textContent())
-			.toContain("pnpm dlx @mizen-labs/cli@latest init --preset m1m4l");
+			.toContain("pnpm dlx @mizen-labs/cli@latest init --preset m33ut");
 		expect(await shownPanel.textContent()).not.toContain("create-");
 		await dialog.getByRole("tab", { name: "CSS" }).click();
 		await expect
@@ -227,7 +231,7 @@ describe.each([
 		});
 		page.on("pageerror", (error) => errors.push(error.message));
 		await page.addInitScript(() => localStorage.setItem("mizen-theme", "dark"));
-		await page.goto(`${handle.url}/create?preset=m1m4l`, {
+		await page.goto(`${handle.url}/create?preset=m33ut`, {
 			waitUntil: "networkidle",
 		});
 		await expect.poll(async () => (await shown(page)).mode).toBe("dark");
@@ -240,17 +244,17 @@ describe.each([
 	});
 
 	it("ignores shortcut keys while focus is outside the page", async () => {
-		const page = await open(browser, "m1m4l", errors);
+		const page = await open(browser, "m33ut", errors);
 		await page.getByRole("link", { name: "Docs" }).first().focus();
 		await page.keyboard.press("r");
 		await page.keyboard.press("d");
-		expect(addressCode(page)).toBe("m1m4l");
+		expect(addressCode(page)).toBe("m33ut");
 		expect((await shown(page)).mode).toBe("light");
 		await page.close();
 	});
 
 	it("ends each menu row with its selected dot", async () => {
-		const page = await open(browser, "m1m4l", errors);
+		const page = await open(browser, "m33ut", errors);
 		await picker(page, "Radius").click();
 		const chosen = page.getByRole("menuitemradio", { name: "Large" });
 		const [row, dot] = await Promise.all([
@@ -270,7 +274,7 @@ describe.each([
 			viewport: { height: 844, width: 390 },
 		});
 		page.on("pageerror", (error) => errors.push(error.message));
-		await page.goto(`${handle.url}/create?preset=m1m4l`, {
+		await page.goto(`${handle.url}/create?preset=m33ut`, {
 			waitUntil: "networkidle",
 		});
 		// Nothing scrolls: the preview takes the room the panel leaves.
@@ -288,6 +292,68 @@ describe.each([
 		await expect
 			.poll(async () => (await shown(page)).theme)
 			.toContain("Stone neutrals");
+		await page.close();
+	});
+
+	it("squares pills with the corners and keeps circles round", async () => {
+		const page = await open(
+			browser,
+			encodePreset({ ...DEFAULT_CHOICES, radius: "none" }),
+			errors
+		);
+		await page.getByText("Components", { exact: true }).click();
+		await expect
+			.poll(async () => (await shown(page)).heading)
+			.toBe("Components");
+		const radii = () =>
+			frame(page).evaluate(() =>
+				Object.fromEntries(
+					["switch", "switch-thumb", "progress-track", "avatar"].map((slot) => [
+						slot,
+						getComputedStyle(
+							document.querySelector(`[data-slot="${slot}"]`) as Element
+						).borderTopLeftRadius,
+					])
+				)
+			);
+		await expect.poll(radii).toMatchObject({
+			"progress-track": "0px",
+			switch: "0px",
+			"switch-thumb": "0px",
+		});
+		expect((await radii()).avatar).not.toBe("0px");
+		await page.close();
+	});
+
+	it("sets headings in their own font, and in the body's by default", async () => {
+		const family = (target: Page) =>
+			frame(target).evaluate(() => ({
+				body: getComputedStyle(document.body).fontFamily,
+				heading: getComputedStyle(document.querySelector("h1") as Element)
+					.fontFamily,
+			}));
+		const plain = await open(browser, "m0", errors);
+		const fonts = await family(plain);
+		expect(fonts.heading).toBe(fonts.body);
+		await plain.close();
+		const page = await open(
+			browser,
+			encodePreset({ ...DEFAULT_CHOICES, font: "inter", heading: "fraunces" }),
+			errors
+		);
+		await expect
+			.poll(() => family(page))
+			.toMatchObject({
+				body: expect.stringContaining("Inter Variable"),
+				heading: expect.stringContaining("Fraunces Variable"),
+			});
+		await picker(page, "Heading").click();
+		// The fonts come in groups, each under its category.
+		await expect
+			.poll(() =>
+				page.getByRole("menu").getByText("Serif", { exact: true }).count()
+			)
+			.toBe(1);
 		await page.close();
 	});
 });

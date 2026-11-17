@@ -1,14 +1,15 @@
 // Mizen Create: theme choices, their short preset code, and the theme file
 // they produce. Pure, so the CLI and the docs Create page share it.
 //
-// A choice only sets --mizen-* variables (and the body font). Components never
-// change. Index 0 of every option is Mizen's default, so code "m0" is the
+// A choice only sets --mizen-* variables, the body font, and the font
+// packages the theme imports. Components never change. Index 0 of every option is Mizen's default, so code "m0" is the
 // default theme.
 
 export interface ThemeChoices {
 	accent: AccentName;
 	density: DensityName;
 	font: FontName;
+	heading: HeadingName;
 	neutral: NeutralName;
 	radius: RadiusName;
 }
@@ -43,35 +44,90 @@ export const RADII = {
 	small: { factor: 0.5, label: "Small" },
 } as const;
 
-// The app loads the font; the theme file names the package that holds it.
-export const FONTS = {
-	default: { family: null, label: "App font", package: null },
-	geist: {
-		family: '"Geist Variable", system-ui, sans-serif',
-		label: "Geist",
-		package: "@fontsource-variable/geist",
-	},
-	"ibm-plex-sans": {
-		family: '"IBM Plex Sans Variable", system-ui, sans-serif',
-		label: "IBM Plex Sans",
-		package: "@fontsource-variable/ibm-plex-sans",
-	},
-	inter: {
-		family: '"Inter Variable", system-ui, sans-serif',
-		label: "Inter",
-		package: "@fontsource-variable/inter",
-	},
-	manrope: {
-		family: '"Manrope Variable", system-ui, sans-serif',
-		label: "Manrope",
-		package: "@fontsource-variable/manrope",
-	},
-	system: {
-		family: "system-ui, sans-serif",
-		label: "System",
-		package: null,
-	},
-} as const;
+// Google Fonts as @fontsource-variable packages: the theme file imports
+// them, and init installs them, so the app serves its own font files.
+const FONT_CATALOG = [
+	["geist", "Geist", "sans"],
+	["inter", "Inter", "sans"],
+	["ibm-plex-sans", "IBM Plex Sans", "sans"],
+	["manrope", "Manrope", "sans"],
+	["dm-sans", "DM Sans", "sans"],
+	["figtree", "Figtree", "sans"],
+	["plus-jakarta-sans", "Plus Jakarta Sans", "sans"],
+	["outfit", "Outfit", "sans"],
+	["public-sans", "Public Sans", "sans"],
+	["noto-sans", "Noto Sans", "sans"],
+	["nunito-sans", "Nunito Sans", "sans"],
+	["space-grotesk", "Space Grotesk", "sans"],
+	["work-sans", "Work Sans", "sans"],
+	["onest", "Onest", "sans"],
+	["instrument-sans", "Instrument Sans", "sans"],
+	["sora", "Sora", "sans"],
+	["lexend", "Lexend", "sans"],
+	["lora", "Lora", "serif"],
+	["source-serif-4", "Source Serif 4", "serif"],
+	["playfair-display", "Playfair Display", "serif"],
+	["fraunces", "Fraunces", "serif"],
+	["newsreader", "Newsreader", "serif"],
+	["eb-garamond", "EB Garamond", "serif"],
+	["literata", "Literata", "serif"],
+	["jetbrains-mono", "JetBrains Mono", "mono"],
+	["geist-mono", "Geist Mono", "mono"],
+	["roboto-mono", "Roboto Mono", "mono"],
+	["fira-code", "Fira Code", "mono"],
+] as const;
+
+export type FontCategory = "mono" | "sans" | "serif";
+type CatalogFont = (typeof FONT_CATALOG)[number][0];
+export type FontName = "default" | "system" | CatalogFont;
+export type HeadingName = "body" | "system" | CatalogFont;
+
+export interface FontInfo {
+	category: FontCategory | null;
+	family: string | null;
+	label: string;
+	package: string | null;
+}
+
+const FALLBACKS: Record<FontCategory, string> = {
+	mono: "ui-monospace, monospace",
+	sans: "system-ui, sans-serif",
+	serif: "Georgia, serif",
+};
+
+const CATALOG_FONTS = Object.fromEntries(
+	FONT_CATALOG.map(([name, label, category]): [CatalogFont, FontInfo] => [
+		name,
+		{
+			category,
+			family: `"${label} Variable", ${FALLBACKS[category]}`,
+			label,
+			package: `@fontsource-variable/${name}`,
+		},
+	])
+) as Record<CatalogFont, FontInfo>;
+
+const SYSTEM_FONT: FontInfo = {
+	category: "sans",
+	family: FALLBACKS.sans,
+	label: "System",
+	package: null,
+};
+
+// "default" keeps the app's font; a heading of "body" keeps the body's.
+export const FONTS: Record<FontName, FontInfo> = {
+	...CATALOG_FONTS,
+	default: { category: null, family: null, label: "App font", package: null },
+	system: SYSTEM_FONT,
+};
+
+export const HEADINGS: Record<HeadingName, FontInfo> = {
+	...CATALOG_FONTS,
+	body: { category: null, family: null, label: "Same as body", package: null },
+	system: SYSTEM_FONT,
+};
+
+const CATALOG_NAMES = FONT_CATALOG.map(([name]) => name);
 
 // Control heights in rem, xs to xl.
 export const DENSITIES = {
@@ -83,7 +139,6 @@ export const DENSITIES = {
 export type AccentName = keyof typeof ACCENTS;
 export type NeutralName = keyof typeof NEUTRALS;
 export type RadiusName = keyof typeof RADII;
-export type FontName = keyof typeof FONTS;
 export type DensityName = keyof typeof DENSITIES;
 
 // The order each option takes in the code and in the Create page. Index 0
@@ -102,7 +157,8 @@ export const ORDER = {
 		"ink",
 	],
 	density: ["default", "compact", "comfortable"],
-	font: ["default", "geist", "inter", "ibm-plex-sans", "manrope", "system"],
+	font: ["default", "system", ...CATALOG_NAMES],
+	heading: ["body", "system", ...CATALOG_NAMES],
 	neutral: ["neutral", "stone", "slate", "zinc", "olive"],
 	radius: ["default", "none", "small", "large"],
 } as const satisfies { [Field in keyof ThemeChoices]: ThemeChoices[Field][] };
@@ -112,8 +168,9 @@ const FIELDS = [
 	["accent", 5],
 	["neutral", 4],
 	["radius", 3],
-	["font", 4],
+	["font", 5],
 	["density", 3],
+	["heading", 5],
 ] as const;
 
 const PREFIX = "m";
@@ -124,6 +181,7 @@ export const DEFAULT_CHOICES: ThemeChoices = {
 	accent: "wine",
 	density: "default",
 	font: "default",
+	heading: "body",
 	neutral: "neutral",
 	radius: "default",
 };
@@ -279,6 +337,12 @@ const RADIUS_TOKENS: readonly [string, number][] = [
 	["surface-radius-large", 1.25],
 ];
 
+// Pills square off with the corners; Default and Large keep them round.
+const PILL_RADII: Partial<Record<RadiusName, string>> = {
+	none: "0rem",
+	small: "0.375rem",
+};
+
 const SIZE_NAMES = ["xs", "sm", "md", "lg", "xl"] as const;
 
 function declarations(rules: readonly [string, string][]) {
@@ -291,13 +355,16 @@ function themeRules(choices: ThemeChoices) {
 		...neutralRules(NEUTRALS[choices.neutral]),
 	];
 	const { factor } = RADII[choices.radius];
-	const radius =
-		factor === 1
+	const pill = PILL_RADII[choices.radius];
+	const radius = [
+		...(factor === 1
 			? []
 			: RADIUS_TOKENS.map(([name, rem]): [string, string] => [
 					`shape-${name}`,
 					`${round(rem * factor)}rem`,
-				]);
+				])),
+		...(pill ? [["shape-pill-radius", pill] as [string, string]] : []),
+	];
 	const sizes =
 		choices.density === "default"
 			? []
@@ -317,23 +384,25 @@ function block(selector: string, lines: string[]) {
 export function presetCss(choices: ThemeChoices): string {
 	const code = encodePreset(choices);
 	const { colors, radius, sizes } = themeRules(choices);
-	const font = FONTS[choices.font];
+	const { family } = FONTS[choices.font];
+	const heading = HEADINGS[choices.heading].family;
 	const light = [
 		...declarations(colors.map(([name, value]) => [name, value])),
 		...declarations(radius),
 		...declarations(sizes),
+		...declarations(heading ? [["font-heading", heading]] : []),
 	];
 	const dark = declarations(colors.map(([name, , value]) => [name, value]));
-	const fontLines = font.family
+	const packages = presetPackages(choices);
+	// @import comes before every other rule.
+	const imports = packages.length
 		? [
-				...(font.package
-					? [
-							`/* The font: install ${font.package} and import it at the app root. */`,
-						]
-					: []),
-				...block("body", [`\tfont-family: ${font.family};`]),
+				"/* init installs these fonts. Copying this file? Install them too. */",
+				...packages.map((name) => `@import "${name}/wght.css";`),
+				"",
 			]
 		: [];
+	const body = family ? block("body", [`\tfont-family: ${family};`]) : [];
 	return [
 		"/*",
 		` * Mizen theme ${code}: ${describe(choices)}.`,
@@ -342,20 +411,32 @@ export function presetCss(choices: ThemeChoices): string {
 		` * Remake it at https://ui.mizen-labs.dev/create?preset=${code}`,
 		" */",
 		"",
+		...imports,
 		...block(":root", light),
 		...block('[data-theme="dark"]', dark),
-		...fontLines,
+		...body,
 	]
 		.join("\n")
 		.replace(TRAILING_LINES, "\n");
 }
 
+// The font packages the theme imports, for init to install.
+export function presetPackages(choices: ThemeChoices): string[] {
+	const names = [
+		FONTS[choices.font].package,
+		HEADINGS[choices.heading].package,
+	];
+	return [...new Set(names.filter((name): name is string => name !== null))];
+}
+
 export function describe(choices: ThemeChoices): string {
+	const heading = HEADINGS[choices.heading];
 	return [
 		`${ACCENTS[choices.accent].label} accent`,
 		`${NEUTRALS[choices.neutral].label} neutrals`,
 		`${RADII[choices.radius].label.toLowerCase()} radius`,
 		`${FONTS[choices.font].label}`,
+		...(heading.family ? [`${heading.label} headings`] : []),
 		`${DENSITIES[choices.density].label.toLowerCase()} density`,
 	].join(", ");
 }

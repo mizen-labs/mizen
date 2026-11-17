@@ -4,6 +4,8 @@ import {
 	DENSITIES,
 	decodePreset,
 	FONTS,
+	type FontCategory,
+	HEADINGS,
 	NEUTRALS,
 	ORDER,
 	RADII,
@@ -17,6 +19,7 @@ export const FIELDS: readonly Field[] = [
 	"neutral",
 	"radius",
 	"font",
+	"heading",
 	"density",
 ];
 
@@ -24,6 +27,7 @@ export const FIELD_LABELS: Record<Field, string> = {
 	accent: "Accent",
 	density: "Density",
 	font: "Font",
+	heading: "Heading",
 	neutral: "Neutral tone",
 	radius: "Radius",
 };
@@ -32,6 +36,7 @@ const TABLES = {
 	accent: ACCENTS,
 	density: DENSITIES,
 	font: FONTS,
+	heading: HEADINGS,
 	neutral: NEUTRALS,
 	radius: RADII,
 };
@@ -61,9 +66,50 @@ export const MENU_ORDER: { [F in Field]: readonly ThemeChoices[F][] } = {
 };
 
 // The font a sample renders in; the app font is the page's own.
+// The family a font option renders in. The app font and "Same as body" are
+// the page's own.
 export function fontFamily(name: string): string {
-	return FONTS[name as keyof typeof FONTS]?.family ?? "inherit";
+	const font =
+		FONTS[name as keyof typeof FONTS] ??
+		HEADINGS[name as keyof typeof HEADINGS];
+	return font?.family ?? "inherit";
 }
+
+const CATEGORY_LABELS: Record<FontCategory, string> = {
+	mono: "Mono",
+	sans: "Sans",
+	serif: "Serif",
+};
+
+// A font menu's options in groups: the defaults first, untitled, then each
+// category under its name.
+export function fontGroups(
+	field: "font" | "heading"
+): { label: string | null; names: string[] }[] {
+	const table = field === "font" ? FONTS : HEADINGS;
+	const names = ORDER[field] as readonly string[];
+	const categoryOf = (name: string) =>
+		table[name as keyof typeof table].category;
+	const first = names.slice(0, 2);
+	const rest = names.slice(2);
+	return [
+		{ label: null, names: first },
+		...(["sans", "serif", "mono"] as const).map((category) => ({
+			label: CATEGORY_LABELS[category],
+			names: rest.filter((name) => categoryOf(name) === category),
+		})),
+	];
+}
+
+// A shuffle never sets text in a mono font.
+const notMono = (field: Field, name: string) =>
+	!(field === "font" || field === "heading") ||
+	(
+		(field === "font" ? FONTS : HEADINGS) as Record<
+			string,
+			{ category: FontCategory | null }
+		>
+	)[name]?.category !== "mono";
 
 export function radiusFactor(name: string): number {
 	return RADII[name as keyof typeof RADII]?.factor ?? 1;
@@ -88,7 +134,9 @@ export function randomize(
 	const next = { ...current } as Record<Field, string>;
 	for (const field of FIELDS) {
 		if (!locked.has(field)) {
-			const names = ORDER[field] as readonly string[];
+			const names = (ORDER[field] as readonly string[]).filter((name) =>
+				notMono(field, name)
+			);
 			next[field] = names[Math.floor(random() * names.length)] ?? names[0];
 		}
 	}
@@ -111,12 +159,11 @@ export function isPreviewMessage(data: unknown): data is PreviewMessage {
 	);
 }
 
-// A package manager and the command that runs a package without installing it.
+// The package managers init writes with, and the command that runs a
+// package without installing it.
 export const PACKAGE_MANAGERS = [
 	["npm", "npx"],
 	["pnpm", "pnpm dlx"],
-	["yarn", "yarn dlx"],
-	["bun", "bunx"],
 ] as const;
 export type PackageManager = (typeof PACKAGE_MANAGERS)[number][0];
 

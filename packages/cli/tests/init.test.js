@@ -213,11 +213,27 @@ test("an unknown preset stops before any change and names the supported ones", (
 test("--preset takes a theme code from the Create page", async (t) => {
 	const { decodePreset, presetCss } = await import("../dist/theme/create.js");
 	const root = fixture(t);
-	const applied = run(root, ["--preset", "m1m4l", "--yes"]);
+	// m33ut sets Inter, so init installs its package with the theme.
+	const font = "@fontsource-variable/inter";
+	const planned = run(root, ["--preset", "m33ut", "--dry-run"]);
+	assert.deepEqual(planned.data.plan.install.packages, [font]);
+	const env = fakePnpm(
+		root,
+		`const fs = require("node:fs");
+const app = JSON.parse(fs.readFileSync("package.json", "utf8"));
+app.dependencies[${JSON.stringify(font)}] = "5.3.0";
+fs.writeFileSync("package.json", JSON.stringify(app));`
+	);
+	const applied = run(root, ["--preset", "m33ut", "--yes"], env);
 	assert.equal(applied.exit, 0, JSON.stringify(applied));
 	assert.equal(
 		readFileSync(join(root, "app/mizen-theme.css"), "utf8"),
-		presetCss(decodePreset("m1m4l"))
+		presetCss(decodePreset("m33ut"))
+	);
+	// A font the app already declares is not installed again.
+	assert.equal(
+		run(root, ["--preset", "m33ut", "--dry-run"]).data.plan.install,
+		null
 	);
 	const unreadable = run(fixture(t), ["--preset", "mzzzzzz", "--yes"]);
 	assert.equal(unreadable.error.reason, "conflict");

@@ -1,8 +1,6 @@
 "use client";
 
-import "@fontsource-variable/inter/wght.css";
-import "@fontsource-variable/ibm-plex-sans/wght.css";
-import "@fontsource-variable/manrope/wght.css";
+import "./fonts";
 import { darkTheme } from "@mizen-labs/ui";
 import { props } from "@stylexjs/stylex";
 import { useCallback, useState } from "react";

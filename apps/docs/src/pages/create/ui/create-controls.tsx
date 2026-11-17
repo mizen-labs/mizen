@@ -1,14 +1,15 @@
 "use client";
 
-import "@fontsource-variable/inter/wght.css";
-import "@fontsource-variable/ibm-plex-sans/wght.css";
-import "@fontsource-variable/manrope/wght.css";
+import "./fonts";
 import {
 	Button,
 	Menu,
+	MenuGroup,
+	MenuGroupLabel,
 	MenuPopup,
 	MenuRadioGroup,
 	MenuRadioItem,
+	MenuSeparator,
 	MenuTrigger,
 	Tooltip,
 	TooltipPopup,
@@ -34,6 +35,7 @@ import {
 	FIELD_LABELS,
 	type Field,
 	fontFamily,
+	fontGroups,
 	initCommand,
 	MENU_ORDER,
 	optionLabel,
@@ -128,6 +130,7 @@ const GLYPHS = {
 	accent: Dot,
 	density: DensityGlyph,
 	font: FontSample,
+	heading: FontSample,
 	neutral: Dot,
 	radius: RadiusGlyph,
 } as const;
@@ -138,6 +141,47 @@ function Indicator({ field, name }: GlyphProps) {
 		<span aria-hidden="true" {...props(createStyles.indicator)}>
 			<Glyph field={field} name={name} />
 		</span>
+	);
+}
+
+// Font menus group their options by category; the rest are one group.
+function groupsFor(field: Field) {
+	return field === "font" || field === "heading"
+		? fontGroups(field)
+		: [{ label: null, names: [...MENU_ORDER[field]] }];
+}
+
+function Option({
+	close,
+	field,
+	name,
+	show,
+}: {
+	close: boolean;
+	field: Field;
+	name: string;
+	show: (event: SyntheticEvent<HTMLElement>) => void;
+}) {
+	return (
+		<MenuRadioItem
+			closeOnClick={close}
+			data-value={name}
+			onFocus={show}
+			onPointerMove={show}
+			value={name}
+		>
+			{field === "font" || field === "heading" ? (
+				// A font's name, set in that font.
+				<span {...props(createStyles.family(fontFamily(name)))}>
+					{optionLabel(field, name)}
+				</span>
+			) : (
+				<span {...props(createStyles.option)}>
+					<Indicator field={field} name={name} />
+					{optionLabel(field, name)}
+				</span>
+			)}
+		</MenuRadioItem>
 	);
 }
 
@@ -217,20 +261,22 @@ function Picker({
 					sideOffset={8}
 				>
 					<MenuRadioGroup onValueChange={change} value={value}>
-						{MENU_ORDER[field].map((name) => (
-							<MenuRadioItem
-								closeOnClick={!wide}
-								data-value={name}
-								key={name}
-								onFocus={show}
-								onPointerMove={show}
-								value={name}
-							>
-								<span {...props(createStyles.option)}>
-									<Indicator field={field} name={name} />
-									{optionLabel(field, name)}
-								</span>
-							</MenuRadioItem>
+						{groupsFor(field).map(({ label: title, names }, index) => (
+							<Fragment key={title ?? "first"}>
+								{index > 0 ? <MenuSeparator /> : null}
+								<MenuGroup>
+									{title ? <MenuGroupLabel>{title}</MenuGroupLabel> : null}
+									{names.map((name) => (
+										<Option
+											close={!wide}
+											field={field}
+											key={name}
+											name={name}
+											show={show}
+										/>
+									))}
+								</MenuGroup>
+							</Fragment>
 						))}
 					</MenuRadioGroup>
 				</MenuPopup>
@@ -252,7 +298,7 @@ function Picker({
 
 const GROUPS: readonly (readonly Field[])[] = [
 	["accent", "neutral"],
-	["font"],
+	["font", "heading"],
 	["radius", "density"],
 ];
 

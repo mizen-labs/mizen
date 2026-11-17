@@ -6,7 +6,12 @@ import { versionCheck } from "../doctor/packages.js";
 import { frameworkOf, targetProject } from "../doctor/project.js";
 import { diagnosticDetail } from "../doctor/report.js";
 import { CliError } from "../errors.js";
-import { decodePreset, isPresetCode, presetCss } from "../theme/create.js";
+import {
+	decodePreset,
+	isPresetCode,
+	presetCss,
+	presetPackages,
+} from "../theme/create.js";
 import { configEdit } from "./config.js";
 import { type Install, installation, managerFor } from "./dependencies.js";
 import { conflict, type FileEdit } from "./edit.js";
@@ -139,13 +144,15 @@ export async function planInit(
 		(edit): edit is FileEdit => edit !== null
 	);
 	await Promise.all(edits.map((edit) => safePath(project, edit)));
+	const choices = options.preset ? decodePreset(options.preset) : undefined;
 	const install = await installation(
 		project,
 		manifest,
 		catalog,
 		options.package,
 		options.feature ?? [],
-		manager
+		manager,
+		choices ? presetPackages(choices) : []
 	);
 	const manifestBefore = await readOptional(join(project, "package.json"));
 	if (!manifestBefore) {

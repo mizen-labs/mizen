@@ -3,18 +3,17 @@ import { test } from "node:test";
 import {
 	ACCENTS,
 	DEFAULT_CHOICES,
-	DENSITIES,
 	decodePreset,
 	encodePreset,
-	FONTS,
 	NEUTRALS,
+	ORDER,
 	presetCss,
-	RADII,
+	presetPackages,
 } from "../dist/theme/create.js";
 
 const R0 = /--mizen-[\w-]+:/u;
 const R1 = /create\?preset=m0/u;
-const R2 = /^m[0-9a-z]{1,5}$/u;
+const R2 = /^m[0-9a-z]{1,6}$/u;
 const R3 = /--mizen-color-accent: oklch\(0\.48 0\.18 255\);/u;
 const R4 = /--mizen-color-accent: oklch\(0\.55 0\.18 255\);/u;
 const R5 = /--mizen-color-workarea: oklch\(0\.965 0\.012 255\);/u;
@@ -26,6 +25,7 @@ const R10 = /@fontsource-variable\/inter/u;
 const R11 = /font-family: "Inter Variable"/u;
 const R12 = /shape|control-size/u;
 
+const PILL = /--mizen-shape-pill-radius: (?<value>[^;]+);/u;
 const every = (options) => Object.keys(options);
 
 test("the default theme is m0 and writes no rules", () => {
@@ -37,20 +37,56 @@ test("the default theme is m0 and writes no rules", () => {
 });
 
 test("every combination round-trips through its code", () => {
-	for (const accent of every(ACCENTS)) {
-		for (const neutral of every(NEUTRALS)) {
-			for (const radius of every(RADII)) {
-				for (const font of every(FONTS)) {
-					for (const density of every(DENSITIES)) {
-						const choices = { accent, density, font, neutral, radius };
-						const code = encodePreset(choices);
-						assert.match(code, R2);
-						assert.deepEqual(decodePreset(code), choices);
-					}
-				}
-			}
-		}
+	// Every choice of every field, as one list of combinations.
+	const combinations = Object.entries(ORDER).reduce(
+		(all, [field, names]) =>
+			all.flatMap((choices) =>
+				names.map((name) => ({ ...choices, [field]: name }))
+			),
+		[{}]
+	);
+	assert.equal(combinations.length, 9 * 5 * 4 * 30 * 3 * 30);
+	for (const choices of combinations) {
+		const code = encodePreset(choices);
+		assert.match(code, R2);
+		assert.deepEqual(decodePreset(code), choices);
 	}
+});
+
+test("fonts import their packages, and headings set their own family", () => {
+	const choices = { ...DEFAULT_CHOICES, font: "inter", heading: "fraunces" };
+	const css = presetCss(choices);
+	assert.deepEqual(presetPackages(choices), [
+		"@fontsource-variable/inter",
+		"@fontsource-variable/fraunces",
+	]);
+	// @import comes first, before any rule.
+	assert.ok(css.indexOf("@import") < css.indexOf("{"));
+	assert.ok(css.includes('@import "@fontsource-variable/fraunces/wght.css";'));
+	assert.ok(
+		css.includes('--mizen-font-heading: "Fraunces Variable", Georgia, serif;')
+	);
+	assert.ok(
+		css.includes('font-family: "Inter Variable", system-ui, sans-serif;')
+	);
+	// One package for a body and heading in the same family; none for System.
+	assert.deepEqual(
+		presetPackages({ ...DEFAULT_CHOICES, font: "lora", heading: "lora" }),
+		["@fontsource-variable/lora"]
+	);
+	assert.deepEqual(
+		presetPackages({ ...DEFAULT_CHOICES, font: "system", heading: "body" }),
+		[]
+	);
+});
+
+test("pills square off with the corners; circles keep no token", () => {
+	const pill = (radius) =>
+		PILL.exec(presetCss({ ...DEFAULT_CHOICES, radius }))?.groups.value;
+	assert.equal(pill("none"), "0rem");
+	assert.equal(pill("small"), "0.375rem");
+	assert.equal(pill("default"), undefined);
+	assert.equal(pill("large"), undefined);
 });
 
 test("a code this version cannot read decodes to nothing", () => {
@@ -64,6 +100,7 @@ test("choices set the matching tokens in light and dark", () => {
 		accent: "blue",
 		density: "compact",
 		font: "inter",
+		heading: "body",
 		neutral: "slate",
 		radius: "large",
 	});

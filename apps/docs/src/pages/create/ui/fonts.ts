@@ -1,0 +1,30 @@
+// Every font Create offers, for its samples and its preview. A face downloads
+// only when text uses it.
+import "@fontsource-variable/geist/wght.css";
+import "@fontsource-variable/inter/wght.css";
+import "@fontsource-variable/ibm-plex-sans/wght.css";
+import "@fontsource-variable/manrope/wght.css";
+import "@fontsource-variable/dm-sans/wght.css";
+import "@fontsource-variable/figtree/wght.css";
+import "@fontsource-variable/plus-jakarta-sans/wght.css";
+import "@fontsource-variable/outfit/wght.css";
+import "@fontsource-variable/public-sans/wght.css";
+import "@fontsource-variable/noto-sans/wght.css";
+import "@fontsource-variable/nunito-sans/wght.css";
+import "@fontsource-variable/space-grotesk/wght.css";
+import "@fontsource-variable/work-sans/wght.css";
+import "@fontsource-variable/onest/wght.css";
+import "@fontsource-variable/instrument-sans/wght.css";
+import "@fontsource-variable/sora/wght.css";
+import "@fontsource-variable/lexend/wght.css";
+import "@fontsource-variable/lora/wght.css";
+import "@fontsource-variable/source-serif-4/wght.css";
+import "@fontsource-variable/playfair-display/wght.css";
+import "@fontsource-variable/fraunces/wght.css";
+import "@fontsource-variable/newsreader/wght.css";
+import "@fontsource-variable/eb-garamond/wght.css";
+import "@fontsource-variable/literata/wght.css";
+import "@fontsource-variable/jetbrains-mono/wght.css";
+import "@fontsource-variable/geist-mono/wght.css";
+import "@fontsource-variable/roboto-mono/wght.css";
+import "@fontsource-variable/fira-code/wght.css";

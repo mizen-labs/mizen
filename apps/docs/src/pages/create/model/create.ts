@@ -56,7 +56,10 @@ export function optionLabel(field: Field, name: string): string {
 export function swatch(field: "accent" | "neutral", name: string): string {
 	if (field === "accent") {
 		const { chroma, hue } = ACCENTS[name as keyof typeof ACCENTS];
-		return chroma === 0 ? "oklch(0.2046 0 0)" : `oklch(0.48 ${chroma} ${hue})`;
+		// Ink is the text color, so its swatch flips with the theme.
+		return chroma === 0
+			? "var(--mizen-color-content)"
+			: `oklch(0.48 ${chroma} ${hue})`;
 	}
 	const { chroma, hue } = NEUTRALS[name as keyof typeof NEUTRALS];
 	return `oklch(0.62 ${chroma * 4} ${hue})`;

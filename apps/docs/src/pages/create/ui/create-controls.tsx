@@ -316,7 +316,7 @@ function CopyCommand({ code }: { code: string }) {
 						/>
 					}
 				>
-					<span {...props(createStyles.code)}>
+					<span dir="ltr" {...props(createStyles.code)}>
 						{status === "copied" ? "Copied" : `--preset ${code}`}
 					</span>
 				</TooltipTrigger>

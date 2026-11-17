@@ -241,7 +241,7 @@ export const createStyles = create({
 		// 24px: Mizen's smallest target.
 		blockSize: "1.5rem",
 		borderRadius: "9999px",
-		boxShadow: `inset 0 0 0 ${borderWidth.thin} rgb(0 0 0 / 0.12)`,
+		boxShadow: `inset 0 0 0 ${borderWidth.thin} ${colors.border}`,
 		cursor: "pointer",
 		inlineSize: "1.5rem",
 		outlineColor: {

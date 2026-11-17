@@ -18,6 +18,8 @@ import {
 } from "../../../packages/ui/src/components/code-block/code-block";
 
 Reflect.set(globalThis, "IS_REACT_ACT_ENVIRONMENT", true);
+const LTR = /<pre [^>]*dir="ltr"/u;
+const RTL = /<pre [^>]*dir="rtl"/u;
 
 vi.mock("@stylexjs/stylex", () => ({
 	create: <T extends object>(styles: T): T => styles,
@@ -98,7 +100,7 @@ describe("CodeBlock contract", () => {
 			'<span data-slot="code-block-title">Install command</span>'
 		);
 		expect(markup).toContain(
-			'<pre dir="ltr" aria-label="Install command" data-slot="code-block-content" role="region" tabindex="0">'
+			'<pre aria-label="Install command" data-slot="code-block-content" dir="ltr" role="region" tabindex="0">'
 		);
 		expect(markup).toContain("<code>pnpm install</code>");
 		expect(markup).toContain('data-slot="code-block-copy-status"');
@@ -112,8 +114,8 @@ describe("CodeBlock contract", () => {
 					npm install
 				</CodeBlockContent>
 			);
-		expect(content()).toContain('<pre dir="ltr"');
-		expect(content("rtl")).toContain('<pre dir="rtl"');
+		expect(content()).toMatch(LTR);
+		expect(content("rtl")).toMatch(RTL);
 	});
 
 	it("rejects an empty scroll-region accessible name", () => {

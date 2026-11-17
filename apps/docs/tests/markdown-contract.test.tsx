@@ -78,7 +78,7 @@ describe("Markdown contract", () => {
 		expect(markup).toContain("<th");
 		expect(markup).toContain("<td");
 		expect(markup).toContain(
-			'<pre dir="ltr" aria-label="Code block" data-slot="code-block-content" role="region" tabindex="0"><code>'
+			'<pre aria-label="Code block" data-slot="code-block-content" dir="ltr" role="region" tabindex="0"><code>'
 		);
 		expect(markup).toContain("<code>const value = 1;\n</code>");
 		expect(contract.every(Boolean)).toBe(true);

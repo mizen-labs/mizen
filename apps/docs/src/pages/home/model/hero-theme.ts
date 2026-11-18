@@ -1,4 +1,5 @@
 import { colors } from "@mizen-labs/ui/colors.stylex";
+import { controlSize } from "@mizen-labs/ui/dimensions.stylex";
 import { shape } from "@mizen-labs/ui/shape.stylex";
 import {
 	DEFAULT_CHOICES,
@@ -7,34 +8,52 @@ import {
 	type ThemeChoices,
 } from "../../../../../../packages/cli/src/theme/create";
 
-export const HERO_ACCENTS = [
-	["wine", "Wine", "oklch(0.48 0.19 3)"],
-	["blue", "Blue", "oklch(0.48 0.18 255)"],
-	["green", "Green", "oklch(0.48 0.15 150)"],
-	["violet", "Violet", "oklch(0.48 0.2 300)"],
-	["orange", "Orange", "oklch(0.48 0.16 48)"],
-] as const;
+export type FilmTheme = Pick<ThemeChoices, "accent" | "density" | "radius">;
 
-export const HERO_RADII = [
-	["none", "None"],
-	["small", "Small"],
-	["default", "Default"],
-	["large", "Large"],
-] as const;
+// The film changes one field per beat, in this order, through these themes.
+// It ends where it began, so the loop has no reset.
+export const FILM_THEMES: readonly FilmTheme[] = [
+	{ accent: "wine", density: "default", radius: "default" },
+	{ accent: "blue", density: "compact", radius: "large" },
+	{ accent: "green", density: "comfortable", radius: "none" },
+];
 
-export type HeroAccent = (typeof HERO_ACCENTS)[number][0];
-export type HeroRadius = (typeof HERO_RADII)[number][0];
+export const FILM_FIELDS = ["accent", "radius", "density"] as const;
+export type FilmField = (typeof FILM_FIELDS)[number];
+
+export const FILM_OPTIONS = {
+	accent: [
+		["wine", "Wine", "oklch(0.48 0.19 3)"],
+		["blue", "Blue", "oklch(0.48 0.18 255)"],
+		["green", "Green", "oklch(0.48 0.15 150)"],
+	],
+	density: [
+		["compact", "Compact"],
+		["default", "Default"],
+		["comfortable", "Roomy"],
+	],
+	radius: [
+		["none", "None"],
+		["default", "Default"],
+		["large", "Large"],
+	],
+} as const;
 
 const VAR = /^var\((?<name>--[\w-]+)\)$/u;
+const UPPER = /[A-Z]/gu;
+const COMMENT = /\/\*[\s\S]*?\*\//gu;
+const IMPORT = /^@import [^\n]*\n/gmu;
+const BODY = /:root body \{[^}]*\}/u;
 const kebab = (key: string) =>
-	key.replace(/[A-Z]/gu, (c) => `-${c.toLowerCase()}`);
+	key.replace(UPPER, (letter) => `-${letter.toLowerCase()}`);
 
 // The docs compile Mizen's tokens to their own variables, each set once at
-// the root from its --mizen-* value. Setting them again here makes the
-// components inside read this element's --mizen-* values.
+// the root from its --mizen-* value. Setting them again on the film makes
+// the components inside read the film's --mizen-* values.
 const GROUPS: [string, unknown][] = [
 	["color", colors],
 	["shape", shape],
+	["control-size", controlSize],
 ];
 const REBIND = GROUPS.flatMap(([group, tokens]) =>
 	Object.entries(tokens as Record<string, unknown>).map(([key, value]) => {
@@ -45,30 +64,25 @@ const REBIND = GROUPS.flatMap(([group, tokens]) =>
 	.filter(Boolean)
 	.join("\n");
 
-const COMMENT = /\/\*[\s\S]*?\*\//gu;
-const IMPORT = /^@import [^\n]*\n/gmu;
-const BODY = /:root body \{[^}]*\}/u;
-
-// The theme a Create code writes, scoped to one element: the hero changes,
-// the page around it keeps Mizen's own theme.
-export function heroTheme(accent: HeroAccent, radius: HeroRadius) {
+// The theme a Create code writes, scoped to the film, with the accent on
+// the main buttons so every change shows.
+export function filmTheme(theme: FilmTheme) {
 	const choices: ThemeChoices = {
 		...DEFAULT_CHOICES,
-		accent,
+		...theme,
 		primary: "accent",
-		radius,
 	};
 	const css = presetCss(choices)
 		.replace(COMMENT, "")
 		.replace(IMPORT, "")
 		.replace(BODY, "")
-		.replace(":root {", "[data-hero-theme] {")
+		.replace(":root {", "[data-film-theme] {")
 		.replace(
 			'[data-theme="dark"] {',
-			'[data-theme="dark"] [data-hero-theme] {'
+			'[data-theme="dark"] [data-film-theme] {'
 		);
 	return {
 		code: encodePreset(choices),
-		css: `${css}\n[data-hero-theme] {\n${REBIND}\n}\n`,
+		css: `${css}\n[data-film-theme] {\n${REBIND}\n}\n`,
 	};
 }

@@ -10,12 +10,12 @@ interface Box {
 	width: number;
 }
 
-// The site's sections in one pill. A raised indicator sits under the current
-// section and springs to the next one when the reader moves on.
-export function SitePillNav() {
+// The site's sections beside the brand. An accent underline sits under the
+// current one and slides to the next when the reader moves on.
+export function SiteSectionsNav() {
 	const [box, setBox] = useState<Box | null>(null);
 
-	// Measured again when the current section changes and whenever the pill
+	// Measured again when the current section changes and whenever the nav
 	// resizes, such as when its font loads.
 	const measure = useCallback((nav: HTMLElement | null) => {
 		if (!nav) {
@@ -47,18 +47,18 @@ export function SitePillNav() {
 		<nav
 			aria-label="Site navigation"
 			ref={measure}
-			{...props(shellStyles.pill)}
+			{...props(shellStyles.sections)}
 		>
 			{box ? (
 				<span
 					aria-hidden="true"
 					{...props(
-						shellStyles.pillIndicator,
-						shellStyles.pillAt(box.left, box.width)
+						shellStyles.underline,
+						shellStyles.underlineAt(box.left, box.width)
 					)}
 				/>
 			) : null}
-			<SiteLinks pill />
+			<SiteLinks underlined />
 		</nav>
 	);
 }

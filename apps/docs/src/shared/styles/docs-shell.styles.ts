@@ -1,5 +1,6 @@
 import { colors } from "@mizen-labs/ui/colors.stylex";
 import { conditions } from "@mizen-labs/ui/conditions.stylex";
+import { controlSize } from "@mizen-labs/ui/dimensions.stylex";
 import {
 	borderWidth,
 	focus,
@@ -7,7 +8,6 @@ import {
 	focusOutline,
 } from "@mizen-labs/ui/interaction.stylex";
 import { duration, easing } from "@mizen-labs/ui/motion.stylex";
-import { shadows } from "@mizen-labs/ui/shadows.stylex";
 import { shape } from "@mizen-labs/ui/shape.stylex";
 import { space } from "@mizen-labs/ui/spacing.stylex";
 import {
@@ -89,17 +89,16 @@ export const shellStyles = create({
 		justifyContent: "flex-end",
 		minWidth: 0,
 	},
-	headerIcon: { justifyContent: "center", minWidth: "2rem" },
 	// Brand, the sections centered, then the actions.
 	headerInner: {
 		alignItems: "center",
 		boxSizing: "border-box",
+		columnGap: { default: space["2"], [conditions.sm]: space["6"] },
 		display: "grid",
-		gap: space["2"],
-		// Phone: brand and actions only; the sections move into Browse.
+		// Brand and sections on the left, the actions on the right.
 		gridTemplateColumns: {
 			default: "auto 1fr",
-			[conditions.sm]: "1fr auto 1fr",
+			[conditions.sm]: "auto 1fr auto",
 		},
 		marginInline: "auto",
 		maxWidth: "90rem",
@@ -158,7 +157,7 @@ export const shellStyles = create({
 			default: "none",
 			[conditions.sm]: "flex",
 		},
-		justifyContent: "center",
+		justifyContent: "start",
 	},
 	main: {
 		minWidth: 0,
@@ -304,43 +303,24 @@ export const shellStyles = create({
 		textAlign: "start",
 		width: "100%",
 	},
-	pill: {
-		alignItems: "center",
-		backgroundColor: colors.workarea,
-		borderRadius: "9999px",
-		display: "flex",
-		gap: 0,
-		padding: space["1"],
-		position: "relative",
-	},
-	pillAt: (left: number, width: number) => ({
-		transform: `translateX(${left}px)`,
-		width: `${width}px`,
-	}),
-	pillIndicator: {
-		backgroundColor: colors.surface,
-		borderRadius: "9999px",
-		boxShadow: shadows.surface,
-		insetBlock: space["1"],
-		insetInlineStart: 0,
-		position: "absolute",
-		transitionDuration: {
-			[conditions.reducedMotion]: duration.instant,
-			default: duration.spring,
-		},
-		transitionProperty: "transform, width",
-		transitionTimingFunction: easing.spring,
-	},
-	pillLink: {
+	sectionLink: {
 		backgroundColor: {
-			":hover": { [conditions.canHover]: "transparent" },
+			":hover": { [conditions.canHover]: colors.controlSurfaceHover },
 			default: "transparent",
 		},
-		borderRadius: "9999px",
+		minHeight: controlSize.md,
+		paddingBlock: 0,
 		paddingInline: space["3"],
+	},
+	sectionLinkCurrent: { color: colors.content, fontWeight: fontWeight.medium },
+	// The sections: plain links at the control height, an accent underline
+	// under the current one.
+	sections: {
+		alignItems: "center",
+		display: "flex",
+		gap: space["1"],
 		position: "relative",
 	},
-	pillLinkCurrent: { color: colors.content, fontWeight: fontWeight.medium },
 	// The workspace runs edge to edge, so wide screens never show a seam.
 	shell: {
 		backgroundColor: colors.workarea,
@@ -399,4 +379,22 @@ export const shellStyles = create({
 		},
 		zIndex: 100,
 	},
+	underline: {
+		backgroundColor: colors.accent,
+		blockSize: "2px",
+		borderRadius: "9999px",
+		insetBlockEnd: `calc(-1 * (${header.height} - ${controlSize.md}) / 2)`,
+		insetInlineStart: 0,
+		position: "absolute",
+		transitionDuration: {
+			[conditions.reducedMotion]: duration.instant,
+			default: duration.spring,
+		},
+		transitionProperty: "transform, width",
+		transitionTimingFunction: easing.spring,
+	},
+	underlineAt: (left: number, width: number) => ({
+		transform: `translateX(${left}px)`,
+		width: `${width}px`,
+	}),
 });

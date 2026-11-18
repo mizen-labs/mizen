@@ -34,7 +34,7 @@ export function ThemeToggle() {
 					<Button
 						aria-label={`Theme: ${label}`}
 						onClick={cycle}
-						size="icon-sm"
+						size="icon"
 						variant="ghost"
 					>
 						{hydrated ? <Icon aria-hidden="true" size={18} /> : null}

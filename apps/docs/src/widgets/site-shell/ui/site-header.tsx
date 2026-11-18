@@ -6,7 +6,7 @@ import { ThemeToggle } from "../../../features/theme-switcher/ui/theme-toggle";
 import { shellStyles } from "../../../shared/styles/docs-shell.styles";
 import { MizenLogo } from "../../../shared/ui/mizen-logo";
 import { MobileNavigation } from "./mobile-navigation";
-import { SitePillNav } from "./site-pill-nav";
+import { SiteSectionsNav } from "./site-sections-nav";
 export function SiteHeader({ docs = false }: { docs?: boolean }) {
 	return (
 		<>
@@ -20,16 +20,19 @@ export function SiteHeader({ docs = false }: { docs?: boolean }) {
 						Mizen UI
 					</Link>
 					<span {...props(shellStyles.headerLinks)}>
-						<SitePillNav />
+						<SiteSectionsNav />
 					</span>
 					<div {...props(shellStyles.headerControls)}>
-						<a
+						<Button
 							aria-label="Mizen UI on GitHub"
-							href="https://github.com/mizen-labs/mizen"
-							{...props(shellStyles.headerLink, shellStyles.headerIcon)}
+							nativeButton={false}
+							render={<a href="https://github.com/mizen-labs/mizen" />}
+							role="link"
+							size="icon"
+							variant="ghost"
 						>
 							<IconBrandGithub aria-hidden="true" size={18} />
-						</a>
+						</Button>
 						<ThemeToggle />
 						<span {...props(shellStyles.headerAction)}>
 							<Button
@@ -38,7 +41,6 @@ export function SiteHeader({ docs = false }: { docs?: boolean }) {
 									<Link params={{ guide: "installation" }} to="/docs/$guide" />
 								}
 								role="link"
-								size="sm"
 							>
 								Get started
 							</Button>

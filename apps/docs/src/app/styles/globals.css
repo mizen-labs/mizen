@@ -7,6 +7,13 @@
 
 html {
 	color-scheme: light dark;
+	/* The scrollbar gutter: a header-colored top band, then the page's own
+	   workarea, so the bar and the page both run edge to edge. */
+	background: linear-gradient(
+			var(--mizen-color-surface) 3.5rem,
+			var(--mizen-color-workarea) 3.5rem
+		)
+		fixed;
 }
 
 html[data-theme="light"] {

@@ -7,6 +7,7 @@ import {
 	focusOutline,
 } from "@mizen-labs/ui/interaction.stylex";
 import { duration, easing } from "@mizen-labs/ui/motion.stylex";
+import { shadows } from "@mizen-labs/ui/shadows.stylex";
 import { shape } from "@mizen-labs/ui/shape.stylex";
 import { space } from "@mizen-labs/ui/spacing.stylex";
 import {
@@ -89,12 +90,17 @@ export const shellStyles = create({
 		minWidth: 0,
 	},
 	headerIcon: { justifyContent: "center", minWidth: "2rem" },
+	// Brand, the sections centered, then the actions.
 	headerInner: {
 		alignItems: "center",
 		boxSizing: "border-box",
-		display: "flex",
+		display: "grid",
 		gap: space["2"],
-		justifyContent: "space-between",
+		// Phone: brand and actions only; the sections move into Browse.
+		gridTemplateColumns: {
+			default: "auto 1fr",
+			[conditions.sm]: "1fr auto 1fr",
+		},
 		marginInline: "auto",
 		maxWidth: "90rem",
 		minHeight: header.height,
@@ -152,7 +158,7 @@ export const shellStyles = create({
 			default: "none",
 			[conditions.sm]: "flex",
 		},
-		gap: space["1"],
+		justifyContent: "center",
 	},
 	main: {
 		minWidth: 0,
@@ -298,6 +304,43 @@ export const shellStyles = create({
 		textAlign: "start",
 		width: "100%",
 	},
+	pill: {
+		alignItems: "center",
+		backgroundColor: colors.workarea,
+		borderRadius: "9999px",
+		display: "flex",
+		gap: 0,
+		padding: space["1"],
+		position: "relative",
+	},
+	pillAt: (left: number, width: number) => ({
+		transform: `translateX(${left}px)`,
+		width: `${width}px`,
+	}),
+	pillIndicator: {
+		backgroundColor: colors.surface,
+		borderRadius: "9999px",
+		boxShadow: shadows.surface,
+		insetBlock: space["1"],
+		insetInlineStart: 0,
+		position: "absolute",
+		transitionDuration: {
+			[conditions.reducedMotion]: duration.instant,
+			default: duration.spring,
+		},
+		transitionProperty: "transform, width",
+		transitionTimingFunction: easing.spring,
+	},
+	pillLink: {
+		backgroundColor: {
+			":hover": { [conditions.canHover]: "transparent" },
+			default: "transparent",
+		},
+		borderRadius: "9999px",
+		paddingInline: space["3"],
+		position: "relative",
+	},
+	pillLinkCurrent: { color: colors.content, fontWeight: fontWeight.medium },
 	// The workspace runs edge to edge, so wide screens never show a seam.
 	shell: {
 		backgroundColor: colors.workarea,

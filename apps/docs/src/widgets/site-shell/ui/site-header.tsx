@@ -6,7 +6,7 @@ import { ThemeToggle } from "../../../features/theme-switcher/ui/theme-toggle";
 import { shellStyles } from "../../../shared/styles/docs-shell.styles";
 import { MizenLogo } from "../../../shared/ui/mizen-logo";
 import { MobileNavigation } from "./mobile-navigation";
-import { SiteLinks } from "./site-links";
+import { SitePillNav } from "./site-pill-nav";
 export function SiteHeader({ docs = false }: { docs?: boolean }) {
 	return (
 		<>
@@ -19,13 +19,10 @@ export function SiteHeader({ docs = false }: { docs?: boolean }) {
 						<MizenLogo style={shellStyles.brandMark} />
 						Mizen UI
 					</Link>
+					<span {...props(shellStyles.headerLinks)}>
+						<SitePillNav />
+					</span>
 					<div {...props(shellStyles.headerControls)}>
-						<nav
-							aria-label="Site navigation"
-							{...props(shellStyles.headerLinks)}
-						>
-							<SiteLinks />
-						</nav>
 						<a
 							aria-label="Mizen UI on GitHub"
 							href="https://github.com/mizen-labs/mizen"

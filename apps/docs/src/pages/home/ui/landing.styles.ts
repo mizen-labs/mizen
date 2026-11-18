@@ -1,5 +1,6 @@
 import { colors } from "@mizen-labs/ui/colors.stylex";
 import { conditions } from "@mizen-labs/ui/conditions.stylex";
+import { controlSize } from "@mizen-labs/ui/dimensions.stylex";
 import { borderWidth } from "@mizen-labs/ui/interaction.stylex";
 import { duration, easing } from "@mizen-labs/ui/motion.stylex";
 import { shadows } from "@mizen-labs/ui/shadows.stylex";
@@ -88,12 +89,6 @@ export const homeStyles = create({
 		color: colors.content,
 		textDecoration: { ":hover": "underline", default: "none" },
 		textUnderlineOffset: "0.2em",
-	},
-	mark: { color: colors.brandForeground, height: "1.75rem", width: "1.75rem" },
-	markLarge: {
-		color: colors.brandForeground,
-		height: "3rem",
-		width: "3rem",
 	},
 	page: {
 		display: "grid",
@@ -189,14 +184,16 @@ export const filmStyles = create({
 		minWidth: 0,
 		padding: 0,
 	},
+	// The page's own spacing follows the density, as the rows do.
 	figure: {
 		backgroundColor: colors.workarea,
 		borderRadius: shape.surfaceRadius,
 		display: "grid",
-		gap: space["1"],
-		padding: space["4"],
+		gap: `calc(${controlSize.md} / 8)`,
+		padding: `calc(${controlSize.md} / 2)`,
 		transitionDuration: duration.disclosure,
-		transitionProperty: "border-radius",
+		transitionProperty: "border-radius, padding",
+		transitionTimingFunction: easing.expoOut,
 	},
 	figureLabel: {
 		color: colors.mutedContent,
@@ -264,11 +261,14 @@ export const filmStyles = create({
 	main: {
 		alignContent: "start",
 		display: "grid",
-		gap: space["5"],
+		gap: `calc(${controlSize.md} * 0.625)`,
 		minWidth: 0,
 		padding: { default: space["4"], [WIDE]: space["6"] },
 		// The window runs 4rem past the stage; its content stops before it.
 		paddingInlineEnd: { default: "5rem", [WIDE]: "6rem" },
+		transitionDuration: duration.disclosure,
+		transitionProperty: "gap",
+		transitionTimingFunction: easing.expoOut,
 	},
 	mainHead: {
 		alignItems: "center",
@@ -326,16 +326,16 @@ export const filmStyles = create({
 		borderRadius: "9999px",
 		color: colors.accentContent,
 		display: { default: "none", [WIDE]: "flex" },
-		height: "4rem",
-		insetBlockEnd: space["6"],
-		insetInlineStart: space["6"],
+		height: "3.5rem",
+		insetBlockStart: space["4"],
+		insetInlineStart: space["4"],
 		justifyContent: "center",
 		position: "absolute",
 		transitionDuration: duration.disclosure,
 		transitionProperty: "background-color",
-		width: "4rem",
+		width: "3.5rem",
 	},
-	sealMark: { height: "2.25rem", width: "2.25rem" },
+	sealMark: { height: "2rem", width: "2rem" },
 	sidebar: {
 		alignContent: "start",
 		display: { default: "none", [WIDE]: "grid" },

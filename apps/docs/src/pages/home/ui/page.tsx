@@ -80,14 +80,12 @@ export default function HomePage() {
 			<section aria-label="Principles" {...props(s.principles)}>
 				{PRINCIPLES.map(([title, text]) => (
 					<div key={title} {...props(s.principle)}>
-						<MizenLogo style={s.mark} />
 						<h2 {...props(s.principleTitle)}>{title}</h2>
 						<p {...props(s.principleText)}>{text}</p>
 					</div>
 				))}
 			</section>
 			<section aria-labelledby="home-start" {...props(s.start)}>
-				<MizenLogo style={s.markLarge} />
 				<h2 id="home-start" {...props(s.startTitle)}>
 					One command to start.
 				</h2>

@@ -1,5 +1,20 @@
 # @mizen-labs/ui
 
+## 0.6.0
+
+### Minor Changes
+
+- 146167e: Two theme tokens. `--mizen-shape-pill-radius` shapes every pill: Switch, Progress, Meter, Badge, Funnel, the Menu switch, the tab indicator, and delta chips. It defaults to a full pill; set it to 0 for square corners. Radio buttons, avatars, and dots stay round. `--mizen-font-heading` sets the family of Heading, page and section titles, Markdown headings, and the titles of Card, Dialog, Sheet, Drawer, Popover, Empty, Error State, and Frame. It inherits the body font until a theme sets it.
+
+### Patch Changes
+
+- 5f82d4a: Calendar marks the reader's today after server rendering. Before, a server-rendered calendar kept the server's day, which differs across time zones.
+- a0cee1f: Chart series 2, 4, 5, and 6 in the light theme are a little darker, so every series reads at 3:1 or more on the workarea; before, three sat just under. In the dark theme, series 3 is a little darker and series 4 a little lighter, so pink and green stay apart for readers with deuteranopia. A test now checks both rules.
+- 8949bb3: Code Block content reads left to right in a right-to-left page, as code does in every language. Pass `dir` to change it.
+- a4fae47: The skill names `init --preset <code>`, with a code from the Create page, as a second way to start the app's theme file.
+- 528046a: Menu, Context Menu, and Combobox put a selected item's check or dot at the end of the row, after the label, as Select already does. Labels now line up at the start whether a row is checked or not, so a group label above radio items no longer needs `inset`. `inset` still lines a row up with rows that start with an icon.
+- 0c4fc37: Table rows and the rows of Menu, Context Menu, Select, and Combobox take their height from the control-size tokens, so a compact or comfortable theme reaches them too. A table row is as tall as a large control, a menu row as a medium one. With Mizen's default sizes nothing moves.
+
 ## 0.5.0
 
 ### Minor Changes

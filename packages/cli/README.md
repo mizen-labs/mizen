@@ -57,7 +57,7 @@ or without `--json`, and stdout stays empty. Exit status remains nonzero.
 Success envelope:
 
 ```json
-{"schemaVersion":1,"command":"info","data":{"uiVersion":"0.5.0","component":{}}}
+{"schemaVersion":1,"command":"info","data":{"uiVersion":"0.6.0","component":{}}}
 ```
 
 The empty component above represents the full registry entry. Search data contains
@@ -204,7 +204,7 @@ Install the CLI in the app, then preview setup:
 
 ```sh
 cd /path/to/app
-npm install --save-dev @mizen-labs/cli@0.5.0
+npm install --save-dev @mizen-labs/cli@0.6.0
 npx --no-install mizen init --dry-run
 npx --no-install mizen init --yes
 ```

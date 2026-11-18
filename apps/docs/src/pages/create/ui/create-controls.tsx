@@ -20,6 +20,7 @@ import {
 	TooltipTrigger,
 	useCopyToClipboard,
 } from "@mizen-labs/ui";
+import { ScrollArea } from "@mizen-labs/ui/scroll-area";
 import { props } from "@stylexjs/stylex";
 import {
 	IconChevronDown,
@@ -387,29 +388,31 @@ export function CreatePanel({
 						!open && createStyles.sectionsClosed
 					)}
 				>
-					{SECTIONS.map(([title, fields]) => (
-						<section
-							aria-label={title}
-							key={title}
-							{...props(createStyles.section)}
-						>
-							<h2 {...props(createStyles.sectionTitle)}>{title}</h2>
-							{fields.map((field) => {
-								const Kind = KINDS[field];
-								return (
-									<Kind
-										{...actions}
-										anchor={anchor}
-										field={field}
-										key={field}
-										locked={locked.has(field)}
-										value={choices[field]}
-										wide={wide}
-									/>
-								);
-							})}
-						</section>
-					))}
+					<ScrollArea overscrollContain scrollFade>
+						{SECTIONS.map(([title, fields]) => (
+							<section
+								aria-label={title}
+								key={title}
+								{...props(createStyles.section)}
+							>
+								<h2 {...props(createStyles.sectionTitle)}>{title}</h2>
+								{fields.map((field) => {
+									const Kind = KINDS[field];
+									return (
+										<Kind
+											{...actions}
+											anchor={anchor}
+											field={field}
+											key={field}
+											locked={locked.has(field)}
+											value={choices[field]}
+											wide={wide}
+										/>
+									);
+								})}
+							</section>
+						))}
+					</ScrollArea>
 				</div>
 				<div {...props(createStyles.footer)}>
 					<CopyCommand code={code} />

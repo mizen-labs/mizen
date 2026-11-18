@@ -180,13 +180,14 @@ export const createStyles = create({
 		paddingBlock: space["4"],
 		paddingInline: space["4"],
 	},
+	// The scroll area fills the room between the fold and the footer.
 	sections: {
+		display: "flex",
+		flexDirection: "column",
 		flexGrow: 1,
 		minHeight: 0,
-		overflowY: "auto",
-		overscrollBehavior: "contain",
 	},
-	sectionsClosed: { display: { default: "none", [WIDE]: "block" } },
+	sectionsClosed: { display: { default: "none", [WIDE]: "flex" } },
 	sectionTitle: {
 		color: colors.mutedContent,
 		fontSize: fontSize["12"],

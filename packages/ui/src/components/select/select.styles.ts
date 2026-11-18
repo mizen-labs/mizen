@@ -91,7 +91,7 @@ export const selectStyles = create({
 		outlineOffset: `-${borderWidth.focus}`,
 		outlineStyle: { ":focus-visible:not(:hover)": "solid", default: "none" },
 		outlineWidth: borderWidth.focus,
-		paddingBlock: `calc((2rem - ${lineHeight["20"]}) / 2)`,
+		paddingBlock: `calc((${controlSize.md} - ${lineHeight["20"]}) / 2)`,
 		paddingInlineEnd: space["2"],
 		paddingInlineStart: space["2"],
 		position: "relative",

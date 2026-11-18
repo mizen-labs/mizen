@@ -1,6 +1,7 @@
 import { create } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
+import { controlSize } from "../../styles/dimensions.stylex";
 import { floatingItemColors } from "../../styles/floating-item-colors.stylex";
 import { fonts } from "../../styles/fonts.stylex";
 import {
@@ -92,7 +93,7 @@ export const menuStyles = create({
 		gap: space["2"],
 		letterSpacing: letterSpacing.ui,
 		lineHeight: lineHeight["20"],
-		minHeight: "2rem",
+		minHeight: controlSize.md,
 		minWidth: 0,
 		opacity: { "[data-disabled]": opacity.disabled, default: 1 },
 		// Keyboard focus draws the ring; the row under the pointer keeps the tint.
@@ -104,7 +105,7 @@ export const menuStyles = create({
 		outlineStyle: { ":focus-visible:not(:hover)": "solid", default: "none" },
 		outlineWidth: borderWidth.focus,
 		overflowWrap: "anywhere",
-		paddingBlock: `calc((2rem - ${lineHeight["20"]}) / 2)`,
+		paddingBlock: `calc((${controlSize.md} - ${lineHeight["20"]}) / 2)`,
 		paddingInline: space["2"],
 		textDecoration: "none",
 		transitionDuration: {

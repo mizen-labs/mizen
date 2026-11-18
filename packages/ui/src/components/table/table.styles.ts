@@ -1,6 +1,7 @@
 import { create, keyframes } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
+import { controlSize } from "../../styles/dimensions.stylex";
 import {
 	borderWidth,
 	focus,
@@ -113,11 +114,11 @@ export const tableStyles = create({
 		outlineOffset: `-${borderWidth.focus}`,
 		outlineStyle: { ":focus-visible": "solid", default: "none" },
 		outlineWidth: borderWidth.focus,
-		// Rows are 40px: 10px block around a 20px line, 12px inline. Grid tables
-		// are compact: 8px block.
+		// A row is as tall as a large control: 40px by default, around a 20px
+		// line. Grid tables are 4px shorter. Both follow the theme's density.
 		paddingBlock: {
-			":is([data-slot='table'][data-grid] *)": space["2"],
-			default: "0.625rem",
+			":is([data-slot='table'][data-grid] *)": `calc((${controlSize.lg} - 0.25rem - ${lineHeight["20"]}) / 2)`,
+			default: `calc((${controlSize.lg} - ${lineHeight["20"]}) / 2)`,
 		},
 		paddingInline: space["3"],
 		textAlign: "start",

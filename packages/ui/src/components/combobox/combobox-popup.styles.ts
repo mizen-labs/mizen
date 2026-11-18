@@ -1,6 +1,7 @@
 import { create } from "@stylexjs/stylex";
 import { colors } from "../../styles/colors.stylex";
 import { conditions } from "../../styles/conditions.stylex";
+import { controlSize } from "../../styles/dimensions.stylex";
 import { floatingItemColors } from "../../styles/floating-item-colors.stylex";
 import { fonts } from "../../styles/fonts.stylex";
 import {
@@ -78,7 +79,7 @@ export const comboboxPopupStyles = create({
 		gridTemplateColumns: "minmax(0, 1fr) 1rem",
 		letterSpacing: letterSpacing.ui,
 		lineHeight: lineHeight["20"],
-		minHeight: "2rem",
+		minHeight: controlSize.md,
 		opacity: { "[data-disabled]": opacity.disabled, default: 1 },
 		// Focus stays in the input, so the row under the pointer keeps the tint
 		// and a row highlighted from the keyboard draws the ring.
@@ -92,7 +93,7 @@ export const comboboxPopupStyles = create({
 			default: "none",
 		},
 		outlineWidth: borderWidth.focus,
-		paddingBlock: `calc((2rem - ${lineHeight["20"]}) / 2)`,
+		paddingBlock: `calc((${controlSize.md} - ${lineHeight["20"]}) / 2)`,
 		paddingInlineEnd: space["2"],
 		paddingInlineStart: space["2"],
 		transitionDuration: {

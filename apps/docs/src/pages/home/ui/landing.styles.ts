@@ -10,7 +10,7 @@ import {
 	fontWeight,
 	lineHeight,
 } from "@mizen-labs/ui/typography.stylex";
-import { create } from "@stylexjs/stylex";
+import { create, keyframes } from "@stylexjs/stylex";
 
 const WIDE = conditions.md;
 const MOTION = "@media (prefers-reduced-motion: no-preference)";
@@ -127,6 +127,12 @@ export const homeStyles = create({
 	},
 });
 
+// A new value rises into its place.
+const rollIn = keyframes({
+	from: { opacity: 0, transform: "translateY(0.5em)" },
+	to: { opacity: 1, transform: "none" },
+});
+
 // The film: a window of the product running off the right and the bottom,
 // with the theme panel straddling its left edge.
 export const filmStyles = create({
@@ -183,6 +189,37 @@ export const filmStyles = create({
 		fontWeight: fontWeight.semibold,
 		lineHeight: lineHeight["28"],
 	},
+	file: {
+		backgroundColor: colors.workarea,
+		borderRadius: shape.controlRadiusLarge,
+		display: "grid",
+		fontFamily: "ui-monospace, monospace",
+		fontSize: fontSize["13"],
+		gap: space["1"],
+		lineHeight: lineHeight["20"],
+		marginInline: `calc(-1 * ${space["2"]})`,
+		paddingBlock: space["2"],
+		paddingInline: space["2"],
+	},
+	fileLine: {
+		borderRadius: shape.inlineRadius,
+		marginInline: `calc(-1 * ${space["1"]})`,
+		overflow: "hidden",
+		paddingInline: space["1"],
+		transitionDuration: duration.disclosure,
+		transitionProperty: "background-color",
+		// A narrow panel wraps the value under its property.
+		whiteSpace: { default: "normal", [WIDE]: "nowrap" },
+	},
+	fileLineChanged: { backgroundColor: colors.brandBackground },
+	fileName: { color: colors.mutedContent },
+	fileValue: {
+		animationDuration: { default: "0s", [MOTION]: "420ms" },
+		animationName: rollIn,
+		animationTimingFunction: easing.expoOut,
+		color: colors.content,
+		display: "inline-block",
+	},
 	filler: {
 		backgroundColor: colors.controlSurface,
 		blockSize: "0.5rem",
@@ -234,11 +271,11 @@ export const filmStyles = create({
 		boxShadow: shadows.floating,
 		display: "grid",
 		gap: space["3"],
-		insetBlockStart: { default: space["4"], [WIDE]: "13rem" },
+		insetBlockStart: { default: space["4"], [WIDE]: "5.5rem" },
 		insetInlineStart: { default: space["4"], [WIDE]: "4%" },
 		padding: space["4"],
 		position: "absolute",
-		width: `min(16rem, calc(100% - ${space["8"]}))`,
+		width: `min(23rem, calc(100% - ${space["8"]}))`,
 		zIndex: 1,
 	},
 	panelField: { display: "grid", gap: space["2"] },
@@ -269,7 +306,7 @@ export const filmStyles = create({
 			default: shape.surfaceRadius,
 			[WIDE]: shape.surfaceRadiusLarge,
 		},
-		height: { default: "36rem", [WIDE]: "32rem" },
+		height: { default: "44rem", [WIDE]: "34rem" },
 		overflow: "hidden",
 		position: "relative",
 	},
@@ -313,9 +350,10 @@ export const filmStyles = create({
 		display: "flex",
 		flexDirection: "column",
 		insetBlockEnd: "-3rem",
-		insetBlockStart: { default: "18.5rem", [WIDE]: "3rem" },
+		insetBlockStart: { default: "26rem", [WIDE]: "3rem" },
 		insetInlineEnd: "-4rem",
-		insetInlineStart: { default: space["4"], [WIDE]: "14%" },
+		// The panel covers only the sidebar, never the content.
+		insetInlineStart: { default: space["4"], [WIDE]: "calc(4% + 12rem)" },
 		overflow: "hidden",
 		position: "absolute",
 	},

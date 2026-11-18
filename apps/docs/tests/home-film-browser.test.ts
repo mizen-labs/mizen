@@ -47,7 +47,7 @@ describe("the landing film", { timeout: 60_000 }, () => {
 	it("says what Mizen is in one heading", async () => {
 		const page = await open("no-preference");
 		expect(await page.getByRole("heading", { level: 1 }).textContent()).toBe(
-			"Change the theme, not the components."
+			"Components for the screens people work in."
 		);
 		await page.close();
 	});

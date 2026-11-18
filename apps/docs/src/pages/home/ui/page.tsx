@@ -10,19 +10,19 @@ import { homeStyles as s } from "./landing.styles";
 const INIT = "npx @mizen-labs/cli@latest init";
 const COPY_LABELS = { copied: "Copied", failed: "Copy failed", idle: "Copy" };
 
-// What Mizen believes, in three lines each.
+// How Mizen works, in three claims each backed by the library itself.
 const PRINCIPLES = [
 	[
-		"Closed by design.",
-		"No className, no style. Props cover what varies; tokens cover the look.",
+		"Styles stay closed.",
+		"Components take props, not className. An upgrade never breaks a page, because no page reaches inside a component.",
 	],
 	[
-		"Calm by default.",
-		"Neutral surfaces, one accent, and type and rhythm before boxes.",
+		"One file makes it yours.",
+		"Color, shape, density, and type live in mizen-theme.css. Change a value and every component follows, in light and dark.",
 	],
 	[
-		"Ready for agents.",
-		"Every page has a Markdown twin, and the package ships its own skill.",
+		"Built for real work.",
+		"Tables, charts, forms, and agent parts, tested in three browsers, right to left, and at 200% zoom. Agents get the docs as Markdown.",
 	],
 ] as const;
 
@@ -45,11 +45,12 @@ export default function HomePage() {
 		<main id="docs-content" {...props(s.page)}>
 			<section aria-labelledby="home-title" {...props(s.hero)}>
 				<h1 id="home-title" {...props(s.title)}>
-					Change the theme, not the components.
+					Components for the screens people work in.
 				</h1>
 				<p {...props(s.lede)}>
-					React components that keep their own styles. One CSS file decides how
-					all of them look.
+					Mizen is a React library for dashboards, data, and agents, built on
+					Base UI and StyleX. Accessible behavior, closed styles, and one theme
+					file that makes every part yours.
 				</p>
 				<div {...props(s.actions)}>
 					<Button

@@ -2,9 +2,12 @@ import { colors } from "@mizen-labs/ui/colors.stylex";
 import { controlSize } from "@mizen-labs/ui/dimensions.stylex";
 import { shape } from "@mizen-labs/ui/shape.stylex";
 import {
+	ACCENTS,
 	DEFAULT_CHOICES,
+	DENSITIES,
 	encodePreset,
 	presetCss,
+	RADII,
 	type ThemeChoices,
 } from "../../../../../../packages/cli/src/theme/create";
 
@@ -85,4 +88,22 @@ export function filmTheme(theme: FilmTheme) {
 		code: encodePreset(choices),
 		css: `${css}\n[data-film-theme] {\n${REBIND}\n}\n`,
 	};
+}
+
+// The lines of mizen-theme.css each field writes, as the film shows them.
+export function fileLines(theme: FilmTheme): [FilmField, string, string][] {
+	const { chroma, hue } = ACCENTS[theme.accent];
+	return [
+		["accent", "--mizen-color-accent", `oklch(48% ${chroma} ${hue})`],
+		[
+			"radius",
+			"--mizen-shape-control-radius",
+			`${0.5 * RADII[theme.radius].factor}rem`,
+		],
+		[
+			"density",
+			"--mizen-control-size-md",
+			`${DENSITIES[theme.density].sizes[2]}rem`,
+		],
+	];
 }

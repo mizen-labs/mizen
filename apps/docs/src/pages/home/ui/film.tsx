@@ -23,6 +23,7 @@ import {
 	FILM_THEMES,
 	type FilmField,
 	type FilmTheme,
+	fileLines,
 	filmTheme,
 } from "../model/hero-theme";
 import { filmStyles as s } from "./landing.styles";
@@ -39,6 +40,8 @@ const PRESS_MS = 140;
 const AFTER_MS = 850;
 const HOLD_MS = 2400;
 const POSTER = FILM_THEMES[1] ?? FILM_THEMES[0];
+// The poster marks the accent line: the change that shows most.
+const POSTER_CHANGE: FilmField = "accent";
 
 interface Pointer {
 	pressed: boolean;
@@ -127,10 +130,39 @@ function Product() {
 }
 
 // The theme panel: what the c‍ursor uses, and what a reader can use too.
+// The theme file: three lines, the one just changed marked, its value
+// rolling in. It is why the product changed.
+function ThemeFile({
+	changed,
+	shown,
+}: {
+	changed: FilmField | null;
+	shown: FilmTheme;
+}) {
+	return (
+		<div aria-hidden="true" {...props(s.file)}>
+			<span {...props(s.fileName)}>mizen-theme.css</span>
+			{fileLines(shown).map(([field, name, value]) => (
+				<span
+					key={field}
+					{...props(s.fileLine, changed === field && s.fileLineChanged)}
+				>
+					<span {...props(s.fileName)}>{name}:</span>{" "}
+					<span key={value} {...props(s.fileValue)}>
+						{value}
+					</span>
+				</span>
+			))}
+		</div>
+	);
+}
+
 function Panel({
+	changed,
 	choose,
 	shown,
 }: {
+	changed: FilmField | null;
 	choose: (field: FilmField, value: string) => void;
 	shown: FilmTheme;
 }) {
@@ -190,6 +222,7 @@ function Panel({
 					</SegmentedControl>
 				</div>
 			))}
+			<ThemeFile changed={changed} shown={shown} />
 			<Link search={{ preset: code }} to="/create" {...props(s.code)}>
 				--preset {code}
 			</Link>
@@ -222,6 +255,7 @@ function Pointer({ pointer }: { pointer: Pointer | null }) {
 }
 
 interface Cast {
+	setChanged: (field: FilmField | null) => void;
 	setPointer: (update: (current: Pointer | null) => Pointer | null) => void;
 	setShown: (update: (current: FilmTheme) => FilmTheme) => void;
 	taken: { current: boolean };
@@ -261,6 +295,7 @@ async function beat(
 		cast.setPointer(() => null);
 		return;
 	}
+	cast.setChanged(field);
 	cast.setShown((current) => ({ ...current, [field]: value }));
 	press(false);
 	await sleep(AFTER_MS);
@@ -312,11 +347,13 @@ function runFilm(stage: HTMLElement, cast: Cast) {
 export function Film() {
 	const [shown, setShown] = useState<FilmTheme>(FILM_THEMES[0] ?? POSTER);
 	const [pointer, setPointer] = useState<Pointer | null>(null);
+	const [changed, setChanged] = useState<FilmField | null>(POSTER_CHANGE);
 	const taken = useRef(false);
 
 	const choose = useCallback((field: FilmField, value: string) => {
 		taken.current = true;
 		setPointer(null);
+		setChanged(field);
 		setShown((current) => ({ ...current, [field]: value }));
 	}, []);
 
@@ -328,7 +365,7 @@ export function Film() {
 			setShown(POSTER);
 			return;
 		}
-		return runFilm(stage, { setPointer, setShown, taken });
+		return runFilm(stage, { setChanged, setPointer, setShown, taken });
 	}, []);
 
 	const { css } = filmTheme(shown);
@@ -336,7 +373,7 @@ export function Film() {
 		<div data-film-theme ref={play} {...props(s.stage)}>
 			<style>{css}</style>
 			<Product />
-			<Panel choose={choose} shown={shown} />
+			<Panel changed={changed} choose={choose} shown={shown} />
 			<Pointer pointer={pointer} />
 		</div>
 	);

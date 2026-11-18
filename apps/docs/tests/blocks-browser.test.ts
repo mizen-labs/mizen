@@ -1,4 +1,14 @@
-import { type Browser, chromium, type Page } from "playwright";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import {
+	type Browser,
+	type BrowserType,
+	chromium,
+	firefox,
+	type Page,
+	webkit,
+} from "playwright";
 import { expect as expectLocator } from "playwright/test";
 import { afterAll, beforeAll, describe, expect, it } from "vite-plus/test";
 import {
@@ -13,10 +23,30 @@ import {
 } from "./test-helper";
 
 const docsRoot = new URL("..", import.meta.url).pathname.replace(/\/$/u, "");
-const errors: string[] = [];
-let handle: TestServerHandle;
+let handle: TestServerHandle | undefined;
 let browser: Browser;
 let page: Page;
+let errors: string[] = [];
+
+// Firefox needs its own home, or parallel runs share a profile lock.
+function launch(engine: BrowserType) {
+	if (engine === chromium) {
+		return engine.launch({
+			executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH,
+			headless: true,
+		});
+	}
+	const env =
+		engine === firefox
+			? {
+					...process.env,
+					CFFIXED_USER_HOME: mkdtempSync(join(tmpdir(), "mizen-firefox-")),
+				}
+			: undefined;
+	return engine.launch({ env, headless: true });
+}
+
+const url = (path: string) => `${handle?.url}${path}`;
 
 async function openPreview(width: number, theme: "dark" | "light" = "light") {
 	await page.setViewportSize({ height: 900, width });
@@ -24,7 +54,7 @@ async function openPreview(width: number, theme: "dark" | "light" = "light") {
 		(value) => localStorage.setItem("mizen-theme", value),
 		theme
 	);
-	await page.goto(`${handle.url}/blocks/dashboard/dashboard-1/preview`, {
+	await page.goto(url("/blocks/dashboard/dashboard-1/preview"), {
 		waitUntil: "networkidle",
 	});
 }
@@ -36,25 +66,32 @@ const token = (name: string) =>
 		name
 	);
 
-describe("Blocks", { timeout: 30_000 }, () => {
+afterAll(async () => {
+	if (handle) {
+		await teardownTestServer(handle);
+	}
+});
+
+describe.each([
+	["chromium", chromium],
+	["webkit", webkit],
+	["firefox", firefox],
+] as const)("Blocks in %s", { timeout: 30_000 }, (_name, engine) => {
 	beforeAll(async () => {
-		handle = await setupTestServer(docsRoot);
-		browser = await chromium.launch({
-			executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH,
-			headless: true,
-		});
+		handle ??= await setupTestServer(docsRoot);
+		browser = await launch(engine);
 		page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+		errors = [];
 		page.on("pageerror", (error) => errors.push(error.message));
 	}, 120_000);
 
 	afterAll(async () => {
 		await browser?.close();
-		await teardownTestServer(handle);
 		expect(errors).toEqual([]);
 	});
 
 	it("lists every category on the index and every block in llms.txt", async () => {
-		await page.goto(`${handle.url}/blocks`, { waitUntil: "networkidle" });
+		await page.goto(url("/blocks"), { waitUntil: "networkidle" });
 		await expectLocator(
 			page
 				.getByRole("navigation", { name: "Site navigation" })
@@ -68,9 +105,7 @@ describe("Blocks", { timeout: 30_000 }, () => {
 				).toHaveAttribute("href", `/blocks/${slug}`)
 			)
 		);
-		const llms = await (
-			await page.request.get(`${handle.url}/llms.txt`)
-		).text();
+		const llms = await (await page.request.get(url("/llms.txt"))).text();
 		for (const block of blocks) {
 			expect(llms).toContain(
 				`- [${block.title}](/blocks/${block.category}/${block.slug}/markdown): ${block.description}`
@@ -80,9 +115,9 @@ describe("Blocks", { timeout: 30_000 }, () => {
 
 	it.each(blocks.map((block) => [block.slug, block] as const))(
 		"runs %s on its own without errors",
-		async (_, block) => {
+		async (_slug, block) => {
 			const response = await page.goto(
-				`${handle.url}/blocks/${block.category}/${block.slug}/preview`,
+				url(`/blocks/${block.category}/${block.slug}/preview`),
 				{ waitUntil: "networkidle" }
 			);
 			expect(response?.status()).toBe(200);
@@ -94,7 +129,7 @@ describe("Blocks", { timeout: 30_000 }, () => {
 
 	it("serves a block's set up and sources as Markdown", async () => {
 		const response = await page.request.get(
-			`${handle.url}/blocks/dashboard/dashboard-1/markdown`
+			url("/blocks/dashboard/dashboard-1/markdown")
 		);
 		expect(response.status()).toBe(200);
 		expect(response.headers()["content-type"]).toContain("text/markdown");
@@ -115,7 +150,7 @@ describe("Blocks", { timeout: 30_000 }, () => {
 				"/blocks/dashboard/unknown/preview",
 				"/blocks/settings/dashboard-1/preview",
 				"/blocks/settings/dashboard-1/markdown",
-			].map((path) => page.request.get(`${handle.url}${path}`))
+			].map((path) => page.request.get(url(path)))
 		);
 		expect(missing.map((entry) => entry.status())).toEqual([
 			404, 404, 404, 404, 404,
@@ -129,17 +164,17 @@ describe("Blocks", { timeout: 30_000 }, () => {
 		["/apps/dashboard/markdown", "/blocks/dashboard/dashboard-1/markdown"],
 		["/apps/unknown", "/blocks"],
 	])("redirects %s to %s", async (from, to) => {
-		const response = await page.request.get(`${handle.url}${from}`, {
+		const response = await page.request.get(url(from), {
 			maxRedirects: 0,
 		});
 		expect(response.status()).toBe(308);
-		const location = new URL(response.headers().location, handle.url);
+		const location = new URL(response.headers().location, url("/"));
 		expect(location.pathname + location.hash).toBe(to);
 	});
 
 	it("lists a category's blocks, each live, with its code a switch away", async () => {
 		await page.setViewportSize({ height: 900, width: 1440 });
-		await page.goto(`${handle.url}/blocks/dashboard`, {
+		await page.goto(url("/blocks/dashboard"), {
 			waitUntil: "networkidle",
 		});
 		await expectLocator(
@@ -176,7 +211,7 @@ describe("Blocks", { timeout: 30_000 }, () => {
 		"fits %s on a phone",
 		async (path) => {
 			await page.setViewportSize({ height: 800, width: 375 });
-			await page.goto(`${handle.url}${path}`, { waitUntil: "networkidle" });
+			await page.goto(url(path), { waitUntil: "networkidle" });
 			const [scroll, client] = await page.evaluate(() => [
 				document.documentElement.scrollWidth,
 				document.documentElement.clientWidth,

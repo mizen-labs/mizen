@@ -8,7 +8,7 @@ import { Film } from "./film";
 import { homeStyles as s } from "./landing.styles";
 
 const INIT = "npx @mizen-labs/cli@latest init";
-const COPY_LABELS = { copied: "Copied", failed: "Copy failed", idle: INIT };
+const COPY_LABELS = { copied: "Copied", failed: "Copy failed", idle: "Copy" };
 
 // What Mizen believes, in three lines each.
 const PRINCIPLES = [
@@ -26,13 +26,17 @@ const PRINCIPLES = [
 	],
 ] as const;
 
+// The command wraps on a narrow screen; the button beside it copies it.
 function CopyInit() {
 	const { copy, status } = useCopyToClipboard();
 	const run = useCallback(() => copy(INIT), [copy]);
 	return (
-		<Button onClick={run} size="lg" variant="outline">
-			<span aria-live="polite">{COPY_LABELS[status]}</span>
-		</Button>
+		<div {...props(s.command)}>
+			<code {...props(s.commandText)}>{INIT}</code>
+			<Button onClick={run} size="lg" variant="outline">
+				<span aria-live="polite">{COPY_LABELS[status]}</span>
+			</Button>
+		</div>
 	);
 }
 

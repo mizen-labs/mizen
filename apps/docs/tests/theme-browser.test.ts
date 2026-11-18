@@ -71,7 +71,7 @@ describe("Theme browser integration and first-paint behavior", () => {
 			waitUntil: "domcontentloaded",
 		});
 		const lightHeaderBg = await lightPage.evaluate(() => {
-			const header = document.querySelector("header > div");
+			const header = document.querySelector("header");
 			return header ? window.getComputedStyle(header).backgroundColor : "";
 		});
 		await lightContext.close();
@@ -87,7 +87,7 @@ describe("Theme browser integration and first-paint behavior", () => {
 
 		const [themeAttr, colorScheme, darkHeaderBg] = await darkPage.evaluate(
 			() => {
-				const header = document.querySelector("header > div");
+				const header = document.querySelector("header");
 				return [
 					document.documentElement.getAttribute("data-theme"),
 					document.documentElement.style.colorScheme,

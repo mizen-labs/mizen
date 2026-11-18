@@ -24,6 +24,21 @@ export const homeStyles = create({
 		justifyContent: "center",
 		paddingBlockStart: space["2"],
 	},
+	command: {
+		alignItems: "center",
+		display: "flex",
+		flexWrap: "wrap",
+		gap: space["3"],
+		justifyContent: "center",
+		maxWidth: "100%",
+	},
+	commandText: {
+		fontFamily: "ui-monospace, monospace",
+		fontSize: fontSize["16"],
+		lineHeight: lineHeight["24"],
+		minWidth: 0,
+		overflowWrap: "anywhere",
+	},
 	footer: {
 		alignItems: "center",
 		color: colors.mutedContent,
@@ -38,6 +53,7 @@ export const homeStyles = create({
 	hero: {
 		display: "grid",
 		gap: space["5"],
+		gridTemplateColumns: "minmax(0, 1fr)",
 		justifyItems: "center",
 		paddingBlockStart: { default: space["12"], [WIDE]: "6rem" },
 		textAlign: "center",
@@ -56,6 +72,7 @@ export const homeStyles = create({
 	},
 	page: {
 		display: "grid",
+		gridTemplateColumns: "minmax(0, 1fr)",
 		marginInline: "auto",
 		maxWidth: "80rem",
 		paddingInline: { default: space["4"], [WIDE]: space["10"] },
@@ -99,12 +116,13 @@ export const homeStyles = create({
 		margin: 0,
 	},
 	title: {
-		fontSize: "clamp(2.5rem, 6vw, 5rem)",
+		fontSize: "clamp(2rem, 6vw, 5rem)",
 		fontWeight: fontWeight.semibold,
 		letterSpacing: "-0.05em",
 		lineHeight: 0.98,
 		margin: 0,
-		maxWidth: "15ch",
+		maxWidth: "min(15ch, 100%)",
+		overflowWrap: "anywhere",
 		textWrap: "balance",
 	},
 });
@@ -220,7 +238,7 @@ export const filmStyles = create({
 		insetInlineStart: { default: space["4"], [WIDE]: "4%" },
 		padding: space["4"],
 		position: "absolute",
-		width: "16rem",
+		width: `min(16rem, calc(100% - ${space["8"]}))`,
 		zIndex: 1,
 	},
 	panelField: { display: "grid", gap: space["2"] },

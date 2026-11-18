@@ -67,7 +67,7 @@ describe("the landing film", { timeout: 60_000 }, () => {
 	it("stops when the reader takes the panel", async () => {
 		const page = await open("no-preference");
 		// The c‍ursor shows once the script runs, so the page has hydrated.
-		await page.locator("[data-film-theme] svg[aria-hidden]").waitFor();
+		await page.locator("[data-film-pointer]").waitFor();
 		await page.getByRole("button", { name: "Green" }).click();
 		const chosen = await fill(page);
 		await page.waitForTimeout(5000);
@@ -87,9 +87,7 @@ describe("the landing film", { timeout: 60_000 }, () => {
 				page.getByRole("button", { name: "Blue" }).getAttribute("aria-pressed")
 			)
 			.toBe("true");
-		expect(
-			await page.locator("[data-film-theme] svg[aria-hidden]").count()
-		).toBe(0);
+		expect(await page.locator("[data-film-pointer]").count()).toBe(0);
 		await page.close();
 	});
 });

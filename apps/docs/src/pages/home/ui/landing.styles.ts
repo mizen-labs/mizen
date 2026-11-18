@@ -39,6 +39,21 @@ export const homeStyles = create({
 		minWidth: 0,
 		overflowWrap: "anywhere",
 	},
+	// The crest, large and faint behind the statement.
+	crest: {
+		color: colors.brandForeground,
+		height: { default: "22rem", [WIDE]: "40rem" },
+		insetBlockStart: { default: space["4"], [WIDE]: space["6"] },
+		insetInlineStart: "50%",
+		// It fades out toward its foot, so the hero never cuts it off.
+		maskImage: "linear-gradient(black 35%, transparent 80%)",
+		opacity: 0.07,
+		pointerEvents: "none",
+		position: "absolute",
+		transform: "translateX(-50%)",
+		width: { default: "22rem", [WIDE]: "40rem" },
+		zIndex: -1,
+	},
 	footer: {
 		alignItems: "center",
 		color: colors.mutedContent,
@@ -54,8 +69,12 @@ export const homeStyles = create({
 		display: "grid",
 		gap: space["5"],
 		gridTemplateColumns: "minmax(0, 1fr)",
+		isolation: "isolate",
 		justifyItems: "center",
+		// The crest may be wider than a narrow screen.
+		overflow: "clip",
 		paddingBlockStart: { default: space["12"], [WIDE]: "6rem" },
+		position: "relative",
 		textAlign: "center",
 	},
 	lede: {
@@ -69,6 +88,12 @@ export const homeStyles = create({
 		color: colors.content,
 		textDecoration: { ":hover": "underline", default: "none" },
 		textUnderlineOffset: "0.2em",
+	},
+	mark: { color: colors.brandForeground, height: "1.75rem", width: "1.75rem" },
+	markLarge: {
+		color: colors.brandForeground,
+		height: "3rem",
+		width: "3rem",
 	},
 	page: {
 		display: "grid",
@@ -294,14 +319,32 @@ export const filmStyles = create({
 		transitionTimingFunction: easing.expoOut,
 		zIndex: 2,
 	},
+	// A wax seal in the corner, pressed in the accent.
+	seal: {
+		alignItems: "center",
+		backgroundColor: colors.accent,
+		borderRadius: "9999px",
+		color: colors.accentContent,
+		display: { default: "none", [WIDE]: "flex" },
+		height: "4rem",
+		insetBlockEnd: space["6"],
+		insetInlineStart: space["6"],
+		justifyContent: "center",
+		position: "absolute",
+		transitionDuration: duration.disclosure,
+		transitionProperty: "background-color",
+		width: "4rem",
+	},
+	sealMark: { height: "2.25rem", width: "2.25rem" },
 	sidebar: {
 		alignContent: "start",
 		display: { default: "none", [WIDE]: "grid" },
 		gap: space["1"],
 		padding: space["3"],
 	},
+	// The brand tint: inside the film it follows the accent.
 	stage: {
-		backgroundColor: colors.workarea,
+		backgroundColor: colors.brandBackground,
 		borderRadius: {
 			default: shape.surfaceRadius,
 			[WIDE]: shape.surfaceRadiusLarge,
@@ -309,6 +352,8 @@ export const filmStyles = create({
 		height: { default: "44rem", [WIDE]: "34rem" },
 		overflow: "hidden",
 		position: "relative",
+		transitionDuration: duration.disclosure,
+		transitionProperty: "background-color",
 	},
 	swatch: {
 		blockSize: "1.5rem",

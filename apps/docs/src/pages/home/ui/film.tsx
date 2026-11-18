@@ -17,6 +17,7 @@ import {
 import { props } from "@stylexjs/stylex";
 import { Link } from "@tanstack/react-router";
 import { type MouseEvent, useCallback, useRef, useState } from "react";
+import { MizenLogo } from "../../../shared/ui/mizen-logo";
 import {
 	FILM_FIELDS,
 	FILM_OPTIONS,
@@ -237,6 +238,7 @@ function Pointer({ pointer }: { pointer: Pointer | null }) {
 	return (
 		<svg
 			aria-hidden="true"
+			data-film-pointer
 			fill="none"
 			height="22"
 			viewBox="0 0 16 22"
@@ -374,6 +376,9 @@ export function Film() {
 			<style>{css}</style>
 			<Product />
 			<Panel changed={changed} choose={choose} shown={shown} />
+			<span aria-hidden="true" {...props(s.seal)}>
+				<MizenLogo style={s.sealMark} />
+			</span>
 			<Pointer pointer={pointer} />
 		</div>
 	);

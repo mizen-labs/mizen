@@ -4,6 +4,7 @@ import { Button, useCopyToClipboard } from "@mizen-labs/ui";
 import { props } from "@stylexjs/stylex";
 import { Link } from "@tanstack/react-router";
 import { useCallback } from "react";
+import { MizenLogo } from "../../../shared/ui/mizen-logo";
 import { Film } from "./film";
 import { homeStyles as s } from "./landing.styles";
 
@@ -44,6 +45,7 @@ export default function HomePage() {
 	return (
 		<main id="docs-content" {...props(s.page)}>
 			<section aria-labelledby="home-title" {...props(s.hero)}>
+				<MizenLogo style={s.crest} />
 				<h1 id="home-title" {...props(s.title)}>
 					Components for the screens people work in.
 				</h1>
@@ -78,12 +80,14 @@ export default function HomePage() {
 			<section aria-label="Principles" {...props(s.principles)}>
 				{PRINCIPLES.map(([title, text]) => (
 					<div key={title} {...props(s.principle)}>
+						<MizenLogo style={s.mark} />
 						<h2 {...props(s.principleTitle)}>{title}</h2>
 						<p {...props(s.principleText)}>{text}</p>
 					</div>
 				))}
 			</section>
 			<section aria-labelledby="home-start" {...props(s.start)}>
+				<MizenLogo style={s.markLarge} />
 				<h2 id="home-start" {...props(s.startTitle)}>
 					One command to start.
 				</h2>

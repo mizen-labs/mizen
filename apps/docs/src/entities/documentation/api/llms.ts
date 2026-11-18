@@ -1,4 +1,4 @@
-import { appDocs } from "../model/apps";
+import { blocks } from "../model/blocks";
 import { componentCategories, componentDocs } from "../model/docs-registry";
 import { guides } from "../model/guides";
 
@@ -42,11 +42,11 @@ export function GET() {
 					`- [${guide.title}](/docs/${guide.slug}/markdown): ${guide.description}`
 			),
 		"",
-		"## Apps",
+		"## Blocks",
 		"",
-		...appDocs.map(
-			(app) =>
-				`- [${app.title}](/apps/${app.slug}/markdown): ${app.description}`
+		...blocks.map(
+			(block) =>
+				`- [${block.title}](/blocks/${block.category}/${block.slug}/markdown): ${block.description}`
 		),
 		"",
 		"## Theme",

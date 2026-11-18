@@ -5,7 +5,7 @@ import { darkTheme } from "@mizen-labs/ui";
 import { props } from "@stylexjs/stylex";
 import { useCallback, useState } from "react";
 import { presetCss } from "../../../../../../packages/cli/src/theme/create";
-import { apps } from "../../../entities/documentation/ui/apps";
+import { blockApps } from "../../../entities/documentation/ui/blocks";
 import {
 	choicesFrom,
 	isPreviewMessage,
@@ -88,7 +88,7 @@ export default function CreatePreview({
 		},
 		[initial.dark]
 	);
-	const { App } = apps.dashboard;
+	const { App } = blockApps["dashboard-1"];
 	return (
 		<div data-slot="app-preview" ref={listen}>
 			<style>{presetCss(choicesFrom(state.preset)).replace(IMPORTS, "")}</style>

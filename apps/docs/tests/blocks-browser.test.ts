@@ -1,7 +1,11 @@
 import { type Browser, chromium, type Page } from "playwright";
 import { expect as expectLocator } from "playwright/test";
 import { afterAll, beforeAll, describe, expect, it } from "vite-plus/test";
-import { appDocs } from "../src/entities/documentation/model/apps";
+import {
+	blockCategories,
+	blocks,
+	blocksIn,
+} from "../src/entities/documentation/model/blocks";
 import {
 	setupTestServer,
 	type TestServerHandle,
@@ -20,7 +24,7 @@ async function openPreview(width: number, theme: "dark" | "light" = "light") {
 		(value) => localStorage.setItem("mizen-theme", value),
 		theme
 	);
-	await page.goto(`${handle.url}/apps/dashboard/preview`, {
+	await page.goto(`${handle.url}/blocks/dashboard/dashboard-1/preview`, {
 		waitUntil: "networkidle",
 	});
 }
@@ -32,7 +36,7 @@ const token = (name: string) =>
 		name
 	);
 
-describe("Apps", { timeout: 30_000 }, () => {
+describe("Blocks", { timeout: 30_000 }, () => {
 	beforeAll(async () => {
 		handle = await setupTestServer(docsRoot);
 		browser = await chromium.launch({
@@ -49,38 +53,48 @@ describe("Apps", { timeout: 30_000 }, () => {
 		expect(errors).toEqual([]);
 	});
 
-	it("lists every app in the site index and in llms.txt", async () => {
-		await page.goto(`${handle.url}/apps`, { waitUntil: "networkidle" });
+	it("lists every category on the index and every block in llms.txt", async () => {
+		await page.goto(`${handle.url}/blocks`, { waitUntil: "networkidle" });
 		await expectLocator(
 			page
 				.getByRole("navigation", { name: "Site navigation" })
-				.getByRole("link", { exact: true, name: "Apps" })
+				.getByRole("link", { exact: true, name: "Blocks" })
 		).toHaveAttribute("aria-current", "page");
+		const main = page.getByRole("main");
+		await Promise.all(
+			blockCategories.map(({ slug, title }) =>
+				expectLocator(
+					main.getByRole("link", { name: new RegExp(`^${title}`, "u") })
+				).toHaveAttribute("href", `/blocks/${slug}`)
+			)
+		);
 		const llms = await (
 			await page.request.get(`${handle.url}/llms.txt`)
 		).text();
-		const main = page.getByRole("main");
-		await expectLocator(main.getByRole("heading", { level: 2 })).toHaveText([
-			...appDocs.map((app) => app.title),
-			"From here",
-		]);
-		await Promise.all(
-			appDocs.map((app) =>
-				expectLocator(
-					main.getByRole("link", { name: `Open ${app.title.toLowerCase()}` })
-				).toHaveAttribute("href", `/apps/${app.slug}`)
-			)
-		);
-		for (const app of appDocs) {
+		for (const block of blocks) {
 			expect(llms).toContain(
-				`- [${app.title}](/apps/${app.slug}/markdown): ${app.description}`
+				`- [${block.title}](/blocks/${block.category}/${block.slug}/markdown): ${block.description}`
 			);
 		}
 	});
 
-	it("serves an app's set up and sources as Markdown", async () => {
+	it.each(blocks.map((block) => [block.slug, block] as const))(
+		"runs %s on its own without errors",
+		async (_, block) => {
+			const response = await page.goto(
+				`${handle.url}/blocks/${block.category}/${block.slug}/preview`,
+				{ waitUntil: "networkidle" }
+			);
+			expect(response?.status()).toBe(200);
+			await expectLocator(
+				page.getByRole("heading", { level: 1 }).first()
+			).toBeVisible();
+		}
+	);
+
+	it("serves a block's set up and sources as Markdown", async () => {
 		const response = await page.request.get(
-			`${handle.url}/apps/dashboard/markdown`
+			`${handle.url}/blocks/dashboard/dashboard-1/markdown`
 		);
 		expect(response.status()).toBe(200);
 		expect(response.headers()["content-type"]).toContain("text/markdown");
@@ -95,31 +109,59 @@ describe("Apps", { timeout: 30_000 }, () => {
 			expect(markdown).toContain(source);
 		}
 		const missing = await Promise.all(
-			["markdown", "preview", ""].map((path) =>
-				page.request.get(`${handle.url}/apps/unknown/${path}`)
-			)
+			[
+				"/blocks/unknown",
+				"/blocks/dashboard/unknown/markdown",
+				"/blocks/dashboard/unknown/preview",
+				"/blocks/settings/dashboard-1/preview",
+				"/blocks/settings/dashboard-1/markdown",
+			].map((path) => page.request.get(`${handle.url}${path}`))
 		);
-		expect(missing.map((entry) => entry.status())).toEqual([404, 404, 404]);
+		expect(missing.map((entry) => entry.status())).toEqual([
+			404, 404, 404, 404, 404,
+		]);
 	});
 
-	it("frames the live app above its set up and files", async () => {
+	it.each([
+		["/apps", "/blocks"],
+		["/apps/dashboard", "/blocks/dashboard#dashboard-1"],
+		["/apps/dashboard/preview", "/blocks/dashboard/dashboard-1/preview"],
+		["/apps/dashboard/markdown", "/blocks/dashboard/dashboard-1/markdown"],
+		["/apps/unknown", "/blocks"],
+	])("redirects %s to %s", async (from, to) => {
+		const response = await page.request.get(`${handle.url}${from}`, {
+			maxRedirects: 0,
+		});
+		expect(response.status()).toBe(308);
+		const location = new URL(response.headers().location, handle.url);
+		expect(location.pathname + location.hash).toBe(to);
+	});
+
+	it("lists a category's blocks, each live, with its code a switch away", async () => {
 		await page.setViewportSize({ height: 900, width: 1440 });
-		await page.goto(`${handle.url}/apps/dashboard`, {
+		await page.goto(`${handle.url}/blocks/dashboard`, {
 			waitUntil: "networkidle",
 		});
 		await expectLocator(
 			page.getByRole("heading", { level: 1, name: "Dashboard" })
 		).toBeVisible();
 		await expectLocator(
-			page
-				.frameLocator('iframe[title="Dashboard preview"]')
+			page.getByRole("main").getByRole("heading", { level: 2 })
+		).toHaveText(blocksIn("dashboard").map(({ title }) => title));
+		const block = page.locator("#dashboard-1");
+		await expectLocator(
+			block
+				.frameLocator('iframe[title="Dashboard 1 preview"]')
 				.getByRole("heading", { level: 1, name: "Home" })
 		).toBeVisible();
 		await expectLocator(
-			page.locator('a[href="/apps/dashboard/preview"]')
-		).toHaveText("Open full screen");
-		const titles = page.locator('#files [data-slot="code-block-title"]');
-		await expectLocator(titles).toHaveText([
+			block.getByRole("link", { name: "Open full screen" })
+		).toHaveAttribute("href", "/blocks/dashboard/dashboard-1/preview");
+		await block.getByRole("button", { exact: true, name: "Code" }).click();
+		await expectLocator(block.locator("iframe")).toHaveCount(0);
+		await expectLocator(
+			block.locator('[data-slot="code-block-title"]')
+		).toHaveText([
 			"src/app.tsx",
 			"src/home.tsx",
 			"src/app-shell.tsx",
@@ -129,6 +171,19 @@ describe("Apps", { timeout: 30_000 }, () => {
 			await page.evaluate(() => document.documentElement.scrollWidth)
 		).toBeLessThanOrEqual(1440);
 	});
+
+	it.each(["/blocks", "/blocks/settings"])(
+		"fits %s on a phone",
+		async (path) => {
+			await page.setViewportSize({ height: 800, width: 375 });
+			await page.goto(`${handle.url}${path}`, { waitUntil: "networkidle" });
+			const [scroll, client] = await page.evaluate(() => [
+				document.documentElement.scrollWidth,
+				document.documentElement.clientWidth,
+			]);
+			expect(scroll).toBeLessThanOrEqual(client);
+		}
+	);
 
 	it.each(["light", "dark"] as const)(
 		"runs the dashboard in the Vivid theme in %s mode",

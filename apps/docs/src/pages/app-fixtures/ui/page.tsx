@@ -1,6 +1,6 @@
 "use client";
 
-import { App } from "../../../entities/documentation/ui/apps/dashboard/app";
+import { App } from "../../../entities/documentation/ui/blocks/dashboard-1/app";
 import { type FixtureName, fixtures } from "./fixtures";
 
 const NAMES: FixtureName[] = ["demo", "worst", "empty", "one", "many"];

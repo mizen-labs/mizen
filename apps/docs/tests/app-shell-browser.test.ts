@@ -399,7 +399,7 @@ describe("AppShell docs", { timeout: 60_000 }, () => {
 		const page = await browser.newPage({
 			viewport: { height: 800, width: 1280 },
 		});
-		await page.goto(`${handle.url}/apps/dashboard/preview`, {
+		await page.goto(`${handle.url}/blocks/dashboard/dashboard-1/preview`, {
 			waitUntil: "networkidle",
 		});
 		expect(await page.locator('[data-slot="app-shell"]').count()).toBe(1);

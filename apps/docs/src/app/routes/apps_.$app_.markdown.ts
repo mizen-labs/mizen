@@ -1,11 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { GET } from "../../entities/documentation/api/app-markdown";
-import { readOnlyHandlers } from "../../shared/lib/read-only-handlers";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import {
+	getBlock,
+	LEGACY_APPS,
+} from "../../entities/documentation/model/blocks";
+
 export const Route = createFileRoute("/apps_/$app_/markdown")({
-	server: {
-		handlers: {
-			...readOnlyHandlers,
-			GET: ({ params }) => GET(params.app),
-		},
+	beforeLoad: ({ params }) => {
+		const block = getBlock(LEGACY_APPS[params.app] ?? "");
+		throw redirect({
+			href: block
+				? `/blocks/${block.category}/${block.slug}/markdown`
+				: "/blocks",
+			statusCode: 308,
+		});
 	},
 });

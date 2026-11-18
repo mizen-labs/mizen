@@ -1,5 +1,5 @@
 export const siteSections = [
 	["Docs", "/docs"],
-	["Apps", "/apps"],
+	["Blocks", "/blocks"],
 	["Create", "/create"],
 ] as const;

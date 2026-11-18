@@ -55,7 +55,7 @@ export function Overview() {
 				{ href: "/docs/components/page", label: "Page and the screen recipes" },
 				{ href: "/docs/components/section", label: "Section" },
 				{
-					href: "/apps/dashboard",
+					href: "/blocks/dashboard#dashboard-1",
 					label: "A dashboard inside an application shell",
 				},
 			],

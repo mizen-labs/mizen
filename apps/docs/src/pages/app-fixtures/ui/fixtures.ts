@@ -13,7 +13,7 @@ import {
 	dashboard,
 	type NavGroup,
 	type Order,
-} from "../../../entities/documentation/ui/apps/dashboard/data";
+} from "../../../entities/documentation/ui/blocks/dashboard-1/data";
 
 // Worst realistic data for the dashboard app, passed through the same prop as
 // the demo data. Each value is something a real workspace produces.

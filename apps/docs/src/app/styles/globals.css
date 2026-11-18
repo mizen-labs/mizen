@@ -24,6 +24,11 @@ html[data-theme="dark"] {
 	color-scheme: dark;
 }
 
+/* A block on its own sits on the surface, as inside an app's inset. */
+html:has([data-slot="app-preview"]) {
+	background: var(--mizen-color-surface);
+}
+
 body {
 	margin: 0;
 	font-family: "Geist Variable", system-ui, sans-serif;

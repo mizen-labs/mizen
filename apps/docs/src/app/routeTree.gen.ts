@@ -15,6 +15,8 @@ import { Route as DocsRouteImport } from './routes/docs'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as AppsIndexRouteImport } from './routes/apps.index'
 import { Route as AppsAppRouteImport } from './routes/apps.$app'
+import { Route as BlocksIndexRouteImport } from './routes/blocks.index'
+import { Route as BlocksCategoryRouteImport } from './routes/blocks.$category'
 import { Route as ComponentsSlugRouteImport } from './routes/components_.$slug'
 import { Route as CreatePreviewRouteImport } from './routes/create_.preview'
 import { Route as DocsIndexRouteImport } from './routes/docs.index'
@@ -31,6 +33,8 @@ import { Route as DocsComponentsSlugRouteImport } from './routes/docs.components
 import { Route as DocsGuideMarkdownRouteImport } from './routes/docs_.$guide_.markdown'
 import { Route as DocsExamplesNameRouteImport } from './routes/docs_.examples.$name'
 import { Route as SkillsMizenUiSKILLDotmdRouteImport } from './routes/skills.mizen-ui.SKILL[.]md'
+import { Route as BlocksCategoryBlockMarkdownRouteImport } from './routes/blocks_.$category_.$block_.markdown'
+import { Route as BlocksCategoryBlockPreviewRouteImport } from './routes/blocks_.$category_.$block_.preview'
 import { Route as DocsComponentsSlugMarkdownRouteImport } from './routes/docs_.components_.$slug_.markdown'
 import { Route as DocsComponentsSlugMetadataRouteImport } from './routes/docs_.components_.$slug_.metadata'
 
@@ -62,6 +66,16 @@ const AppsIndexRoute = AppsIndexRouteImport.update({
 const AppsAppRoute = AppsAppRouteImport.update({
   id: '/apps/$app',
   path: '/apps/$app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlocksIndexRoute = BlocksIndexRouteImport.update({
+  id: '/blocks/',
+  path: '/blocks/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlocksCategoryRoute = BlocksCategoryRouteImport.update({
+  id: '/blocks/$category',
+  path: '/blocks/$category',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComponentsSlugRoute = ComponentsSlugRouteImport.update({
@@ -145,6 +159,18 @@ const SkillsMizenUiSKILLDotmdRoute = SkillsMizenUiSKILLDotmdRouteImport.update({
   path: '/skills/mizen-ui/SKILL.md',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlocksCategoryBlockMarkdownRoute =
+  BlocksCategoryBlockMarkdownRouteImport.update({
+    id: '/blocks_/$category_/$block_/markdown',
+    path: '/blocks/$category/$block/markdown',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const BlocksCategoryBlockPreviewRoute =
+  BlocksCategoryBlockPreviewRouteImport.update({
+    id: '/blocks_/$category_/$block_/preview',
+    path: '/blocks/$category/$block/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DocsComponentsSlugMarkdownRoute =
   DocsComponentsSlugMarkdownRouteImport.update({
     id: '/docs_/components_/$slug_/markdown',
@@ -164,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/docs': typeof DocsRouteWithChildren
   '/llms.txt': typeof LlmsDottxtRoute
   '/apps/$app': typeof AppsAppRoute
+  '/blocks/$category': typeof BlocksCategoryRoute
   '/components/$slug': typeof ComponentsSlugRoute
   '/create/preview': typeof CreatePreviewRoute
   '/docs/$guide': typeof DocsGuideRoute
@@ -173,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/internal/specimens': typeof InternalSpecimensRoute
   '/internal/theme-fixtures': typeof InternalThemeFixturesRoute
   '/apps/': typeof AppsIndexRoute
+  '/blocks/': typeof BlocksIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/apps/$app/markdown': typeof AppsAppMarkdownRoute
   '/apps/$app/preview': typeof AppsAppPreviewRoute
@@ -181,6 +209,8 @@ export interface FileRoutesByFullPath {
   '/docs/$guide/markdown': typeof DocsGuideMarkdownRoute
   '/docs/examples/$name': typeof DocsExamplesNameRoute
   '/skills/mizen-ui/SKILL.md': typeof SkillsMizenUiSKILLDotmdRoute
+  '/blocks/$category/$block/markdown': typeof BlocksCategoryBlockMarkdownRoute
+  '/blocks/$category/$block/preview': typeof BlocksCategoryBlockPreviewRoute
   '/docs/components/$slug/markdown': typeof DocsComponentsSlugMarkdownRoute
   '/docs/components/$slug/metadata': typeof DocsComponentsSlugMetadataRoute
 }
@@ -189,6 +219,7 @@ export interface FileRoutesByTo {
   '/create': typeof CreateRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/apps/$app': typeof AppsAppRoute
+  '/blocks/$category': typeof BlocksCategoryRoute
   '/components/$slug': typeof ComponentsSlugRoute
   '/create/preview': typeof CreatePreviewRoute
   '/docs/$guide': typeof DocsGuideRoute
@@ -198,6 +229,7 @@ export interface FileRoutesByTo {
   '/internal/specimens': typeof InternalSpecimensRoute
   '/internal/theme-fixtures': typeof InternalThemeFixturesRoute
   '/apps': typeof AppsIndexRoute
+  '/blocks': typeof BlocksIndexRoute
   '/docs': typeof DocsIndexRoute
   '/apps/$app/markdown': typeof AppsAppMarkdownRoute
   '/apps/$app/preview': typeof AppsAppPreviewRoute
@@ -206,6 +238,8 @@ export interface FileRoutesByTo {
   '/docs/$guide/markdown': typeof DocsGuideMarkdownRoute
   '/docs/examples/$name': typeof DocsExamplesNameRoute
   '/skills/mizen-ui/SKILL.md': typeof SkillsMizenUiSKILLDotmdRoute
+  '/blocks/$category/$block/markdown': typeof BlocksCategoryBlockMarkdownRoute
+  '/blocks/$category/$block/preview': typeof BlocksCategoryBlockPreviewRoute
   '/docs/components/$slug/markdown': typeof DocsComponentsSlugMarkdownRoute
   '/docs/components/$slug/metadata': typeof DocsComponentsSlugMetadataRoute
 }
@@ -216,6 +250,7 @@ export interface FileRoutesById {
   '/docs': typeof DocsRouteWithChildren
   '/llms.txt': typeof LlmsDottxtRoute
   '/apps/$app': typeof AppsAppRoute
+  '/blocks/$category': typeof BlocksCategoryRoute
   '/components_/$slug': typeof ComponentsSlugRoute
   '/create_/preview': typeof CreatePreviewRoute
   '/docs/$guide': typeof DocsGuideRoute
@@ -225,6 +260,7 @@ export interface FileRoutesById {
   '/internal/specimens': typeof InternalSpecimensRoute
   '/internal/theme-fixtures': typeof InternalThemeFixturesRoute
   '/apps/': typeof AppsIndexRoute
+  '/blocks/': typeof BlocksIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/apps_/$app_/markdown': typeof AppsAppMarkdownRoute
   '/apps_/$app_/preview': typeof AppsAppPreviewRoute
@@ -233,6 +269,8 @@ export interface FileRoutesById {
   '/docs_/$guide_/markdown': typeof DocsGuideMarkdownRoute
   '/docs_/examples/$name': typeof DocsExamplesNameRoute
   '/skills/mizen-ui/SKILL.md': typeof SkillsMizenUiSKILLDotmdRoute
+  '/blocks_/$category_/$block_/markdown': typeof BlocksCategoryBlockMarkdownRoute
+  '/blocks_/$category_/$block_/preview': typeof BlocksCategoryBlockPreviewRoute
   '/docs_/components_/$slug_/markdown': typeof DocsComponentsSlugMarkdownRoute
   '/docs_/components_/$slug_/metadata': typeof DocsComponentsSlugMetadataRoute
 }
@@ -244,6 +282,7 @@ export interface FileRouteTypes {
     | '/docs'
     | '/llms.txt'
     | '/apps/$app'
+    | '/blocks/$category'
     | '/components/$slug'
     | '/create/preview'
     | '/docs/$guide'
@@ -253,6 +292,7 @@ export interface FileRouteTypes {
     | '/internal/specimens'
     | '/internal/theme-fixtures'
     | '/apps/'
+    | '/blocks/'
     | '/docs/'
     | '/apps/$app/markdown'
     | '/apps/$app/preview'
@@ -261,6 +301,8 @@ export interface FileRouteTypes {
     | '/docs/$guide/markdown'
     | '/docs/examples/$name'
     | '/skills/mizen-ui/SKILL.md'
+    | '/blocks/$category/$block/markdown'
+    | '/blocks/$category/$block/preview'
     | '/docs/components/$slug/markdown'
     | '/docs/components/$slug/metadata'
   fileRoutesByTo: FileRoutesByTo
@@ -269,6 +311,7 @@ export interface FileRouteTypes {
     | '/create'
     | '/llms.txt'
     | '/apps/$app'
+    | '/blocks/$category'
     | '/components/$slug'
     | '/create/preview'
     | '/docs/$guide'
@@ -278,6 +321,7 @@ export interface FileRouteTypes {
     | '/internal/specimens'
     | '/internal/theme-fixtures'
     | '/apps'
+    | '/blocks'
     | '/docs'
     | '/apps/$app/markdown'
     | '/apps/$app/preview'
@@ -286,6 +330,8 @@ export interface FileRouteTypes {
     | '/docs/$guide/markdown'
     | '/docs/examples/$name'
     | '/skills/mizen-ui/SKILL.md'
+    | '/blocks/$category/$block/markdown'
+    | '/blocks/$category/$block/preview'
     | '/docs/components/$slug/markdown'
     | '/docs/components/$slug/metadata'
   id:
@@ -295,6 +341,7 @@ export interface FileRouteTypes {
     | '/docs'
     | '/llms.txt'
     | '/apps/$app'
+    | '/blocks/$category'
     | '/components_/$slug'
     | '/create_/preview'
     | '/docs/$guide'
@@ -304,6 +351,7 @@ export interface FileRouteTypes {
     | '/internal/specimens'
     | '/internal/theme-fixtures'
     | '/apps/'
+    | '/blocks/'
     | '/docs/'
     | '/apps_/$app_/markdown'
     | '/apps_/$app_/preview'
@@ -312,6 +360,8 @@ export interface FileRouteTypes {
     | '/docs_/$guide_/markdown'
     | '/docs_/examples/$name'
     | '/skills/mizen-ui/SKILL.md'
+    | '/blocks_/$category_/$block_/markdown'
+    | '/blocks_/$category_/$block_/preview'
     | '/docs_/components_/$slug_/markdown'
     | '/docs_/components_/$slug_/metadata'
   fileRoutesById: FileRoutesById
@@ -322,6 +372,7 @@ export interface RootRouteChildren {
   DocsRoute: typeof DocsRouteWithChildren
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   AppsAppRoute: typeof AppsAppRoute
+  BlocksCategoryRoute: typeof BlocksCategoryRoute
   ComponentsSlugRoute: typeof ComponentsSlugRoute
   CreatePreviewRoute: typeof CreatePreviewRoute
   InternalAppFixturesRoute: typeof InternalAppFixturesRoute
@@ -330,12 +381,15 @@ export interface RootRouteChildren {
   InternalSpecimensRoute: typeof InternalSpecimensRoute
   InternalThemeFixturesRoute: typeof InternalThemeFixturesRoute
   AppsIndexRoute: typeof AppsIndexRoute
+  BlocksIndexRoute: typeof BlocksIndexRoute
   AppsAppMarkdownRoute: typeof AppsAppMarkdownRoute
   AppsAppPreviewRoute: typeof AppsAppPreviewRoute
   ComponentsSlugMarkdownRoute: typeof ComponentsSlugMarkdownRoute
   DocsGuideMarkdownRoute: typeof DocsGuideMarkdownRoute
   DocsExamplesNameRoute: typeof DocsExamplesNameRoute
   SkillsMizenUiSKILLDotmdRoute: typeof SkillsMizenUiSKILLDotmdRoute
+  BlocksCategoryBlockMarkdownRoute: typeof BlocksCategoryBlockMarkdownRoute
+  BlocksCategoryBlockPreviewRoute: typeof BlocksCategoryBlockPreviewRoute
   DocsComponentsSlugMarkdownRoute: typeof DocsComponentsSlugMarkdownRoute
   DocsComponentsSlugMetadataRoute: typeof DocsComponentsSlugMetadataRoute
 }
@@ -382,6 +436,20 @@ declare module '@tanstack/react-router' {
       path: '/apps/$app'
       fullPath: '/apps/$app'
       preLoaderRoute: typeof AppsAppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blocks/': {
+      id: '/blocks/'
+      path: '/blocks'
+      fullPath: '/blocks/'
+      preLoaderRoute: typeof BlocksIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blocks/$category': {
+      id: '/blocks/$category'
+      path: '/blocks/$category'
+      fullPath: '/blocks/$category'
+      preLoaderRoute: typeof BlocksCategoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/components_/$slug': {
@@ -496,6 +564,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SkillsMizenUiSKILLDotmdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blocks_/$category_/$block_/markdown': {
+      id: '/blocks_/$category_/$block_/markdown'
+      path: '/blocks/$category/$block/markdown'
+      fullPath: '/blocks/$category/$block/markdown'
+      preLoaderRoute: typeof BlocksCategoryBlockMarkdownRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blocks_/$category_/$block_/preview': {
+      id: '/blocks_/$category_/$block_/preview'
+      path: '/blocks/$category/$block/preview'
+      fullPath: '/blocks/$category/$block/preview'
+      preLoaderRoute: typeof BlocksCategoryBlockPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/docs_/components_/$slug_/markdown': {
       id: '/docs_/components_/$slug_/markdown'
       path: '/docs/components/$slug/markdown'
@@ -533,6 +615,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocsRoute: DocsRouteWithChildren,
   LlmsDottxtRoute: LlmsDottxtRoute,
   AppsAppRoute: AppsAppRoute,
+  BlocksCategoryRoute: BlocksCategoryRoute,
   ComponentsSlugRoute: ComponentsSlugRoute,
   CreatePreviewRoute: CreatePreviewRoute,
   InternalAppFixturesRoute: InternalAppFixturesRoute,
@@ -541,12 +624,15 @@ const rootRouteChildren: RootRouteChildren = {
   InternalSpecimensRoute: InternalSpecimensRoute,
   InternalThemeFixturesRoute: InternalThemeFixturesRoute,
   AppsIndexRoute: AppsIndexRoute,
+  BlocksIndexRoute: BlocksIndexRoute,
   AppsAppMarkdownRoute: AppsAppMarkdownRoute,
   AppsAppPreviewRoute: AppsAppPreviewRoute,
   ComponentsSlugMarkdownRoute: ComponentsSlugMarkdownRoute,
   DocsGuideMarkdownRoute: DocsGuideMarkdownRoute,
   DocsExamplesNameRoute: DocsExamplesNameRoute,
   SkillsMizenUiSKILLDotmdRoute: SkillsMizenUiSKILLDotmdRoute,
+  BlocksCategoryBlockMarkdownRoute: BlocksCategoryBlockMarkdownRoute,
+  BlocksCategoryBlockPreviewRoute: BlocksCategoryBlockPreviewRoute,
   DocsComponentsSlugMarkdownRoute: DocsComponentsSlugMarkdownRoute,
   DocsComponentsSlugMetadataRoute: DocsComponentsSlugMetadataRoute,
 }

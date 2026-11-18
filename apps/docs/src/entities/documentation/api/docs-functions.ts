@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { validateSlug } from "../lib/validate-slug";
 import { getGuide } from "../model/guides";
-import { getAppPageData } from "./app-data.server";
+import { getCategoryPageData } from "./block-data.server";
 import { getComponentPageData } from "./component-data.server";
 import { getDocsNavigation } from "./navigation-data.server";
 
@@ -17,6 +17,6 @@ export const loadComponent = createServerFn({ method: "GET" })
 	.validator(validateSlug)
 	.handler(({ data }) => getComponentPageData(data));
 
-export const loadApp = createServerFn({ method: "GET" })
+export const loadBlockCategory = createServerFn({ method: "GET" })
 	.validator(validateSlug)
-	.handler(({ data }) => getAppPageData(data));
+	.handler(({ data }) => getCategoryPageData(data));

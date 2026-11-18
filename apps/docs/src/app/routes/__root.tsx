@@ -1,8 +1,9 @@
 import sansFontUrl from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
-import { createRootRoute, Link } from "@tanstack/react-router";
+import { createRootRoute } from "@tanstack/react-router";
 import { loadNavigation } from "../../entities/documentation/api/docs-functions";
 import RootLayout from "../layouts/root-layout";
 import { siteShare } from "../lib/page-head";
+import { NotFound } from "../ui/route-error";
 
 export const Route = createRootRoute({
 	loader: () => loadNavigation(),
@@ -33,12 +34,3 @@ export const Route = createRootRoute({
 	notFoundComponent: NotFound,
 	shellComponent: RootLayout,
 });
-
-function NotFound() {
-	return (
-		<main id="docs-content">
-			<h1>Page not found</h1>
-			<Link to="/docs">Browse documentation</Link>
-		</main>
-	);
-}

@@ -211,7 +211,7 @@ it("recovers from a failed page request without replacing the shell", async () =
 			.getByRole("link", { exact: true, name: "Installation" })
 			.click();
 		await expectLocator(
-			page.getByRole("heading", { name: "Unable to load this page" })
+			page.getByRole("heading", { name: "This page didn't load" })
 		).toBeVisible();
 		expect(
 			await shell?.evaluate(
@@ -243,7 +243,7 @@ it("offers reload recovery when an example chunk fails", async () => {
 			.getByRole("link", { exact: true, name: "Input" })
 			.click();
 		await expectLocator(
-			page.getByRole("heading", { name: "Unable to load this page" })
+			page.getByRole("heading", { name: "This page didn't load" })
 		).toBeVisible();
 		await expectLocator(
 			page.locator('[data-slot="desktop-sidebar"]')

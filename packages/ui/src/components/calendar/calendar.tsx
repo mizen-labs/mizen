@@ -4,7 +4,7 @@ import type { DateRange } from "@daypicker/react";
 import { DayPicker } from "@daypicker/react";
 import { props } from "@stylexjs/stylex";
 import type { ReactElement } from "react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { calendarStyles } from "./calendar.styles";
 import type {
 	CalendarProps,
@@ -215,13 +215,21 @@ function getWrapperProps(calendarProps: CalendarProps) {
 	};
 }
 
+const subscribeNever = () => () => undefined;
+const onClient = () => "client";
+const onServer = () => "server";
+
 export function Calendar(calendarProps: CalendarProps): ReactElement {
 	const wrapperProps = getWrapperProps(calendarProps);
+	// Today is the reader's day, which can differ from the server's. Hydration
+	// keeps the server's marks, so a hydrated calendar mounts once more on the
+	// client. A calendar rendered on the client mounts once.
+	const side = useSyncExternalStore(subscribeNever, onClient, onServer);
 	const content =
 		calendarProps.mode === "single" ? (
-			<SingleCalendarView {...calendarProps} />
+			<SingleCalendarView key={side} {...calendarProps} />
 		) : (
-			<RangeCalendarView {...calendarProps} />
+			<RangeCalendarView key={side} {...calendarProps} />
 		);
 
 	const {

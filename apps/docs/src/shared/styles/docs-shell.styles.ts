@@ -93,12 +93,13 @@ export const shellStyles = create({
 	headerInner: {
 		alignItems: "center",
 		boxSizing: "border-box",
-		columnGap: { default: space["2"], [conditions.sm]: space["6"] },
+		columnGap: { default: space["2"], [conditions.md]: space["6"] },
 		display: "grid",
-		// Brand and sections on the left, the actions on the right.
+		// Brand and sections on the left, the actions on the right. The
+		// sections show from the md width, where all three fit with large text.
 		gridTemplateColumns: {
-			default: "auto 1fr",
-			[conditions.sm]: "auto 1fr auto",
+			default: "auto minmax(0, 1fr)",
+			[conditions.md]: "auto minmax(0, 1fr) auto",
 		},
 		marginInline: "auto",
 		maxWidth: "90rem",
@@ -155,9 +156,10 @@ export const shellStyles = create({
 		alignItems: "center",
 		display: {
 			default: "none",
-			[conditions.sm]: "flex",
+			[conditions.md]: "flex",
 		},
 		justifyContent: "start",
+		minWidth: 0,
 	},
 	main: {
 		minWidth: 0,

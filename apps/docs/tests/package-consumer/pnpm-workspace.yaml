@@ -1,0 +1,6 @@
+# csstype 3.2.4 adds the draft CSS property pathLength, which conflicts with
+# motion's MotionStyle (TS2320) under skipLibCheck: false. Mizen's compiled
+# types do not import motion; only the source-condition audit reaches it.
+# Remove this pin once motion omits pathLength from its CSS properties.
+overrides:
+  csstype: 3.2.3

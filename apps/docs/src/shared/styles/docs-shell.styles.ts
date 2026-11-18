@@ -7,7 +7,6 @@ import {
 	focusOutline,
 } from "@mizen-labs/ui/interaction.stylex";
 import { duration, easing } from "@mizen-labs/ui/motion.stylex";
-import { shadows } from "@mizen-labs/ui/shadows.stylex";
 import { shape } from "@mizen-labs/ui/shape.stylex";
 import { space } from "@mizen-labs/ui/spacing.stylex";
 import {
@@ -71,13 +70,15 @@ export const shellStyles = create({
 		insetBlockStart: header.offset,
 		position: "sticky",
 	},
-	// A transparent sticky strip; the card inside floats with an even inset.
+	// A plain bar in the page's own color: content scrolls under it.
 	header: {
-		insetBlockStart: header.inset,
-		marginBlock: header.inset,
-		paddingInline: header.inset,
+		backgroundColor: colors.surface,
+		insetBlockStart: 0,
 		position: "sticky",
 		zIndex: 20,
+	},
+	headerAction: {
+		display: { default: "none", [conditions.sm]: "inline-flex" },
 	},
 	headerControls: {
 		alignItems: "center",
@@ -87,16 +88,9 @@ export const shellStyles = create({
 		justifyContent: "flex-end",
 		minWidth: 0,
 	},
-	// Translucent so content scrolling underneath shows through, softened.
+	headerIcon: { justifyContent: "center", minWidth: "2rem" },
 	headerInner: {
 		alignItems: "center",
-		backdropFilter: "blur(16px) saturate(1.5)",
-		backgroundColor: `color-mix(in oklab, ${colors.surface} 72%, transparent)`,
-		borderColor: colors.border,
-		borderRadius: shape.surfaceRadius,
-		borderStyle: "solid",
-		borderWidth: borderWidth.thin,
-		boxShadow: shadows.surface,
 		boxSizing: "border-box",
 		display: "flex",
 		gap: space["2"],
@@ -104,7 +98,7 @@ export const shellStyles = create({
 		marginInline: "auto",
 		maxWidth: "90rem",
 		minHeight: header.height,
-		paddingInline: { default: space["3"], [conditions.sm]: space["4"] },
+		paddingInline: { default: space["4"], [conditions.md]: space["10"] },
 	},
 	headerLink: {
 		alignItems: "center",

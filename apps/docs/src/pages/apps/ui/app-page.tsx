@@ -29,6 +29,7 @@ export default function AppPage({
 					<Button
 						nativeButton={false}
 						render={<a href={preview} rel="noreferrer" target="_blank" />}
+						role="link"
 						size="sm"
 						variant="ghost"
 					>

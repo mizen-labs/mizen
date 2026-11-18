@@ -59,13 +59,18 @@ describe("Apps", { timeout: 30_000 }, () => {
 		const llms = await (
 			await page.request.get(`${handle.url}/llms.txt`)
 		).text();
-		const links = page.getByRole("main").getByRole("link");
-		await expectLocator(links).toHaveText(appDocs.map((app) => app.title));
-		expect(
-			await links.evaluateAll((anchors) =>
-				anchors.map((anchor) => anchor.getAttribute("href"))
+		const main = page.getByRole("main");
+		await expectLocator(main.getByRole("heading", { level: 2 })).toHaveText([
+			...appDocs.map((app) => app.title),
+			"From here",
+		]);
+		await Promise.all(
+			appDocs.map((app) =>
+				expectLocator(
+					main.getByRole("link", { name: `Open ${app.title.toLowerCase()}` })
+				).toHaveAttribute("href", `/apps/${app.slug}`)
 			)
-		).toEqual(appDocs.map((app) => `/apps/${app.slug}`));
+		);
 		for (const app of appDocs) {
 			expect(llms).toContain(
 				`- [${app.title}](/apps/${app.slug}/markdown): ${app.description}`

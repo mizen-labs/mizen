@@ -41,6 +41,7 @@ export function ExamplePreview({
 						render={
 							<a href={fullScreenHref} rel="noreferrer" target="_blank" />
 						}
+						role="link"
 						size="sm"
 						variant="ghost"
 					>

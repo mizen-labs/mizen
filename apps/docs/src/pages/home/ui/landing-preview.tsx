@@ -159,6 +159,7 @@ export function LandingPreview() {
 											to="/docs/components/$slug"
 										/>
 									}
+									role="link"
 									size="icon-sm"
 									variant="ghost"
 								>

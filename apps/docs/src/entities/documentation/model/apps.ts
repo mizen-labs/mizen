@@ -1,4 +1,6 @@
 export interface AppDoc {
+	/** The main components the app shows off. */
+	components: string[];
 	description: string;
 	/** What to do before the files go into an application. */
 	setup: {
@@ -13,6 +15,14 @@ export interface AppDoc {
 // An app is a whole screen built from Mizen components, with its sources.
 export const appDocs: AppDoc[] = [
 	{
+		components: [
+			"App Shell",
+			"Metric Trend",
+			"Table",
+			"Area Chart",
+			"Calendar Heatmap",
+			"Menu",
+		],
 		description:
 			"A store overview in an application shell: metrics, a table with selection, and two charts, in the Vivid theme.",
 		setup: {
